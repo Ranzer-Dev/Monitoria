@@ -76,7 +76,7 @@ export function useGamification() {
     return list.exercises.every(ex => isCompleted(listId, ex.id, language));
   };
 
-  const isListUnlocked = (listId: number, language: Language) => {
+  const isListUnlocked = (_listId: number, _language: Language) => {
     // Liberar todas as missões desde o início conforme pedido do usuário
     return true;
   };

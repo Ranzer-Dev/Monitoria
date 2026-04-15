@@ -13,6 +13,7 @@
   "dependencies": {
     "@radix-ui/react-toast": "^1.2.15",
     "@shadcn/ui": "^0.0.4",
+    "@supabase/supabase-js": "^2.103.2",
     "autoprefixer": "^10.5.0",
     "axios": "^1.15.0",
     "clsx": "^2.1.1",

@@ -15,7 +15,7 @@ function App() {
   const { 
     stats, totalCompleted, 
     completeExercise, isCompleted, 
-    isListCompleted, isListUnlocked, getListProgress 
+    isListUnlocked, getListProgress 
   } = useGamification();
   const [showConfetti, setShowConfetti] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
@@ -81,7 +81,6 @@ function App() {
             language={language}
             completeExercise={(listId, exId, xp) => completeExercise(listId, exId, language, xp)}
             isCompleted={(listId, exId) => isCompleted(listId, exId, language)}
-            isListCompleted={(listId) => isListCompleted(listId, language)}
             isListUnlocked={(listId) => isListUnlocked(listId, language)}
             getListProgress={(listId) => getListProgress(listId, language)}
           />

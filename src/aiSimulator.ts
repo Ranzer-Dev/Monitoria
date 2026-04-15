@@ -4,7 +4,7 @@ export interface AIReview {
   score: number;
 }
 
-export function simulateAIAnalysis(code: string, output: string[], listId: number, exId: number, language: string): AIReview {
+export function simulateAIAnalysis(code: string, output: string[], listId: number, _exId: number, language: string): AIReview {
   const c = code.toLowerCase();
   const cWords = code.split(/\W+/);
   const outString = output.join('\n');

@@ -1,18 +1,9 @@
-import { useState, useCallback, useRef } from 'react';
-
-// URL para o compilador TCC portado para WebAssembly
-const TCC_JS_URL = "https://cdn.jsdelivr.net/gh/eliot-akira/tcc-wasm@master/tcc.js";
+import { useState, useCallback } from 'react';
 
 export function useCInterpreter() {
-  const [isInitializing, setIsInitializing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [output, setOutput] = useState<string[]>([]);
-  const tccInstanceRef = useRef<any>(null);
-
-  const initTCC = useCallback(async () => {
-    // Mantido por compatibilidade
-    return true; 
-  }, []);
+  const isInitializing = false; // kept for interface compatibility
 
   const runC = useCallback(async (code: string) => {
     setIsLoading(true);

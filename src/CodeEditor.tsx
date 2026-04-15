@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
-import { Terminal, Send } from 'lucide-react';
+import { Terminal } from 'lucide-react';
 
-export default function CodeEditor({ initialCode = '', onSubmit, onChange }: { initialCode?: string, onSubmit: (code: string) => void, onChange?: (code: string) => void }) {
+export default function CodeEditor({ initialCode = '', onChange }: { initialCode?: string, onChange?: (code: string) => void }) {
   const [code, setCode] = useState(initialCode);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

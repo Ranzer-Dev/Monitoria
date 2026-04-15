@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import type { Language } from './App';
-import type { Exercise, Fundamental, ExerciseListDef } from './types';
+import type { Exercise, ExerciseListDef } from './types';
 import CodeEditor from './CodeEditor';
 import { useInterpreter } from './hooks/useInterpreter';
 import { useCInterpreter } from './hooks/useCInterpreter';
 import { simulateAIAnalysis } from './aiSimulator';
-import { CheckCircle2, ChevronDown, Clock, Zap, Sword, BookOpen, Lightbulb, CodeXml, Trophy, ChevronRight, Lock, Play, Cpu, Terminal as TerminalIcon, Sparkles, Send } from 'lucide-react';
+import { CheckCircle2, ChevronDown, Sword, BookOpen, Lightbulb, CodeXml, Trophy, ChevronRight, Lock, Play, Cpu, Terminal as TerminalIcon, Sparkles, Send } from 'lucide-react';
 
 function ExerciseCard({ exercise, index, completed, onComplete, language, listId }: {
   exercise: Exercise,
@@ -35,7 +35,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
     // 1. Execução Real
     let executionOutput: string[] = [];
     if (language === 'python') {
-      executionOutput = await runPython(currentCode);
+      executionOutput = (await runPython(currentCode)) ?? [];
     } else {
       executionOutput = await runC(currentCode);
     }
@@ -199,9 +199,6 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   <CodeEditor 
                     onChange={(newCode) => setCode(newCode)}
-                    onSubmit={(currentCode) => {
-                      handleSubmission(currentCode);
-                    }} 
                   />
                   {/* Botões de Ação Rápidos */}
                   <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -311,7 +308,6 @@ export default function ExercisesList({
   language,
   completeExercise, 
   isCompleted,
-  isListCompleted,
   isListUnlocked,
   getListProgress
 }: { 
@@ -319,7 +315,6 @@ export default function ExercisesList({
   language: Language;
   completeExercise: (listId: number, exId: number, xp: number) => void;
   isCompleted: (listId: number, exId: number) => boolean;
-  isListCompleted: (listId: number) => boolean;
   isListUnlocked: (listId: number) => boolean;
   getListProgress: (listId: number) => { completed: number; total: number };
 }) {

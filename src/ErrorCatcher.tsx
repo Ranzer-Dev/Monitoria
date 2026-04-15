@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+
 export default function ErrorCatcher() {
   const [errors, setErrors] = useState<string[]>([]);
 
