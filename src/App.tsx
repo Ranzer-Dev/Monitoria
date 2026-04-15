@@ -20,7 +20,7 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [language, setLanguage] = useState<Language>('python');
-  const [view, setView] = useState<'practice' | 'theory'>('practice');
+  const [view, setView] = useState<'practice' | 'theory'>('theory');
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {

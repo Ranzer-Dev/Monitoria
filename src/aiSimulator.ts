@@ -10,28 +10,47 @@ export function simulateAIAnalysis(code: string, output: string[], listId: numbe
   const outString = output.join('\n');
   const outLower = outString.toLowerCase();
   
-  // 1. Detect Runtime Errors (High Priority)
-  const hasError = outLower.includes('traceback') || outLower.includes('error:') || outLower.includes('exception:');
+  // 1. Detect Runtime/Compiler Errors (High Priority)
+  const isC = language === 'c';
+  const hasError = outLower.includes('traceback') || 
+                   outLower.includes('error:') || 
+                   outLower.includes('erro:') ||
+                   outLower.includes('❌') ||
+                   outLower.includes('exception:') ||
+                   outLower.includes('segmentation fault');
   
   if (hasError) {
     let specificFix = "Revise sua lógica para garantir que todos os caminhos de execução sejam válidos.";
     
-    if (outLower.includes('zerodivisionerror')) {
-      specificFix = "Opa! Detectei uma divisão por zero. No Python (e na matemática), você não pode dividir por 0. Verifique se o divisor está sendo zerado inesperadamente.";
-    } else if (outLower.includes('nameerror')) {
-      const match = outString.match(/name '(.*)' is not defined/);
-      const varName = match ? match[1] : "variável";
-      specificFix = `O computador não reconhece a palavra '${varName}'. Verifique se você declarou essa variável ou se escreveu o nome corretamente.`;
-    } else if (outLower.includes('syntaxerror')) {
-      specificFix = "A gramática do código está incorreta. Verifique se esqueceu de fechar parênteses, aspas ou os dois-pontos (:) em blocos IF/WHILE.";
-    } else if (outLower.includes('indentationerror')) {
-      specificFix = "O Python é sensível a espaços! Certifique-se de que o código dentro do bloco está 'empurrado' para a direita (tabulação).";
+    if (isC) {
+      if (outLower.includes('expected \';\'')) {
+        specificFix = "Faltou um ponto e vírgula (;)! No C, cada linha de comando deve terminar com ';'. Verifique a linha indicada no terminal.";
+      } else if (outLower.includes('undeclared')) {
+        specificFix = "Você tentou usar uma variável que não foi declarada. Lembre-se que em C você deve dizer o tipo (int, float, etc) antes de usar a variável pela primeira vez.";
+      } else if (outLower.includes('segmentation fault')) {
+        specificFix = "Ocorreu um Erro de Memória (Segmentation Fault). Em iniciantes de C, isso quase sempre acontece por esquecer o '&' no scanf.";
+      } else if (outLower.includes('include')) {
+        specificFix = "Houve um erro na inclusão de bibliotecas. Verifique se escreveu #include <stdio.h> corretamente no topo do código.";
+      }
+    } else {
+      // Python specific fixes
+      if (outLower.includes('zerodivisionerror')) {
+        specificFix = "Opa! Detectei uma divisão por zero. No Python (e na matemática), você não pode dividir por 0. Verifique se o divisor está sendo zerado inesperadamente.";
+      } else if (outLower.includes('nameerror')) {
+        const match = outString.match(/name '(.*)' is not defined/);
+        const varName = match ? match[1] : "variável";
+        specificFix = `O computador não reconhece a palavra '${varName}'. Verifique se você declarou essa variável ou se escreveu o nome corretamente.`;
+      } else if (outLower.includes('syntaxerror')) {
+        specificFix = "A gramática do código está incorreta. Verifique se esqueceu de fechar parênteses, aspas ou os dois-pontos (:) em blocos IF/WHILE.";
+      } else if (outLower.includes('indentationerror')) {
+        specificFix = "O Python é sensível a espaços! Certifique-se de que o código dentro do bloco está 'empurrado' para a direita (tabulação).";
+      }
     }
 
     return {
       approved: false,
       score: 0,
-      feedback: `IA: Detectei um erro crítico! ❌\n\n${specificFix}\n\nO computador interrompeu a execução antes de terminar.`
+      feedback: `IA: Detectei um erro crítico no ${isC ? 'Compilador' : 'Interpretador'}! ❌\n\n${specificFix}\n\nAnalise a mensagem no terminal para mais detalhes.`
     };
   }
 
@@ -46,11 +65,22 @@ export function simulateAIAnalysis(code: string, output: string[], listId: numbe
     pedagogicalTip = "\n\n💡 Dica de Mestre: Suas variáveis (como " + usedGeneric.slice(0,2).join(', ') + ") funcionam, mas nomes como 'media', 'soma' ou 'total' tornam seu código muito mais profissional!";
   }
 
-  // B) Hardcoding Detection (Common beginner mistake)
+  // B) C-Specific Check: Memory Addressing in scanf
+  if (isC && c.includes('scanf')) {
+    // Regex simples para capturar scanf(fmt, VAR) onde VAR não começa com &
+    // Nota: Simplificado, mas efetivo para aprendizado
+    const hasScanfWithoutAddr = /scanf\s*\([^,]+,\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\)/.test(code);
+    if (hasScanfWithoutAddr) {
+      pedagogicalTip += "\n\n⚠️ Atenção: Vi um 'scanf' onde você pode ter esquecido o '&' na frente da variável. Em C, precisamos passar o endereço de memória para que o scanf saiba onde salvar o valor!";
+    }
+  }
+
+  // C) Hardcoding Detection (Common beginner mistake)
   const hasNumbersInCode = /\d+/.test(code);
   const hasInput = c.includes('input') || c.includes('scanf');
   if (hasNumbersInCode && !hasInput && listId === 1) {
-    pedagogicalTip += "\n\n⚠️ Observação: Vi valores fixos no seu código. Para tornar o programa dinâmico, tente usar o comando input() para que o usuário possa digitar novos valores!";
+    const inputCmd = isC ? 'scanf()' : 'input()';
+    pedagogicalTip += `\n\n⚠️ Observação: Vi valores fixos no seu código. Para tornar o programa dinâmico, tente usar o comando ${inputCmd} para que o usuário possa digitar novos valores!`;
   }
 
   // 3. Logic analysis based on keywords (Smart patterns)

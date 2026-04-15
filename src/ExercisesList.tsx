@@ -3,6 +3,7 @@ import type { Language } from './App';
 import type { Exercise, Fundamental, ExerciseListDef } from './types';
 import CodeEditor from './CodeEditor';
 import { useInterpreter } from './hooks/useInterpreter';
+import { useCInterpreter } from './hooks/useCInterpreter';
 import { simulateAIAnalysis } from './aiSimulator';
 import { CheckCircle2, ChevronDown, Clock, Zap, Sword, BookOpen, Lightbulb, CodeXml, Trophy, ChevronRight, Lock, Play, Cpu, Terminal as TerminalIcon, Sparkles, Send } from 'lucide-react';
 
@@ -19,17 +20,24 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
   const [feedback, setFeedback] = useState<{ msg: string; ok: boolean; score?: number } | null>(null);
   const [aiThinking, setAiThinking] = useState(false);
   const [code, setCode] = useState("");
-  const { runPython, output, isLoading, isInitializing } = useInterpreter();
+  const { runPython, output: pyOutput, isLoading: pyLoading, isInitializing: pyInit } = useInterpreter();
+  const { runC, output: cOutput, isLoading: cLoading, isInitializing: cInit } = useCInterpreter();
+
+  const output = language === 'python' ? pyOutput : cOutput;
+  const isLoading = language === 'python' ? pyLoading : cLoading;
+  const isInitializing = language === 'python' ? pyInit : cInit;
 
   // Função para executar a lógica da IA Simulation
   async function handleSubmission(currentCode: string) {
     setFeedback(null);
     setAiThinking(true);
     
-    // 1. Execução Real (se for Python)
+    // 1. Execução Real
     let executionOutput: string[] = [];
     if (language === 'python') {
       executionOutput = await runPython(currentCode);
+    } else {
+      executionOutput = await runC(currentCode);
     }
 
     // Pequeno delay para simular a IA "pensando"
@@ -198,7 +206,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                   {/* Botões de Ação Rápidos */}
                   <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                     <button
-                      onClick={() => language === 'python' ? runPython(code) : setFeedback({ ok: false, msg: "Rodar código em C ainda não disponível no terminal." })}
+                      onClick={() => language === 'python' ? runPython(code) : runC(code)}
                       style={{
                         padding: '10px 16px', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
                         color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
