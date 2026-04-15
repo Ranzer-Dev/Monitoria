@@ -1,0 +1,67 @@
+# --- Node.js / Javascript ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.eslintcache
+
+# --- MQL5 / MetaTrader 5 ---
+*.ex5
+*.ex4
+*.log
+MQL5/Logs/
+MQL5/Files/
+MQL5/Images/
+MQL5/Include/WinAPI/
+*.bak
+*.ini
+metaeditor.ini
+tester.ini
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.ipynb_checkpoints/
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.stackdump
+
+# --- OS / IDEs ---
+.vscode/
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# --- General Junk ---
+*.tmp
+*.temp
+logs
+*.sw?
+*.ntvs*
+*.njsproj
