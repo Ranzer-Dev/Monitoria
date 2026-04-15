@@ -15,7 +15,7 @@ export default function EducationalMaterial() {
       paddingRight: 20
     }}>
       
-      {/* 🚀 Header da Aula Theory */}
+      {/* 🚀 Header */}
       <div style={{
         background: 'linear-gradient(145deg, rgba(139, 92, 246, 0.1) 0%, rgba(109, 40, 217, 0.05) 100%)',
         border: '1px solid rgba(139, 92, 246, 0.2)',
@@ -37,10 +37,117 @@ export default function EducationalMaterial() {
           Fundamentos da <span style={{ color: '#a78bfa' }}>Engenharia Digital</span>
         </h1>
         <p style={{ margin: 0, fontSize: 18, color: 'rgba(255,255,255,0.5)', maxWidth: 750, lineHeight: 1.6 }}>
-          A ciência por trás do código. Entenda a jornada do bit até a inteligência lógica 
-          com uma visão profunda do hardware e software.
+          A ciência por trás do código — desde o transistor que liga uma lâmpada até o programa que você vai escrever.
         </p>
       </div>
+
+      {/* 🌟 Módulo 0: Por que 0 e 1? */}
+      <TheoryCard
+        index={0}
+        title="Por que o Computador Pensa em 0 e 1?"
+        description="A origem de tudo: o transistor, o binário e a história da Tabela ASCII."
+        icon={<Zap size={20} color="#a78bfa" />}
+        accentColor="#a78bfa"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
+
+          {/* Seção: O Transistor */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <h4 style={{ margin: 0, fontSize: 14, fontWeight: 900, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: 1 }}>⚡ O Transistor: A Chave de Tudo</h4>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, margin: 0 }}>
+                Um computador moderno tem <strong>bilhões de transistores</strong> — componentes menores que um vírus, que funcionam como <strong>chaves de luz elétricas</strong>.
+              </p>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, margin: 0 }}>
+                Como qualquer chave de luz, ela só tem dois estados possíveis:
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={{ padding: '20px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 16, textAlign: 'center' }}>
+                  <div style={{ fontSize: 32, marginBottom: 8 }}>💡</div>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: '#f87171', fontFamily: 'monospace' }}>1</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>Corrente PASSOU</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>Lâmpada ACESA</div>
+                </div>
+                <div style={{ padding: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, textAlign: 'center' }}>
+                  <div style={{ fontSize: 32, marginBottom: 8 }}>🌑</div>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace' }}>0</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>Corrente BLOQUEADA</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', marginTop: 2 }}>Lâmpada APAGADA</div>
+                </div>
+              </div>
+              <div style={{ padding: '16px 20px', background: 'rgba(167,139,250,0.06)', border: '1px solid rgba(167,139,250,0.15)', borderRadius: 14 }}>
+                <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
+                  <strong style={{ color: '#a78bfa' }}>Conclusão:</strong> O computador usa 0 e 1 porque a natureza da eletricidade só permite dois estados estáveis e confiáveis. Não é uma escolha — é física!
+                </p>
+              </div>
+            </div>
+
+            {/* Seção: ASCII History */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <h4 style={{ margin: 0, fontSize: 14, fontWeight: 900, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: 1 }}>📜 A Tabela ASCII: Um Acordo Global</h4>
+              <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: 24, flexShrink: 0 }}>🏛️</span>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#fff', fontSize: 13, marginBottom: 4 }}>1963 — Nasce a ASCII</div>
+                    <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
+                      A empresa americana ASA (atual ANSI) criou um padrão: um dicionário com 128 "palavras", onde cada número representava um símbolo.
+                    </p>
+                  </div>
+                </div>
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
+                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: 24, flexShrink: 0 }}>🤝</span>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#fff', fontSize: 13, marginBottom: 4 }}>Por que foi necessário?</div>
+                    <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
+                      Antes, empresas usavam tabelas diferentes. A IBM usava uma, a AT&T usava outra. Um texto no computador da IBM virava "lixo" no da AT&T. A ASCII criou um idioma comum para máquinas.
+                    </p>
+                  </div>
+                </div>
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
+                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: 24, flexShrink: 0 }}>🔢</span>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#fff', fontSize: 13, marginBottom: 4 }}>Como funciona?</div>
+                    <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
+                      É simplesmente uma lista de combinações: <strong>"65 = A"</strong>, <strong>"97 = a"</strong>, <strong>"48 = '0'"</strong>. O computador nunca guarda a letra A — ele guarda o número 65. Quando exibe na tela, traduz de volta para a letra.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mini tabela de grupos */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: 1 }}>Grupos da Tabela ASCII</div>
+                {[
+                  { range: '0 – 31', label: 'Controle (não imprimíveis)', desc: 'Enter, Tab, Delete...', color: '#6b7280' },
+                  { range: '32', label: 'Espaço', desc: 'O espaço em branco', color: '#9ca3af' },
+                  { range: '48 – 57', label: 'Dígitos', desc: '0, 1, 2, 3... 9', color: '#fbbf24' },
+                  { range: '65 – 90', label: 'Maiúsculas', desc: 'A, B, C... Z', color: '#60a5fa' },
+                  { range: '97 – 122', label: 'Minúsculas', desc: 'a, b, c... z', color: '#4ade80' },
+                ].map(g => (
+                  <div key={g.range} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '8px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: 10 }}>
+                    <span style={{ fontFamily: 'monospace', fontSize: 12, fontWeight: 900, color: g.color, minWidth: 70 }}>{g.range}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)' }}>{g.label}</span>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginLeft: 'auto' }}>{g.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Interativo: Bits como lâmpadas */}
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.04)' }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <h4 style={{ margin: 0, fontSize: 14, fontWeight: 900, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: 1 }}>🔮 Experimento: Construa um Número com Bits!</h4>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>
+              Cada bit abaixo é uma "chave de luz". Clique para ligar (1) ou desligar (0). Observe como o número decimal à direita muda!
+            </p>
+            <BitLampBuilder />
+          </div>
+        </div>
+      </TheoryCard>
 
       {/* 🔮 Módulo 1: O Mundo Binário, ASCII e Imagens */}
       <TheoryCard 
@@ -57,6 +164,7 @@ export default function EducationalMaterial() {
               <h4 style={{ margin: 0, fontSize: 13, fontWeight: 900, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: 1 }}>🔠 Do Caractere à Frase</h4>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, margin: 0 }}>
                 Cada letra é um código (ASCII). Uma frase é simplesmente uma <strong>sequência de bytes</strong> guardados em ordem.
+                A ferramenta abaixo funciona nos <strong>dois sentidos</strong>: escreva uma letra ou um número (0–127)!
               </p>
             </div>
             <AsciiTool />
@@ -71,7 +179,7 @@ export default function EducationalMaterial() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingBottom: 10 }}>
               <h4 style={{ margin: 0, fontSize: 13, fontWeight: 900, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: 1 }}>🖼️ Visão de Máquina</h4>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, margin: 0 }}>
-                Fotos não são "fotos" para o robô, são <strong>tabelas gigantes de números</strong> representando cores.
+                Fotos não são "fotos" para o computador, são <strong>tabelas gigantes de números</strong> representando cores.
               </p>
             </div>
             
@@ -126,15 +234,76 @@ export default function EducationalMaterial() {
         </div>
       </TheoryCard>
 
-      {/* 🏗️ Módulo 2: O Mapa da Memória (Multi-Byte Deep Dive) */}
+      {/* 🏗️ Módulo 2: O Mapa da Memória */}
       <TheoryCard 
         index={2}
-        title="A Hierarquia da Memória"
-        description="Como o computador organiza blocos de 8 bits para representar dados complexos."
+        title="A Hierarquia da Memória (RAM)"
+        description="O armário de gavetas do computador: como seus dados são guardados e recuperados."
         icon={<HardDrive size={20} color="#60a5fa" />}
         accentColor="#60a5fa"
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+
+          {/* Narrativa da RAM */}
+          <div style={{ padding: '28px 32px', background: 'rgba(96,165,250,0.05)', border: '1px solid rgba(96,165,250,0.15)', borderRadius: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <h4 style={{ margin: 0, fontSize: 15, fontWeight: 900, color: '#60a5fa' }}>🗄️ Pense na RAM como um Armário de Gavetas de Vidro</h4>
+            <p style={{ margin: 0, fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.8 }}>
+              Imagine um armário gigante com <strong>milhões de gavetas numeradas</strong>, e cada gaveta guarda exatamente <strong>1 byte</strong> de informação.
+              Quando o sistema operacional abre seu programa, ele reserva algumas dessas gavetas para guardar os dados que você vai usar.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+              <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 1 }}>Exemplo em C</div>
+                <code style={{ fontSize: 13, fontFamily: 'monospace', color: '#4ade80', lineHeight: 1.8 }}>
+                  int x = 10;<br/>
+                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>// Reserva 4 gavetas</span><br/>
+                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>// Endereços: 0x00 a 0x03</span>
+                </code>
+              </div>
+              <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 1 }}>Exemplo em Python</div>
+                <code style={{ fontSize: 13, fontFamily: 'monospace', color: '#fbbf24', lineHeight: 1.8 }}>
+                  x = 10<br/>
+                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>// O Python gerencia</span><br/>
+                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>// automaticamente!</span>
+                </code>
+              </div>
+            </div>
+          </div>
+
+          {/* Escala Real: Uma RAM de 2GB */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <h4 style={{ margin: 0, fontSize: 14, fontWeight: 900, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: 1 }}>📊 Escala Real: Uma Memória RAM de 2GB</h4>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>
+              2 Gigabytes = <strong>2.147.483.648 gavetas</strong>. Confira abaixo o quanto cada tipo de dado ocupa nesse armário imenso:
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {[
+                { emoji: '🔢', label: 'Uma variável int em C', bytes: 4, desc: '4 gavetas', color: '#60a5fa', pct: 0.001 },
+                { emoji: '📝', label: 'Este parágrafo de texto', bytes: 500, desc: '~500 gavetas', color: '#a78bfa', pct: 0.01 },
+                { emoji: '🎵', label: 'Uma música MP3 (4 min)', bytes: 4_000_000, desc: '~4 milhões de gavetas', color: '#4ade80', pct: 0.2 },
+                { emoji: '📷', label: 'Uma foto de celular (12MP raw)', bytes: 36_000_000, desc: '~36 milhões de gavetas', color: '#fbbf24', pct: 1.6 },
+                { emoji: '🎥', label: 'Um vídeo HD de 10 segundos', bytes: 200_000_000, desc: '~200 milhões de gavetas', color: '#f87171', pct: 9 },
+              ].map(item => (
+                <div key={item.label} style={{ padding: '16px 20px', background: 'rgba(255,255,255,0.02)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                      <span style={{ fontSize: 18 }}>{item.emoji}</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.8)' }}>{item.label}</span>
+                    </div>
+                    <span style={{ fontSize: 12, fontFamily: 'monospace', color: item.color, fontWeight: 900, whiteSpace: 'nowrap', flexShrink: 0 }}>{item.desc}</span>
+                  </div>
+                  <div style={{ height: 6, background: 'rgba(255,255,255,0.04)', borderRadius: 3, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${Math.min(item.pct, 100)}%`, background: item.color, borderRadius: 3, minWidth: 4, transition: 'width 0.5s ease' }} />
+                  </div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>{item.pct.toFixed(3)}% da RAM de 2GB</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
+
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(400px, 1fr) 1fr', gap: 40, alignItems: 'start' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -142,8 +311,7 @@ export default function EducationalMaterial() {
                 <h4 style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#60a5fa', textTransform: 'uppercase' }}>Profundidade de Bits por Tipo</h4>
               </div>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, margin: 0 }}>
-                A memória é sempre composta de bytes (8 bits). Tipos maiores apenas empilham mais bytes em sequência. 
-                Observe como os "interruptores" aumentam:
+                No C, o programador escolhe <strong>manualmente</strong> o tamanho de cada variável. Isso é poder e responsabilidade: escolha um tipo pequeno demais e os dados "transbordam"!
               </p>
               <MultiByteBitView />
             </div>
@@ -196,11 +364,11 @@ export default function EducationalMaterial() {
         </div>
       </TheoryCard>
 
-      {/* ⚠️ Módulo 4: Error Lab 2.0 (Side-by-Side Scaled) */}
+      {/* ⚠️ Módulo 4: Error Lab */}
       <TheoryCard 
         index={4}
         title="O Laboratório de Erros"
-        description="Analise códigos quebramos e aprenda a solução com comparação direta."
+        description="Analise códigos quebrados e aprenda a solução com comparação direta."
         icon={<AlertTriangle size={20} color="#f87171" />}
         accentColor="#f87171"
       >
@@ -346,6 +514,66 @@ export default function EducationalMaterial() {
 }
 
 // -----------------------------------------------------------------------------
+// Componente: BitLampBuilder — 8 bits interativos como chaves de luz
+// -----------------------------------------------------------------------------
+function BitLampBuilder() {
+  const [bits, setBits] = useState<number[]>([0, 0, 0, 0, 0, 0, 0, 0]);
+
+  const toggleBit = (index: number) => {
+    const next = [...bits];
+    next[index] = next[index] === 0 ? 1 : 0;
+    setBits(next);
+  };
+
+  const decimal = parseInt(bits.join(''), 2);
+  const ascii = decimal >= 32 && decimal <= 126 ? String.fromCharCode(decimal) : null;
+
+  return (
+    <div style={{ padding: '28px 32px', background: 'rgba(167,139,250,0.05)', border: '1px solid rgba(167,139,250,0.15)', borderRadius: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+        {bits.map((bit, i) => (
+          <button
+            key={i}
+            onClick={() => toggleBit(i)}
+            style={{
+              width: 64, height: 80, borderRadius: 16, cursor: 'pointer',
+              background: bit === 1 ? 'rgba(167,139,250,0.15)' : 'rgba(255,255,255,0.03)',
+              border: `2px solid ${bit === 1 ? '#a78bfa' : 'rgba(255,255,255,0.08)'}`,
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6,
+              transition: 'all 0.15s ease',
+              boxShadow: bit === 1 ? '0 0 20px rgba(167,139,250,0.3)' : 'none',
+            }}
+          >
+            <span style={{ fontSize: 24 }}>{bit === 1 ? '💡' : '🌑'}</span>
+            <span style={{ fontSize: 16, fontFamily: 'monospace', fontWeight: 900, color: bit === 1 ? '#a78bfa' : 'rgba(255,255,255,0.2)' }}>{bit}</span>
+            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase' }}>Bit {7 - i}</span>
+          </button>
+        ))}
+      </div>
+      <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ textAlign: 'center', padding: '16px 28px', background: 'rgba(255,255,255,0.03)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 4 }}>Binário</div>
+          <div style={{ fontSize: 20, fontFamily: 'monospace', fontWeight: 900, color: '#a78bfa', letterSpacing: 4 }}>{bits.join('')}</div>
+        </div>
+        <div style={{ textAlign: 'center', padding: '16px 28px', background: 'rgba(255,255,255,0.03)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 4 }}>Decimal</div>
+          <div style={{ fontSize: 32, fontFamily: 'monospace', fontWeight: 900, color: '#60a5fa' }}>{decimal}</div>
+        </div>
+        {ascii && (
+          <div style={{ textAlign: 'center', padding: '16px 28px', background: 'rgba(251,191,36,0.06)', borderRadius: 16, border: '1px solid rgba(251,191,36,0.2)' }}>
+            <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 4 }}>Caractere ASCII</div>
+            <div style={{ fontSize: 32, fontFamily: 'monospace', fontWeight: 900, color: '#fbbf24' }}>{ascii}</div>
+          </div>
+        )}
+      </div>
+      <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: 1.6 }}>
+        Tente criar a letra <strong style={{ color: '#fbbf24' }}>A</strong> (decimal 65 = <span style={{ fontFamily: 'monospace' }}>01000001</span>)!
+      </p>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
 // Componentes Auxiliares
 // -----------------------------------------------------------------------------
 function DeepStep({ label, desc, icon, color = 'rgba(255,255,255,0.1)' }: { label: string, desc: string, icon: React.ReactNode, color?: string }) {
@@ -391,15 +619,15 @@ function FlowArrow() {
 
 
 // -----------------------------------------------------------------------------
-// Componente: MultiByteBitView (Expanded Bit Blocks)
+// Componente: MultiByteBitView
 // -----------------------------------------------------------------------------
 function MultiByteBitView() {
   const [selected, setSelected] = useState<'char' | 'short' | 'float'>('char');
 
   const configs = {
-    char: { bytes: 1, label: 'char', color: '#fbbf24' },
-    short: { bytes: 2, label: 'short', color: '#4ade80' },
-    float: { bytes: 4, label: 'float', color: '#34d399' }
+    char: { bytes: 1, label: 'char', color: '#fbbf24', desc: 'Guarda um único caractere ou número de -128 a 127.' },
+    short: { bytes: 2, label: 'short', color: '#4ade80', desc: 'Inteiro de -32.768 a 32.767. Útil para economizar memória.' },
+    float: { bytes: 4, label: 'float', color: '#34d399', desc: 'Número com casas decimais com precisão de ~7 dígitos.' }
   };
 
   return (
@@ -441,15 +669,15 @@ function MultiByteBitView() {
         ))}
       </div>
       <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: 0 }}>
-        O tipo <strong>{configs[selected].label}</strong> ocupa {configs[selected].bytes} {configs[selected].bytes === 1 ? 'byte' : 'bytes'} na memória, 
-        totalizando <strong>{configs[selected].bytes * 8} bits</strong>.
+        O tipo <strong>{configs[selected].label}</strong> ocupa {configs[selected].bytes} {configs[selected].bytes === 1 ? 'byte' : 'bytes'} = <strong>{configs[selected].bytes * 8} bits</strong> na RAM.
+        <br/><span style={{ color: 'rgba(255,255,255,0.3)', marginTop: 4, display: 'block' }}>{configs[selected].desc}</span>
       </p>
     </div>
   );
 }
 
 // -----------------------------------------------------------------------------
-// Componente: PremiumErrorLab (Wrong vs Right Side-by-Side Scaled)
+// Componente: PremiumErrorLab
 // -----------------------------------------------------------------------------
 function PremiumErrorLab() {
   const [lang, setLang] = useState<'c' | 'python'>('c');
@@ -487,7 +715,6 @@ function PremiumErrorLab() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-      {/* Lang Selector */}
       <div style={{ display: 'flex', gap: 12, alignSelf: 'center', background: 'rgba(255,255,255,0.03)', padding: 6, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
         {['c', 'python'].map(l => (
           <button 
@@ -506,7 +733,6 @@ function PremiumErrorLab() {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
-        {/* Syntax Section Card */}
         <ErrorSectionCard 
           icon={<Zap size={20} color="#fbbf24" />}
           title="Regras e Gramática (Sintaxe)"
@@ -516,7 +742,6 @@ function PremiumErrorLab() {
           <ErrorCompareRow content={content[lang].syntax} />
         </ErrorSectionCard>
 
-        {/* Logic Section Card */}
         <ErrorSectionCard 
           icon={<Brain size={20} color="#a78bfa" />}
           title="Sentido e Raciocínio (Lógica)"
@@ -609,7 +834,7 @@ function ErrorCompareRow({ content }: { content: any }) {
 }
 
 // -----------------------------------------------------------------------------
-// Componente: PhraseTranslator (Scaled Up)
+// Componente: PhraseTranslator
 // -----------------------------------------------------------------------------
 function PhraseTranslator() {
   const [text, setText] = useState('Python');
@@ -633,14 +858,13 @@ function PhraseTranslator() {
                 {code.toString(2).padStart(8, '0')}
               </div>
               <div style={{ fontSize: 9, fontWeight: 900, color: 'rgba(255,255,255,0.2)', marginTop: 4, textTransform: 'uppercase' }}>
-                1 Byte
+                ASCII {code}
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Fluxo de Bits Brutos */}
       {text.length > 0 && (
         <div style={{ marginTop: 8, padding: '24px', background: 'rgba(0,0,0,0.2)', borderRadius: 20, border: '1px solid rgba(251,191,36,0.1)' }}>
           <div style={{ fontSize: 10, fontWeight: 900, color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', marginBottom: 12, letterSpacing: 1 }}>Fluxo de Bits no Barramento (Raw Stream)</div>
@@ -662,27 +886,60 @@ function PhraseTranslator() {
 }
 
 // -----------------------------------------------------------------------------
-// Componente: AsciiTool
+// Componente: AsciiTool — Bidirecional (Letra ↔ Número)
 // -----------------------------------------------------------------------------
 function AsciiTool() {
-  const [char, setChar] = useState('A');
-  const code = char.charCodeAt(0) || 0;
+  const [mode, setMode] = useState<'char' | 'num'>('char');
+  const [charInput, setCharInput] = useState('A');
+  const [numInput, setNumInput] = useState('65');
+
+  const fromChar = charInput.charCodeAt(0) || 0;
+  const fromNum = Math.min(127, Math.max(0, parseInt(numInput) || 0));
+  const fromNumChar = fromNum >= 32 ? String.fromCharCode(fromNum) : '(não imprimível)';
+  const fromNumBin = fromNum.toString(2).padStart(8, '0');
+  const fromCharBin = (charInput.charCodeAt(0) || 0).toString(2).padStart(8, '0');
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: 24, border: '1px solid rgba(255,255,255,0.05)' }}>
-      <input 
-        maxLength={1}
-        value={char}
-        onChange={e => setChar(e.target.value)}
-        style={{ 
-          width: 64, height: 64, fontSize: 32, textAlign: 'center', background: 'rgba(255,255,255,0.03)', 
-          border: '2px solid rgba(251,191,36,0.5)', borderRadius: 16, color: '#fbbf24', fontWeight: 900, outline: 'none'
-        }}
-      />
-      <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 4 }}>Código ASCII Unitário</div>
-        <div style={{ fontSize: 32, fontWeight: 900, color: '#fbbf24' }}>{code}</div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: 24, border: '1px solid rgba(255,255,255,0.05)' }}>
+      {/* Toggle de Modo */}
+      <div style={{ display: 'flex', gap: 8, background: 'rgba(255,255,255,0.03)', padding: 4, borderRadius: 10 }}>
+        <button onClick={() => setMode('char')} style={{ flex: 1, padding: '8px', borderRadius: 7, border: 'none', cursor: 'pointer', background: mode === 'char' ? 'rgba(255,255,255,0.1)' : 'transparent', color: mode === 'char' ? '#fbbf24' : 'rgba(255,255,255,0.3)', fontSize: 11, fontWeight: 900, transition: 'all 0.2s' }}>
+          Letra → Número
+        </button>
+        <button onClick={() => setMode('num')} style={{ flex: 1, padding: '8px', borderRadius: 7, border: 'none', cursor: 'pointer', background: mode === 'num' ? 'rgba(255,255,255,0.1)' : 'transparent', color: mode === 'num' ? '#60a5fa' : 'rgba(255,255,255,0.3)', fontSize: 11, fontWeight: 900, transition: 'all 0.2s' }}>
+          Número → Letra
+        </button>
       </div>
+
+      {mode === 'char' ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <input 
+            maxLength={1}
+            value={charInput}
+            onChange={e => setCharInput(e.target.value || 'A')}
+            style={{ width: 64, height: 64, fontSize: 32, textAlign: 'center', background: 'rgba(255,255,255,0.03)', border: '2px solid rgba(251,191,36,0.5)', borderRadius: 16, color: '#fbbf24', fontWeight: 900, outline: 'none' }}
+          />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 2 }}>Código ASCII → Binário</div>
+            <div style={{ fontSize: 28, fontWeight: 900, color: '#fbbf24' }}>{fromChar}</div>
+            <div style={{ fontFamily: 'monospace', fontSize: 14, color: 'rgba(251,191,36,0.6)', letterSpacing: 2 }}>{fromCharBin}</div>
+          </div>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <input 
+            type="number" min={0} max={127}
+            value={numInput}
+            onChange={e => setNumInput(e.target.value)}
+            style={{ width: 72, height: 64, fontSize: 22, textAlign: 'center', background: 'rgba(255,255,255,0.03)', border: '2px solid rgba(96,165,250,0.5)', borderRadius: 16, color: '#60a5fa', fontWeight: 900, outline: 'none' }}
+          />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 2 }}>Caractere → Binário</div>
+            <div style={{ fontSize: 28, fontWeight: 900, color: '#60a5fa' }}>{fromNumChar}</div>
+            <div style={{ fontFamily: 'monospace', fontSize: 14, color: 'rgba(96,165,250,0.6)', letterSpacing: 2 }}>{fromNumBin}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -694,11 +951,11 @@ function MemorySimulator() {
   const [active, setActive] = useState<null | string>(null);
   
   const types = [
-    { id: 'char', label: 'char', size: 1, color: '#fbbf24' },
-    { id: 'short', label: 'short', size: 2, color: '#4ade80' },
-    { id: 'float', label: 'float', size: 4, color: '#34d399' },
-    { id: 'int', label: 'int', size: 4, color: '#60a5fa' },
-    { id: 'long', label: 'long / double', size: 8, color: '#f472b6' },
+    { id: 'char', label: 'char', size: 1, color: '#fbbf24', desc: '1 gaveta' },
+    { id: 'short', label: 'short', size: 2, color: '#4ade80', desc: '2 gavetas' },
+    { id: 'float', label: 'float', size: 4, color: '#34d399', desc: '4 gavetas' },
+    { id: 'int', label: 'int', size: 4, color: '#60a5fa', desc: '4 gavetas' },
+    { id: 'long', label: 'long / double', size: 8, color: '#f472b6', desc: '8 gavetas' },
   ];
 
   const activeType = types.find(t => t.id === active);
@@ -708,7 +965,7 @@ function MemorySimulator() {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'minmax(140px, 160px) 1fr', gap: 32, padding: '32px', background: 'rgba(255,255,255,0.02)', borderRadius: 24, border: '1px solid rgba(255,255,255,0.1)' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 10, fontWeight: 900, color: 'rgba(255,255,255,0.2)', marginBottom: 4, textTransform: 'uppercase' }}>Alocação Teórica</div>
+        <div style={{ fontSize: 10, fontWeight: 900, color: 'rgba(255,255,255,0.2)', marginBottom: 4, textTransform: 'uppercase' }}>Clique para alocar</div>
         {types.map(t => (
           <button
             key={t.id}
@@ -724,7 +981,7 @@ function MemorySimulator() {
           >
             <span style={{ fontSize: 14 }}>{t.label}</span>
             <span style={{ fontSize: 10, opacity: 0.6, fontWeight: 900, textTransform: 'uppercase' }}>
-              {t.size} {t.size === 1 ? 'byte' : 'bytes'}
+              {t.size} {t.size === 1 ? 'byte' : 'bytes'} — {t.desc}
             </span>
           </button>
         ))}
@@ -737,11 +994,13 @@ function MemorySimulator() {
               width: '100%', aspectRatio: '1/1', borderRadius: 12,
               background: i < activeSize ? `${activeColor}20` : 'rgba(255,255,255,0.02)',
               border: `1px solid ${i < activeSize ? activeColor : 'rgba(255,255,255,0.04)'}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 10, fontWeight: 900, color: i < activeSize ? activeColor : 'rgba(255,255,255,0.05)'
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2,
+              fontSize: 9, fontWeight: 900, color: i < activeSize ? activeColor : 'rgba(255,255,255,0.1)',
+              transition: 'all 0.2s'
             }}
           >
-            {i < activeSize ? 'BYTE' : '0x' + i.toString(16).toUpperCase()}
+            <span style={{ fontSize: 7, opacity: 0.5 }}>{'0x' + i.toString(16).padStart(2,'0').toUpperCase()}</span>
+            {i < activeSize ? <span>BYTE</span> : <span>──</span>}
           </div>
         ))}
       </div>
