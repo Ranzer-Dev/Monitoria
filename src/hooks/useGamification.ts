@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { Language } from '../App';
 import { allPythonLists } from '../exerciseLists';
 import { allCLists } from '../exerciseListsC';
+import { allLogicLists } from '../exerciseListsLogic';
 
 export interface UserStats {
   xp: number;
@@ -9,6 +10,7 @@ export interface UserStats {
   streak: number;
   completedPython: string[]; // now stores 'listId-exId'
   completedC: string[];      // now stores 'listId-exId'
+  completedLogic: string[];  // NEW: support for logic challenges
   lastActive: string | null;
 }
 
@@ -18,14 +20,23 @@ const INITIAL_STATS: UserStats = {
   streak: 0,
   completedPython: [],
   completedC: [],
+  completedLogic: [],
   lastActive: null,
 };
 
 export function useGamification() {
   const [stats, setStats] = useState<UserStats>(() => {
-    // using v3 for the new multi-list string format
     const saved = localStorage.getItem('gamified_stats_v3');
-    return saved ? JSON.parse(saved) : INITIAL_STATS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Garante que novos campos (como completedLogic) existam mesmo em saves antigos
+        return { ...INITIAL_STATS, ...parsed };
+      } catch (e) {
+        return INITIAL_STATS;
+      }
+    }
+    return INITIAL_STATS;
   });
 
   useEffect(() => {
@@ -49,7 +60,7 @@ export function useGamification() {
   };
 
   const completeExercise = (listId: number, exId: number, language: Language, xpReward: number = 50) => {
-    const key = language === 'python' ? 'completedPython' : 'completedC';
+    const key = language === 'python' ? 'completedPython' : language === 'c' ? 'completedC' : 'completedLogic';
     const compoundId = `${listId}-${exId}`;
     if (stats[key].includes(compoundId)) return;
 
@@ -62,13 +73,13 @@ export function useGamification() {
   };
 
   const isCompleted = (listId: number, exId: number, language: Language) => {
-    const key = language === 'python' ? 'completedPython' : 'completedC';
+    const key = language === 'python' ? 'completedPython' : language === 'c' ? 'completedC' : 'completedLogic';
     const compoundId = `${listId}-${exId}`;
     return stats[key].includes(compoundId);
   };
 
   const isListCompleted = (listId: number, language: Language) => {
-    const lists = language === 'python' ? allPythonLists : allCLists;
+    const lists = language === 'python' ? allPythonLists : language === 'c' ? allCLists : allLogicLists;
     const list = lists.find(l => l.id === listId);
     if (!list) return false;
     
@@ -82,7 +93,7 @@ export function useGamification() {
   };
 
   const getListProgress = (listId: number, language: Language) => {
-    const lists = language === 'python' ? allPythonLists : allCLists;
+    const lists = language === 'python' ? allPythonLists : language === 'c' ? allCLists : allLogicLists;
     const list = lists.find(l => l.id === listId);
     if (!list) return { completed: 0, total: 0 };
     
@@ -90,7 +101,7 @@ export function useGamification() {
     return { completed: completedCount, total: list.exercises.length };
   };
 
-  const totalCompleted = stats.completedPython.length + stats.completedC.length;
+  const totalCompleted = stats.completedPython.length + stats.completedC.length + stats.completedLogic.length;
 
   const updateStreak = () => {
     const now = new Date().toISOString().split('T')[0];

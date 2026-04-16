@@ -8,14 +8,15 @@ import ErrorCatcher from './ErrorCatcher';
 import { useGamification } from './hooks/useGamification';
 import { allPythonLists } from './exerciseLists';
 import { allCLists } from './exerciseListsC';
+import { allLogicLists } from './exerciseListsLogic';
 
-export type Language = 'python' | 'c';
+export type Language = 'python' | 'c' | 'logic';
 
 function App() {
-  const { 
-    stats, totalCompleted, 
-    completeExercise, isCompleted, 
-    isListUnlocked, getListProgress 
+  const {
+    stats, totalCompleted,
+    completeExercise, isCompleted,
+    isListUnlocked, getListProgress
   } = useGamification();
   const [showConfetti, setShowConfetti] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
@@ -40,14 +41,17 @@ function App() {
         // Desligar o confete após alguns segundos
         setTimeout(() => setShowConfetti(false), 5000);
       }, 100);
-      
+
       prevCountRef.current = totalCompleted;
       return () => clearTimeout(timer);
     }
     prevCountRef.current = totalCompleted;
   }, [totalCompleted]);
 
-  const activeLists = language === 'python' ? allPythonLists : allCLists;
+  const activeLists =
+    language === 'python' ? allPythonLists :
+      language === 'c' ? allCLists :
+        allLogicLists;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -65,15 +69,15 @@ function App() {
       )}
       {showAuth && <AuthOverlay onClose={() => setShowAuth(false)} />}
 
-      <Header 
-        stats={stats} 
-        language={language} 
-        onLanguageChange={setLanguage} 
+      <Header
+        stats={stats}
+        language={language}
+        onLanguageChange={setLanguage}
         view={view}
         onViewChange={setView}
       />
 
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 md:px-8 py-8">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-4 md:px-8 pt-40 pb-8">
         {view === 'practice' ? (
           <ExercisesList
             key={language}

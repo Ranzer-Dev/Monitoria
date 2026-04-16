@@ -49,63 +49,90 @@ export default function Header({ stats, language, onLanguageChange, view, onView
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-white/5 glass">
-        <div className="max-w-4xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between gap-4">
+      <header
+        className="fixed top-0 left-0 right-0 w-full z-[100] border-b border-white/10 glass"
+        style={{ height: '54px' }}
+      >
+        <div className="max-w-6xl mx-auto px-4 md:px-8 h-full flex items-center justify-between gap-4" style={{ height: '100%' }}>
 
-          {/* Logo */}
-          <h1 style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', margin: 0, whiteSpace: 'nowrap' }}>&lt;/&gt;CodeQuest</h1>
+          {/* Left: Logo + Mobile XP */}
+          <div className="flex items-center gap-4">
+            <h1 style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', margin: 0, whiteSpace: 'nowrap' }}>&lt;/&gt;CodeQuest</h1>
 
-          {/* Mobile XP mini bar — bigger and separated */}
-          <div className="sm:hidden" style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 80, marginLeft: 12, paddingLeft: 12, borderLeft: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'hsl(263.4 70% 65%)' }}>LVL {stats.level}</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 3, color: 'hsl(263.4 70% 65%)' }}>
-                <Zap size={10} fill="currentColor" />
-                <span style={{ fontSize: 10, fontWeight: 900 }}>{stats.xp} XP</span>
+            {/* Mobile XP mini bar — bigger and separated */}
+            <div className="sm:hidden" style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 80, marginLeft: 12, paddingLeft: 12, borderLeft: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'hsl(263.4 70% 65%)' }}>LVL {stats.level}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 3, color: 'hsl(263.4 70% 65%)' }}>
+                  <Zap size={10} fill="currentColor" />
+                  <span style={{ fontSize: 10, fontWeight: 900 }}>{stats.xp} XP</span>
+                </div>
+              </div>
+              <div style={{ height: 5, width: '100%', background: 'rgba(255,255,255,0.06)', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${levelProgress}%`, background: 'hsl(263.4 70% 55%)', borderRadius: 99, transition: 'width 0.5s ease' }} />
               </div>
             </div>
-            <div style={{ height: 5, width: '100%', background: 'rgba(255,255,255,0.06)', borderRadius: 99, overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${levelProgress}%`, background: 'hsl(263.4 70% 55%)', borderRadius: 99, transition: 'width 0.5s ease' }} />
+          </div>
+
+          {/* Center: Mode Switcher + Language switcher */}
+          <div
+            className="absolute left-1/2 -translate-x-1/2 flex items-center pointer-events-none"
+            style={{ height: '96px' }}
+          >
+            {/* Mode Switcher - Centered exactly on the page */}
+            <div className="pointer-events-auto" style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px', borderRadius: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <button
+                onClick={() => onViewChange('practice')}
+                style={{
+                  padding: '6px 12px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6,
+                  background: view === 'practice' ? 'rgba(139,92,246,0.35)' : 'transparent',
+                  color: view === 'practice' ? '#a78bfa' : 'rgba(255,255,255,0.4)',
+                  border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, transition: 'all 0.2s',
+                  boxShadow: view === 'practice' ? '0 0 0 1px rgba(139,92,246,0.3)' : 'none'
+                }}
+              >
+                <CodeXml size={14} /> Missões
+              </button>
+              <button
+                onClick={() => onViewChange('theory')}
+                style={{
+                  padding: '6px 12px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6,
+                  background: view === 'theory' ? 'rgba(251,191,36,0.25)' : 'transparent',
+                  color: view === 'theory' ? '#fbbf24' : 'rgba(255,255,255,0.4)',
+                  border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, transition: 'all 0.2s',
+                  boxShadow: view === 'theory' ? '0 0 0 1px rgba(251,191,36,0.3)' : 'none'
+                }}
+              >
+                <BookOpen size={14} /> Aula Teórica
+              </button>
             </div>
+
+            {/* Language switcher — anchored to the right of the center, won't push the position */}
+            {view === 'practice' && (
+              <div
+                className="pointer-events-auto animate-in fade-in slide-in-from-left-4 duration-300"
+                style={{
+                  position: 'absolute',
+                  left: 'calc(100% + 48px)', // Large gap (48px) as requested
+                  whiteSpace: 'nowrap',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  padding: '4px',
+                  borderRadius: 12,
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)'
+                }}
+              >
+                <LangBtn active={language === 'python'} label="🐍 Python" onClick={() => onLanguageChange('python')} />
+                <LangBtn active={language === 'c'} label="⚙️ C" onClick={() => onLanguageChange('c')} />
+                <LangBtn active={language === 'logic'} label="🧠 Lógica" onClick={() => onLanguageChange('logic')} />
+              </div>
+            )}
           </div>
 
-          {/* Mode Switcher (Practice | Theory) */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px', borderRadius: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <button 
-              onClick={() => onViewChange('practice')}
-              style={{
-                padding: '6px 12px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6,
-                background: view === 'practice' ? 'rgba(139,92,246,0.35)' : 'transparent',
-                color: view === 'practice' ? '#a78bfa' : 'rgba(255,255,255,0.4)',
-                border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, transition: 'all 0.2s',
-                boxShadow: view === 'practice' ? '0 0 0 1px rgba(139,92,246,0.3)' : 'none'
-              }}
-            >
-              <CodeXml size={14} /> Missões
-            </button>
-            <button 
-              onClick={() => onViewChange('theory')}
-              style={{
-                padding: '6px 12px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6,
-                background: view === 'theory' ? 'rgba(251,191,36,0.25)' : 'transparent',
-                color: view === 'theory' ? '#fbbf24' : 'rgba(255,255,255,0.4)',
-                border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, transition: 'all 0.2s',
-                boxShadow: view === 'theory' ? '0 0 0 1px rgba(251,191,36,0.3)' : 'none'
-              }}
-            >
-              <BookOpen size={14} /> Aula Teórica
-            </button>
-          </div>
-
-          {/* Language switcher — centre */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px', borderRadius: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <LangBtn active={language === 'python'} label="🐍 Python" onClick={() => onLanguageChange('python')} />
-            <LangBtn active={language === 'c'} label="⚙️ C" onClick={() => onLanguageChange('c')} />
-          </div>
-
-          {/* Right side */}
+          {/* Right side: Search + Settings */}
           <div className="flex items-center gap-3">
-            {/* Desktop search */}
             <div className="relative group hidden sm:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={15} />
               <input
@@ -115,16 +142,14 @@ export default function Header({ stats, language, onLanguageChange, view, onView
               />
             </div>
 
-            {/* Gear button */}
             <button
               ref={buttonRef}
               onClick={handleGearClick}
               title="Opções"
-              className={`p-2 rounded-full transition-all duration-300 ${
-                dropdownOpen
-                  ? 'text-primary bg-primary/10 rotate-45'
-                  : 'text-muted-foreground hover:text-primary hover:bg-white/5'
-              }`}
+              className={`p-2 rounded-full transition-all duration-300 ${dropdownOpen
+                ? 'text-primary bg-primary/10 rotate-45'
+                : 'text-muted-foreground hover:text-primary hover:bg-white/5'
+                }`}
               style={{ transform: dropdownOpen ? 'rotate(45deg)' : 'rotate(0deg)' }}
             >
               <Settings size={22} />
@@ -210,9 +235,8 @@ export default function Header({ stats, language, onLanguageChange, view, onView
 function DropItem({ icon, label, active = false }: { icon: React.ReactNode; label: string; active?: boolean }) {
   return (
     <button
-      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-        active ? 'text-white' : 'text-white/60 hover:text-white'
-      }`}
+      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? 'text-white' : 'text-white/60 hover:text-white'
+        }`}
       style={active ? { background: 'rgba(139,92,246,0.35)', boxShadow: '0 0 0 1px rgba(139,92,246,0.25)' } : undefined}
       onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)'; }}
       onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.background = ''; }}

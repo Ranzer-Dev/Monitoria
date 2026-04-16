@@ -5,7 +5,7 @@ import CodeEditor from './CodeEditor';
 import { useInterpreter } from './hooks/useInterpreter';
 import { useCInterpreter } from './hooks/useCInterpreter';
 import { simulateAIAnalysis } from './aiSimulator';
-import { CheckCircle2, ChevronDown, Sword, BookOpen, Lightbulb, CodeXml, Trophy, ChevronRight, Lock, Play, Cpu, Terminal as TerminalIcon, Sparkles, Send } from 'lucide-react';
+import { CheckCircle2, ChevronDown, Sword, BookOpen, Lightbulb, CodeXml, Trophy, ChevronRight, Lock, Play, Cpu, Terminal as TerminalIcon, Sparkles, Send, HelpCircle, Eye, Zap } from 'lucide-react';
 
 function ExerciseCard({ exercise, index, completed, onComplete, language, listId }: {
   exercise: Exercise,
@@ -31,7 +31,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
   async function handleSubmission(currentCode: string) {
     setFeedback(null);
     setAiThinking(true);
-    
+
     // 1. Execução Real
     let executionOutput: string[] = [];
     if (language === 'python') {
@@ -43,18 +43,30 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
     // Pequeno delay para simular a IA "pensando"
     setTimeout(() => {
       const review = simulateAIAnalysis(currentCode, executionOutput, listId, exercise.id, language);
-      
+
       setAiThinking(false);
-      setFeedback({ 
-        msg: review.feedback, 
-        ok: review.approved, 
-        score: review.score 
+      setFeedback({
+        msg: review.feedback,
+        ok: review.approved,
+        score: review.score
       });
 
       if (review.approved && !completed) {
         onComplete();
       }
     }, 1500);
+  }
+
+  // Se for lógica, usamos uma UI de Quiz/Desafio
+  if (language === 'logic') {
+    return (
+      <LogicQuiz
+        exercise={exercise}
+        index={index}
+        completed={completed}
+        onComplete={onComplete}
+      />
+    );
   }
 
   return (
@@ -105,7 +117,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
         <div style={{
           position: 'absolute', right: 24, top: '50%', marginTop: -16,
           width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)' , transition: 'transform 0.3s ease'
+          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s ease'
         }}>
           <ChevronDown size={18} color="rgba(255,255,255,0.5)" />
         </div>
@@ -170,7 +182,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                     {exercise.lesson.steps.map((step: string, i: number) => <li key={i}>{step}</li>)}
                   </ul>
                 </div>
-                
+
                 <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 12 }}>
                   <h4 style={{ margin: '0 0 12px', fontSize: 13, textTransform: 'uppercase', color: '#f472b6', letterSpacing: 1 }}>4. Dicas Extras</h4>
                   <ul style={{ margin: 0, paddingLeft: 20, color: 'rgba(255,255,255,0.6)', fontSize: 13, lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -197,7 +209,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 20 }}>
                 {/* Lado Esquerdo: Editor */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <CodeEditor 
+                  <CodeEditor
                     onChange={(newCode) => setCode(newCode)}
                   />
                   {/* Botões de Ação Rápidos */}
@@ -217,7 +229,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                       onClick={() => handleSubmission(code)}
                       style={{
                         padding: '10px 20px', borderRadius: 10, background: '#8b5cf6', border: 'none',
-                        color: '#fff', fontSize: 13, fontWeight: 700, cursor: code.trim() ? 'pointer' : 'not-allowed', 
+                        color: '#fff', fontSize: 13, fontWeight: 700, cursor: code.trim() ? 'pointer' : 'not-allowed',
                         display: 'flex', alignItems: 'center', gap: 8, opacity: code.trim() ? 1 : 0.5,
                         boxShadow: code.trim() ? '0 4px 12px rgba(139,92,246,0.3)' : 'none',
                         transition: 'all 0.2s ease'
@@ -237,7 +249,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                 {/* Lado Direito: Console & Feedback IA */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {/* Terminal / Console */}
-                  <div style={{ 
+                  <div style={{
                     flex: 1, background: '#0a0a0c', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)',
                     display: 'flex', flexDirection: 'column', overflow: 'hidden'
                   }}>
@@ -245,7 +257,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                       <TerminalIcon size={14} color="rgba(255,255,255,0.4)" />
                       <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Console Output</span>
                     </div>
-                    <div style={{ 
+                    <div style={{
                       padding: '12px', flex: 1, fontFamily: 'monospace', fontSize: 13, color: '#4ade80', overflowY: 'auto',
                       minHeight: 120, maxHeight: 200, whiteSpace: 'pre-wrap'
                     }}>
@@ -254,7 +266,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                   </div>
 
                   {/* IA Analysis Feedback Panel */}
-                  <div style={{ 
+                  <div style={{
                     padding: '16px', borderRadius: 12, background: 'rgba(139,92,246,0.05)', border: '1px solid rgba(139,92,246,0.15)',
                     display: 'flex', flexDirection: 'column', gap: 12, position: 'relative', overflow: 'hidden'
                   }}>
@@ -303,14 +315,187 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
   );
 }
 
-export default function ExercisesList({ 
-  lists, 
+function LogicQuiz({ exercise, index, completed, onComplete }: {
+  exercise: Exercise,
+  index: number,
+  completed: boolean,
+  onComplete: () => void
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [feedback, setFeedback] = useState<{ msg: string; ok: boolean } | null>(null);
+
+  const handleCheck = () => {
+    if (selectedOption === exercise.answer) {
+      setFeedback({ msg: "Correto! Você pensou exatamente como o computador. 🎉", ok: true });
+      if (!completed) onComplete();
+    } else {
+      setFeedback({ msg: "Ainda não... Tente analisar o passo a passo para entender a lógica! ❌", ok: false });
+    }
+  };
+
+  return (
+    <div style={{
+      background: completed ? 'rgba(34,197,94,0.05)' : 'rgba(30, 30, 36, 0.4)',
+      border: completed ? '1px solid rgba(34, 197, 94, 0.2)' : '1px solid rgba(255, 255, 255, 0.05)',
+      borderRadius: 16, overflow: 'hidden', transition: 'all 0.2s ease',
+    }}>
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{ width: '100%', background: 'none', border: 'none', padding: '24px', display: 'flex', alignItems: 'center', cursor: 'pointer', textAlign: 'left' }}
+      >
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 1 }}>DESAFIO {index + 1}</span>
+            {completed && <span style={{ fontSize: 11, fontWeight: 900, color: '#4ade80', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12, textTransform: 'uppercase' }}>Resolvido</span>}
+          </div>
+          <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <HelpCircle size={20} color={completed ? "#4ade80" : "#c026d3"} />
+            {exercise.title}
+          </h3>
+        </div>
+        <ChevronDown size={20} color="rgba(255,255,255,0.3)" style={{ transform: isExpanded ? 'rotate(180deg)' : 'none', transition: '0.3s' }} />
+      </button>
+
+      {isExpanded && (
+        <div style={{ padding: '0 24px 24px', display: 'flex', flexDirection: 'column', gap: 24, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ marginTop: 24, padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.05)' }}>
+            <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: '#e2e8f0', whiteSpace: 'pre-wrap' }}>{exercise.description}</p>
+          </div>
+
+          <div style={{ display: 'grid', gap: 12 }}>
+            {exercise.options?.map((opt) => (
+              <button
+                key={opt}
+                onClick={() => { setSelectedOption(opt[0]); setFeedback(null); }}
+                style={{
+                  padding: '16px 20px', borderRadius: 12, textAlign: 'left', border: 'none', cursor: 'pointer',
+                  background: selectedOption === opt[0] ? 'rgba(192, 38, 211, 0.2)' : 'rgba(255,255,255,0.03)',
+                  borderLeft: selectedOption === opt[0] ? '4px solid #c026d3' : '4px solid transparent',
+                  color: selectedOption === opt[0] ? '#fff' : 'rgba(255,255,255,0.5)',
+                  fontSize: 14, fontWeight: 600, transition: 'all 0.2s'
+                }}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={handleCheck}
+              disabled={!selectedOption}
+              style={{
+                padding: '12px 28px', borderRadius: 12, background: '#c026d3', color: '#fff', border: 'none',
+                fontWeight: 800, cursor: selectedOption ? 'pointer' : 'not-allowed', opacity: selectedOption ? 1 : 0.5,
+                boxShadow: selectedOption ? '0 4px 12px rgba(192,38,211,0.3)' : 'none'
+              }}
+            >
+              Verificar Resposta
+            </button>
+
+            <button
+              onClick={() => { setShowHint(!showHint); if (!showHint) setShowExplanation(false); }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
+                color: '#fbbf24', padding: '10px 16px', borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              <Zap size={16} /> {showHint ? 'Esconder Pista' : '💡 Pedir Pista'}
+            </button>
+
+            <button
+              onClick={() => { setShowExplanation(!showExplanation); if (!showExplanation) setShowHint(false); }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
+                color: '#a78bfa', padding: '10px 16px', borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              <Eye size={16} /> {showExplanation ? 'Esconder Explicação' : '🔍 Raio-X do Código'}
+            </button>
+          </div>
+
+          {showHint && exercise.tips && (
+            <div className="animate-in fade-in slide-in-from-top-2 duration-300" style={{ 
+              padding: '20px', background: 'rgba(251,191,36,0.05)', borderRadius: 16, border: '1px solid rgba(251,191,36,0.2)',
+              display: 'flex', flexDirection: 'column', gap: 12
+            }}>
+              <h4 style={{ margin: 0, fontSize: 12, fontWeight: 900, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: 1 }}>💡 Pista do Monitor:</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {exercise.tips.map((tip, i) => (
+                  <p key={i} style={{ margin: 0, fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5 }}>{tip}</p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {feedback && (
+            <div style={{
+              padding: '16px', borderRadius: 12,
+              background: feedback.ok ? 'rgba(74,222,128,0.1)' : 'rgba(239,68,68,0.1)',
+              border: `1px solid ${feedback.ok ? '#4ade80' : '#ef4444'}`,
+              color: feedback.ok ? '#4ade80' : '#fca5a5', fontSize: 14, fontWeight: 600
+            }}>
+              {feedback.msg}
+            </div>
+          )}
+
+          {showExplanation && exercise.lesson.explanation && (
+            <div className="animate-in zoom-in-95 duration-300" style={{ 
+              display: 'flex', flexDirection: 'column', gap: 16, padding: '24px', 
+              background: 'rgba(139,92,246,0.03)', borderRadius: 20, border: '1px solid rgba(139,92,246,0.15)',
+              boxShadow: 'inset 0 0 40px rgba(139,92,246,0.05)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                <h4 style={{ margin: 0, fontSize: 12, fontWeight: 900, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: 1.5 }}>🔍 Raio-X do Código:</h4>
+                <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(167,139,250,0.5)', background: 'rgba(167,139,250,0.1)', padding: '2px 8px', borderRadius: 6 }}>MODO DEBUG</div>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {exercise.lesson.explanation.map((step, i) => (
+                  <div key={i} style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'minmax(120px, auto) 1fr', 
+                    gap: 20, 
+                    padding: '12px 16px', 
+                    background: 'rgba(255,255,255,0.02)', 
+                    borderRadius: 12,
+                    border: '1px solid rgba(255,255,255,0.03)',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ 
+                      fontFamily: 'monospace', fontSize: 13, fontWeight: 700, color: '#fff',
+                      padding: '4px 10px', background: 'rgba(0,0,0,0.3)', borderRadius: 6,
+                      borderLeft: '3px solid #a78bfa', whiteSpace: 'nowrap'
+                    }}>
+                      {step.line}
+                    </div>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
+                      {step.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function ExercisesList({
+  lists,
   language,
-  completeExercise, 
+  completeExercise,
   isCompleted,
   isListUnlocked,
   getListProgress
-}: { 
+}: {
   lists: ExerciseListDef[];
   language: Language;
   completeExercise: (listId: number, exId: number, xp: number) => void;
@@ -324,18 +509,19 @@ export default function ExercisesList({
   const activeList = lists.find(l => l.id === activeListId) || lists[0];
 
   return (
-    <div style={{ 
-      maxWidth: '1200px', 
-      margin: '0 auto', 
-      width: '100%', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      gap: 32, 
-      paddingBottom: 60 
+    <div style={{
+      maxWidth: '1200px',
+      margin: '0 auto',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 32,
+      paddingBottom: 60,
+      marginTop: '4%'
     }}>
       {/* 📚 Seção de Conceitos Fundamentais (Apenas da Lista Ativa) */}
       {activeList.fundamentals.length > 0 && (
-        <div style={{ 
+        <div style={{
           background: 'linear-gradient(145deg, rgba(251,191,36,0.1) 0%, rgba(217,119,6,0.05) 100%)',
           border: '1px solid rgba(251,191,36,0.2)',
           borderRadius: 20,
@@ -364,10 +550,10 @@ export default function ExercisesList({
                 </p>
               </div>
             </div>
-            <div style={{ 
-               position: 'absolute', right: 24, top: '50%', marginTop: -16,
-               width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-               transform: showFundamentals ? 'rotate(180deg)' : 'rotate(0)' , transition: 'transform 0.3s ease'
+            <div style={{
+              position: 'absolute', right: 24, top: '50%', marginTop: -16,
+              width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transform: showFundamentals ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s ease'
             }}>
               <ChevronDown size={18} color="#fbbf24" />
             </div>
@@ -404,15 +590,15 @@ export default function ExercisesList({
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
           <Sword size={24} color="#8b5cf6" />
           <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: '#fff' }}>
-            {language === 'python' ? '🐍 Missões — Python' : '⚙️ Missões — Linguagem C'}
+            {language === 'python' ? '🐍 Missões — Python' : language === 'c' ? '⚙️ Missões — Linguagem C' : '🧠 Desafios de Lógica'}
           </h2>
         </div>
 
         {/* Tab Menu das Listas */}
         <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, scrollbarWidth: 'none', justifyContent: 'center' }}>
           {lists.map((list) => {
-            const unlocked = isListUnlocked(list.id);
-            const { completed, total } = getListProgress(list.id);
+            const unlocked = isListUnlocked(list.id, language);
+            const { completed, total } = getListProgress(list.id, language);
             const isFullyDone = completed === total && total > 0;
             const isActive = list.id === activeListId;
 
@@ -435,10 +621,10 @@ export default function ExercisesList({
                 {!unlocked ? <Lock size={16} /> : isFullyDone ? <CheckCircle2 size={16} /> : <span>{list.icon}</span>}
                 <span>Lista {list.id}</span>
                 {unlocked && (
-                  <span style={{ 
-                    marginLeft: 4, fontSize: 12, 
-                    background: isActive ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.1)', 
-                    padding: '2px 8px', borderRadius: 12 
+                  <span style={{
+                    marginLeft: 4, fontSize: 12,
+                    background: isActive ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.1)',
+                    padding: '2px 8px', borderRadius: 12
                   }}>
                     {completed}/{total}
                   </span>

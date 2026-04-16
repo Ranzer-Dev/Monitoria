@@ -2,15 +2,24 @@ export type Lesson = {
   concept: string;
   example: string;
   steps: string[];
+  explanation?: { // Para o "Passo a Passo"
+    line: string;
+    text: string;
+  }[];
 };
 
 export type Exercise = {
-  id: number; // Will change to number inside list
+  id: number;
   title: string;
   description: string;
   tips: string[];
   lesson: Lesson;
+  // Novos campos para desafios de lógica (múltipla escolha)
+  options?: string[];
+  answer?: string;
 };
+
+export type Language = 'python' | 'c' | 'logic';
 
 export type Fundamental = {
   id: string;
