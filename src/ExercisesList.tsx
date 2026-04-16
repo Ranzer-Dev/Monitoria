@@ -597,8 +597,8 @@ export default function ExercisesList({
         {/* Tab Menu das Listas */}
         <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, scrollbarWidth: 'none', justifyContent: 'center' }}>
           {lists.map((list) => {
-            const unlocked = isListUnlocked(list.id, language);
-            const { completed, total } = getListProgress(list.id, language);
+            const unlocked = isListUnlocked(list.id);
+            const { completed, total } = getListProgress(list.id);
             const isFullyDone = completed === total && total > 0;
             const isActive = list.id === activeListId;
 

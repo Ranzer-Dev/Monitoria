@@ -1383,7 +1383,7 @@ function LogicGateShape({ type, active }: { type: 'AND' | 'OR' | 'NOT', active: 
 
   return (
     <div style={{
-      position: 'relative', width: 90, height: 70, border: `2px solid ${color}`,
+      position: 'relative', height: 70, border: `2px solid ${color}`,
       background: active ? 'rgba(74, 222, 128, 0.05)' : 'rgba(255,255,255,0.02)',
       borderRadius: type === 'AND' ? '0 35px 35px 0' : type === 'OR' ? '10px 45px 45px 10px' : '0',
       clipPath: type === 'OR' ? 'polygon(0% 0%, 20% 0%, 100% 50%, 20% 100%, 0% 100%, 15% 50%)' : undefined,
