@@ -1,12 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-
 export const config = {
   runtime: 'edge',
 };
 
-export default async function handler(req: NextRequest) {
+export default async function handler(req: Request) {
   if (req.method !== 'POST') {
-    return new NextResponse('Method Not Allowed', { status: 405 });
+    return new Response('Method Not Allowed', { status: 405 });
   }
 
   try {
@@ -38,7 +36,7 @@ export default async function handler(req: NextRequest) {
       const data = await response.json();
       if (!response.ok) throw new Error(`Groq API Error: ${JSON.stringify(data)}`);
       
-      return new NextResponse(data.choices[0]?.message?.content);
+      return new Response(data.choices[0]?.message?.content);
     }
 
     // 2. SEGUNDA OPÇÃO: GEMINI (Se configurado no Vercel)
@@ -65,17 +63,20 @@ export default async function handler(req: NextRequest) {
       if (!response.ok) throw new Error(`Gemini API Error: ${JSON.stringify(data)}`);
       
       const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      return new NextResponse(rawText);
+      return new Response(rawText);
     }
 
     // 3. FALHA: Nenhuma chave configurada
-    return NextResponse.json(
-      { error: 'Configuração Incompleta: Adicione GROQ_API_KEY ou GEMINI_API_KEY nas variáveis de ambiente da Vercel.' }, 
-      { status: 500 }
+    return new Response(
+      JSON.stringify({ error: 'Configuração Incompleta: Adicione GROQ_API_KEY ou GEMINI_API_KEY nas variáveis de ambiente da Vercel.' }), 
+      { status: 500, headers: { 'content-type': 'application/json' } }
     );
 
   } catch (error: any) {
     console.error('Proxy Error:', error.message);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return new Response(
+      JSON.stringify({ error: error.message }), 
+      { status: 500, headers: { 'content-type': 'application/json' } }
+    );
   }
 }
