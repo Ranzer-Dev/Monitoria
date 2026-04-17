@@ -1,6 +1,8 @@
 export type Lesson = {
   concept: string;
   example: string;
+  instructions?: string;
+  expectedOutput?: string;
   steps: string[];
   explanation?: { // Para o "Passo a Passo"
     line: string;
@@ -14,9 +16,11 @@ export type Exercise = {
   description: string;
   tips: string[];
   lesson: Lesson;
+  initialCode?: string; // Código inicial para o editor
   // Novos campos para desafios de lógica (múltipla escolha)
   options?: string[];
-  answer?: string;
+  correctAnswer?: string;
+  answer?: string; // Mantido para compatibilidade com dados existentes
 };
 
 export type Language = 'python' | 'c' | 'logic';

@@ -5,7 +5,7 @@ export function useCInterpreter() {
   const [output, setOutput] = useState<string[]>([]);
   const isInitializing = false; // kept for interface compatibility
 
-  const runC = useCallback(async (code: string) => {
+  const runC = useCallback(async (code: string, stdin: string = "") => {
     setIsLoading(true);
     setOutput([]);
     
@@ -19,6 +19,7 @@ export function useCInterpreter() {
         body: JSON.stringify({
           compiler: "gcc-head",
           code: code,
+          stdin: stdin,
           save: false
         })
       });

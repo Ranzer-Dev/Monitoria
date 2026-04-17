@@ -13,7 +13,6 @@ export function useInterpreter() {
     setIsInitializing(true);
     try {
       const pyodide = await loadPyodide({
-        // Using CDN for simplicity and smaller local bundle
         indexURL: "https://cdn.jsdelivr.net/pyodide/v0.29.3/full/"
       });
       pyodideRef.current = pyodide;
@@ -41,29 +40,43 @@ export function useInterpreter() {
     
     // Redirect stdout to our local array
     pyodide.setStdout({
-      write: (buffer) => {
+      write: (buffer: Uint8Array) => {
         const text = new TextDecoder().decode(buffer);
-        logs.push(text.trim());
+        const parts = text.split('\n');
+        parts.forEach((part, index) => {
+          if (part.trim() || index < parts.length - 1) {
+            logs.push(part.trim());
+          }
+        });
         setOutput([...logs]);
         return buffer.length;
       }
     });
 
-    try {
-      // Small hack to handle input() - Pyodide doesn't support blocking input() by default
-      if (code.includes('input(')) {
-        logs.push("⚠️ Aviso: input() simulado retornando vazio.");
-        await pyodide.runPythonAsync(`
-def input(msg=""):
-    print(msg)
-    return "0"
-        `);
+    // 2. Real input() bridge using window.prompt
+    pyodide.setStdin({
+      read: (buffer: Uint8Array) => {
+        const input = window.prompt("O programa está esperando um dado (input):") || "";
+        const encoded = new TextEncoder().encode(input + "\n");
+        // We must copy the data into the buffer provided by Pyodide
+        buffer.set(encoded);
+        return encoded.length;
       }
+    });
 
+    try {
       await pyodide.runPythonAsync(code);
     } catch (err: any) {
-      logs.push(`❌ Erro de Execução: ${err.message}`);
-      setOutput(prev => [...prev, `❌ Erro de Execução: ${err.message}`]);
+      const cleanError = (msg: string) => {
+        return msg
+          .split('\n')
+          .filter(line => !line.includes('_pyodide') && !line.includes('/lib/python'))
+          .join('\n')
+          .trim();
+      };
+      const finalMsg = cleanError(err.message);
+      logs.push(finalMsg);
+      setOutput(prev => [...prev, finalMsg]);
     } finally {
       setIsLoading(false);
     }

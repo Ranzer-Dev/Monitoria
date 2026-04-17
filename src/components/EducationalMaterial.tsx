@@ -53,7 +53,7 @@ export default function EducationalMaterial() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
 
           {/* Seção: O Transistor */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 32, alignItems: 'start' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <h4 style={{ margin: 0, fontSize: 14, fontWeight: 900, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: 1 }}>⚡ O Transistor: A Chave de Tudo</h4>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, margin: 0 }}>
@@ -158,7 +158,7 @@ export default function EducationalMaterial() {
         icon={<Binary size={20} color="#fbbf24" />}
         accentColor="#fbbf24"
       >
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) 1px minmax(0, 1fr)', gap: 40, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1px 1fr', gap: 40, alignItems: 'start' }}>
           {/* LADO ESQUERDO: TRADUTORES */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingBottom: 10 }}>
@@ -252,8 +252,8 @@ export default function EducationalMaterial() {
               Imagine um armário gigante com <strong>milhões de gavetas numeradas</strong>, e cada gaveta guarda exatamente <strong>1 byte</strong> de informação.
               Quando o sistema operacional abre seu programa, ele reserva algumas dessas gavetas para guardar os dados que você vai usar.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
-              <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+              <div style={{ flex: '1 1 200px', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)' }}>
                 <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 1 }}>Exemplo em C</div>
                 <code style={{ fontSize: 13, fontFamily: 'monospace', color: '#4ade80', lineHeight: 1.8 }}>
                   int x = 10;<br />
@@ -261,7 +261,7 @@ export default function EducationalMaterial() {
                   <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>// Endereços: 0x00 a 0x03</span>
                 </code>
               </div>
-              <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ flex: '1 1 200px', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)' }}>
                 <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 1 }}>Exemplo em Python</div>
                 <code style={{ fontSize: 13, fontFamily: 'monospace', color: '#fbbf24', lineHeight: 1.8 }}>
                   x = 10<br />
@@ -305,8 +305,8 @@ export default function EducationalMaterial() {
 
           <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(400px, 1fr) 1fr', gap: 40, alignItems: 'start' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 32, alignItems: 'start' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24, minWidth: 0, overflow: 'hidden' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <Layers size={18} color="#60a5fa" />
                 <h4 style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#60a5fa', textTransform: 'uppercase' }}>Profundidade de Bits por Tipo</h4>
@@ -316,7 +316,9 @@ export default function EducationalMaterial() {
               </p>
               <MultiByteBitView />
             </div>
-            <MemorySimulator />
+            <div style={{ minWidth: 0, overflow: 'hidden' }}>
+              <MemorySimulator />
+            </div>
           </div>
         </div>
       </TheoryCard>
@@ -431,7 +433,7 @@ export default function EducationalMaterial() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
             <h4 style={{ margin: 0, fontSize: 14, fontWeight: 900, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', textAlign: 'center', letterSpacing: 2 }}>A Anatomia da Execução</h4>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 50 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 50 }}>
               {/* Fluxo C Detalhado */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -486,7 +488,7 @@ export default function EducationalMaterial() {
               <h5 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: '#fff' }}>Simulador de Debug: Parando o Tempo</h5>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)', gap: 32 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 32 }}>
               {/* Código com Breakpoint */}
               <div style={{ background: '#0a0a0c', borderRadius: 24, border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden' }}>
                 <div style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.03)', fontSize: 10, fontWeight: 900, color: 'rgba(255,255,255,0.3)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>EDITOR DE CÓDIGO (PAUSADO)</div>
@@ -1164,7 +1166,16 @@ function MemorySimulator() {
   const activeColor = activeType?.color || '#fff';
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(140px, 160px) 1fr', gap: 32, padding: '32px', background: 'rgba(255,255,255,0.02)', borderRadius: 24, border: '1px solid rgba(255,255,255,0.1)' }}>
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: 'minmax(100px, 120px) 1fr', 
+      gap: 12, 
+      padding: '16px', 
+      background: 'rgba(255,255,255,0.02)', 
+      borderRadius: 24, 
+      border: '1px solid rgba(255,255,255,0.1)',
+      minWidth: 0
+    }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div style={{ fontSize: 10, fontWeight: 900, color: 'rgba(255,255,255,0.2)', marginBottom: 4, textTransform: 'uppercase' }}>Clique para alocar</div>
         {types.map(t => (
@@ -1172,22 +1183,22 @@ function MemorySimulator() {
             key={t.id}
             onClick={() => setActive(t.id)}
             style={{
-              padding: '16px', borderRadius: 16, textAlign: 'left',
+              padding: '12px', borderRadius: 12, textAlign: 'left',
               background: active === t.id ? `${t.color}15` : 'rgba(255,255,255,0.03)',
               border: `1px solid ${active === t.id ? t.color : 'rgba(255,255,255,0.05)'}`,
               color: active === t.id ? t.color : 'rgba(255,255,255,0.4)',
-              fontSize: 13, fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s',
-              display: 'flex', flexDirection: 'column', gap: 4
+              fontSize: 12, fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s',
+              display: 'flex', flexDirection: 'column', gap: 2
             }}
           >
-            <span style={{ fontSize: 14 }}>{t.label}</span>
+            <span style={{ fontSize: 13 }}>{t.label}</span>
             <span style={{ fontSize: 10, opacity: 0.6, fontWeight: 900, textTransform: 'uppercase' }}>
               {t.size} {t.size === 1 ? 'byte' : 'bytes'} — {t.desc}
             </span>
           </button>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
         {Array.from({ length: 16 }).map((_, i) => (
           <div
             key={i}
@@ -1201,7 +1212,7 @@ function MemorySimulator() {
             }}
           >
             <span style={{ fontSize: 7, opacity: 0.5 }}>{'0x' + i.toString(16).padStart(2, '0').toUpperCase()}</span>
-            {i < activeSize ? <span>BYTE</span> : <span>──</span>}
+            {i < activeSize ? <span>B</span> : <span>──</span>}
           </div>
         ))}
       </div>

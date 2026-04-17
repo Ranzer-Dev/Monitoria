@@ -4,8 +4,8 @@ import type { Exercise, ExerciseListDef } from './types';
 import CodeEditor from './CodeEditor';
 import { useInterpreter } from './hooks/useInterpreter';
 import { useCInterpreter } from './hooks/useCInterpreter';
-import { simulateAIAnalysis } from './aiSimulator';
-import { CheckCircle2, ChevronDown, Sword, BookOpen, Lightbulb, CodeXml, Trophy, ChevronRight, Lock, Play, Cpu, Terminal as TerminalIcon, Sparkles, Send, HelpCircle, Eye, Zap } from 'lucide-react';
+import { getAIReview, getApiKey, setApiKey } from './services/aiService';
+import { Settings, CheckCircle2, ChevronDown, Sword, BookOpen, Lightbulb, CodeXml, Trophy, ChevronRight, Lock, Cpu } from 'lucide-react';
 
 function ExerciseCard({ exercise, index, completed, onComplete, language, listId }: {
   exercise: Exercise,
@@ -19,31 +19,28 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
   const [activeTab, setActiveTab] = useState<'lesson' | 'editor'>('lesson');
   const [feedback, setFeedback] = useState<{ msg: string; ok: boolean; score?: number } | null>(null);
   const [aiThinking, setAiThinking] = useState(false);
-  const [code, setCode] = useState("");
-  const { runPython, output: pyOutput, isLoading: pyLoading, isInitializing: pyInit } = useInterpreter();
-  const { runC, output: cOutput, isLoading: cLoading, isInitializing: cInit } = useCInterpreter();
+  const { runPython, isInitializing: isPyInitializing } = useInterpreter();
+  const { runC } = useCInterpreter();
 
-  const output = language === 'python' ? pyOutput : cOutput;
-  const isLoading = language === 'python' ? pyLoading : cLoading;
-  const isInitializing = language === 'python' ? pyInit : cInit;
+  const isInitializing = language === 'python' ? isPyInitializing : false;
 
-  // Função para executar a lógica da IA Simulation
   async function handleSubmission(currentCode: string) {
     setFeedback(null);
     setAiThinking(true);
 
-    // 1. Execução Real
     let executionOutput: string[] = [];
     if (language === 'python') {
       executionOutput = (await runPython(currentCode)) ?? [];
-    } else {
-      executionOutput = await runC(currentCode);
+    } else if (language === 'c') {
+      let stdin = "";
+      if (currentCode.includes('scanf')) {
+        stdin = window.prompt("O programa possui 'scanf'. Digite os valores de entrada (separe por espaços):") || "";
+      }
+      executionOutput = await runC(currentCode, stdin);
     }
 
-    // Pequeno delay para simular a IA "pensando"
-    setTimeout(() => {
-      const review = simulateAIAnalysis(currentCode, executionOutput, listId, exercise.id, language);
-
+    try {
+      const review = await getAIReview(currentCode, executionOutput, exercise, language, listId);
       setAiThinking(false);
       setFeedback({
         msg: review.feedback,
@@ -54,436 +51,214 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
       if (review.approved && !completed) {
         onComplete();
       }
-    }, 1500);
+    } catch (err) {
+      setAiThinking(false);
+      console.error(err);
+    }
   }
 
-  // Se for lógica, usamos uma UI de Quiz/Desafio
   if (language === 'logic') {
     return (
-      <LogicQuiz
-        exercise={exercise}
-        index={index}
-        completed={completed}
-        onComplete={onComplete}
-      />
+      <div style={{
+        background: 'rgba(255,255,255,0.03)',
+        borderRadius: 20,
+        padding: 24,
+        border: '1px solid rgba(255,255,255,0.05)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 20
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
+              {index + 1}
+            </div>
+            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#f3f4f6' }}>{exercise.title}</h3>
+          </div>
+          {completed && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#10b981', fontSize: 13, background: 'rgba(16,185,129,0.1)', padding: '6px 12px', borderRadius: 20, border: '1px solid rgba(16,185,129,0.2)' }}>
+              <CheckCircle2 size={16} />
+              <span>Concluído</span>
+            </div>
+          )}
+        </div>
+
+        <div style={{ background: 'rgba(0,0,0,0.2)', padding: 20, borderRadius: 16, border: '1px solid rgba(255,255,255,0.03)' }}>
+           <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', fontSize: 15 }}>{exercise.description}</p>
+        </div>
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+          {exercise.options?.map((opt, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                if (opt === exercise.correctAnswer) {
+                  onComplete();
+                } else {
+                  alert("Tente novamente!");
+                }
+              }}
+              style={{
+                background: 'rgba(139, 92, 246, 0.1)',
+                border: '1px solid rgba(139, 92, 246, 0.2)',
+                color: '#fff',
+                padding: '12px 24px',
+                borderRadius: 12,
+                cursor: 'pointer',
+                fontSize: 14,
+                transition: 'all 0.2s',
+              }}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      </div>
     );
   }
 
   return (
-    <div
-      style={{
-        background: completed ? 'rgba(34,197,94,0.05)' : 'rgba(30, 30, 36, 0.4)',
-        border: completed ? '1px solid rgba(34, 197, 94, 0.2)' : '1px solid rgba(255, 255, 255, 0.05)',
-        borderRadius: 16,
-        overflow: 'hidden',
-        transition: 'all 0.2s ease',
-      }}
-    >
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        style={{
-          width: '100%',
-          background: 'none',
-          border: 'none',
-          padding: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          textAlign: 'center',
-          position: 'relative'
-        }}
-      >
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 8 }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 1 }}>MISSÃO {index + 1}</span>
-            {completed && <span style={{ fontSize: 12, fontWeight: 600, color: '#4ade80', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12 }}>Concluída</span>}
-          </div>
-          <h3 style={{ margin: '0 0 8px', fontSize: 20, fontWeight: 700, color: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-            <div style={{
-              width: 32, height: 32, borderRadius: '50%',
-              background: completed ? 'rgba(34, 197, 94, 0.1)' : 'rgba(139, 92, 246, 0.1)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            }}>
-              {completed ? <CheckCircle2 size={18} color="#4ade80" /> : <Trophy size={16} color="#8b5cf6" />}
-            </div>
-            {exercise.title}
-          </h3>
-          <p style={{ margin: '0 auto', fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, maxWidth: 600 }}>
-            {exercise.description}
-          </p>
-        </div>
-
-        <div style={{
-          position: 'absolute', right: 24, top: '50%', marginTop: -16,
-          width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s ease'
-        }}>
-          <ChevronDown size={18} color="rgba(255,255,255,0.5)" />
-        </div>
-      </button>
-
-      {isExpanded && (
-        <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
-          {/* Tabs: Mini Aula | Editor */}
-          <div style={{ display: 'flex', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-            <button
-              onClick={() => setActiveTab('lesson')}
-              style={{
-                flex: 1, padding: '16px', background: activeTab === 'lesson' ? 'rgba(255,255,255,0.03)' : 'transparent',
-                border: 'none', borderBottom: activeTab === 'lesson' ? '2px solid #fbbf24' : '2px solid transparent',
-                color: activeTab === 'lesson' ? '#fbbf24' : 'rgba(255,255,255,0.4)',
-                fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
-              }}
-            >
-              <Lightbulb size={18} /> Mini Aula
-            </button>
-            <button
-              onClick={() => setActiveTab('editor')}
-              style={{
-                flex: 1, padding: '16px', background: activeTab === 'editor' ? 'rgba(255,255,255,0.03)' : 'transparent',
-                border: 'none', borderBottom: activeTab === 'editor' ? '2px solid #8b5cf6' : '2px solid transparent',
-                color: activeTab === 'editor' ? '#a78bfa' : 'rgba(255,255,255,0.4)',
-                fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
-              }}
-            >
-              <CodeXml size={18} /> Resolva Aqui
-            </button>
-          </div>
-
-          {/* Tab: Lesson */}
-          {activeTab === 'lesson' && (
-            <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-              <div style={{ padding: '16px', background: 'rgba(0,0,0,0.2)', borderRadius: 12, borderLeft: '4px solid #fbbf24' }}>
-                <h4 style={{ margin: '0 0 8px', fontSize: 13, textTransform: 'uppercase', color: '#fbbf24', letterSpacing: 1 }}>1. O que você precisa saber</h4>
-                <p style={{ margin: 0, fontSize: 14, lineHeight: '1.6', color: 'rgba(255,255,255,0.8)' }}>
-                  {exercise.lesson.concept}
-                </p>
-              </div>
-
-              <div>
-                <h4 style={{ margin: '0 0 12px', fontSize: 13, textTransform: 'uppercase', color: '#60a5fa', letterSpacing: 1 }}>2. Exemplo de Código</h4>
-                <div style={{ background: '#111', padding: '16px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <code style={{ fontFamily: 'monospace', fontSize: 13, lineHeight: '1.6', color: '#4ade80' }}>
-                    {exercise.lesson.example.split('\n').map((line: string, i: number) => {
-                      const isComment = line.trim().startsWith(language === 'python' ? '#' : '//');
-                      return (
-                        <div key={i} style={{ whiteSpace: 'pre', color: isComment ? '#94a3b8' : '#e2e8f0' }}>{line || ' '}</div>
-                      );
-                    })}
-                  </code>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 12 }}>
-                  <h4 style={{ margin: '0 0 12px', fontSize: 13, textTransform: 'uppercase', color: '#a78bfa', letterSpacing: 1 }}>3. Passo a Passo</h4>
-                  <ul style={{ margin: 0, paddingLeft: 20, color: 'rgba(255,255,255,0.6)', fontSize: 13, lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {exercise.lesson.steps.map((step: string, i: number) => <li key={i}>{step}</li>)}
-                  </ul>
-                </div>
-
-                <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 12 }}>
-                  <h4 style={{ margin: '0 0 12px', fontSize: 13, textTransform: 'uppercase', color: '#f472b6', letterSpacing: 1 }}>4. Dicas Extras</h4>
-                  <ul style={{ margin: 0, paddingLeft: 20, color: 'rgba(255,255,255,0.6)', fontSize: 13, lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {exercise.tips.map((tip: string, i: number) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setActiveTab('editor')}
-                style={{
-                  background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)', color: '#fff', border: 'none', padding: '14px', borderRadius: 12,
-                  fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 4px 12px rgba(139,92,246,0.3)'
-                }}
-              >
-                Ir para o Editor <ChevronRight size={18} />
-              </button>
-            </div>
-          )}
-
-          {/* Tab: Editor */}
-          {activeTab === 'editor' && (
-            <div style={{ padding: '16px 20px 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 20 }}>
-                {/* Lado Esquerdo: Editor */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <CodeEditor
-                    onChange={(newCode) => setCode(newCode)}
-                  />
-                  {/* Botões de Ação Rápidos */}
-                  <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                    <button
-                      onClick={() => language === 'python' ? runPython(code) : runC(code)}
-                      style={{
-                        padding: '10px 16px', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                        color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <Play size={14} /> Testar Código
-                    </button>
-
-                    <button
-                      disabled={!code.trim()}
-                      onClick={() => handleSubmission(code)}
-                      style={{
-                        padding: '10px 20px', borderRadius: 10, background: '#8b5cf6', border: 'none',
-                        color: '#fff', fontSize: 13, fontWeight: 700, cursor: code.trim() ? 'pointer' : 'not-allowed',
-                        display: 'flex', alignItems: 'center', gap: 8, opacity: code.trim() ? 1 : 0.5,
-                        boxShadow: code.trim() ? '0 4px 12px rgba(139,92,246,0.3)' : 'none',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      <Send size={14} /> Enviar Missão
-                    </button>
-
-                    {(isLoading || isInitializing) && (
-                      <span style={{ fontSize: 12, color: '#fbbf24', display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Cpu size={14} className="animate-spin" /> {isInitializing ? 'Iniciando...' : 'Executando...'}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Lado Direito: Console & Feedback IA */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {/* Terminal / Console */}
-                  <div style={{
-                    flex: 1, background: '#0a0a0c', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)',
-                    display: 'flex', flexDirection: 'column', overflow: 'hidden'
-                  }}>
-                    <div style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <TerminalIcon size={14} color="rgba(255,255,255,0.4)" />
-                      <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Console Output</span>
-                    </div>
-                    <div style={{
-                      padding: '12px', flex: 1, fontFamily: 'monospace', fontSize: 13, color: '#4ade80', overflowY: 'auto',
-                      minHeight: 120, maxHeight: 200, whiteSpace: 'pre-wrap'
-                    }}>
-                      {output.length > 0 ? output.join('\n') : (language === 'python' ? '> Aguardando execução...' : '> Clique em enviar para validar.')}
-                    </div>
-                  </div>
-
-                  {/* IA Analysis Feedback Panel */}
-                  <div style={{
-                    padding: '16px', borderRadius: 12, background: 'rgba(139,92,246,0.05)', border: '1px solid rgba(139,92,246,0.15)',
-                    display: 'flex', flexDirection: 'column', gap: 12, position: 'relative', overflow: 'hidden'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <Sparkles size={16} color="#a78bfa" />
-                      <span style={{ fontSize: 12, fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase' }}>Review da Inteligência Artificial</span>
-                    </div>
-
-                    {aiThinking ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        <div style={{ height: 14, width: '90%', background: 'rgba(255,255,255,0.05)', borderRadius: 4 }} className="animate-pulse" />
-                        <div style={{ height: 14, width: '70%', background: 'rgba(255,255,255,0.05)', borderRadius: 4 }} className="animate-pulse" />
-                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>IA analisando estratégia e lógica...</span>
-                      </div>
-                    ) : feedback ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                        <p style={{ margin: 0, fontSize: 13, lineHeight: '1.5', color: feedback.ok ? '#e2e8f0' : '#fca5a5' }}>
-                          {feedback.msg}
-                        </p>
-                        {feedback.ok && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, color: '#4ade80', background: 'rgba(34,197,94,0.1)', padding: '4px 8px', borderRadius: 8, width: 'fit-content' }}>
-                            <CheckCircle2 size={14} /> Missão Aprovada
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.3)', fontStyle: 'italic' }}>
-                        Submeta seu código para receber um feedback inteligente da nossa IA.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setActiveTab('lesson')}
-                style={{ alignSelf: 'flex-start', fontSize: 12, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
-              >
-                ← Voltar para a Mini Aula
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function LogicQuiz({ exercise, index, completed, onComplete }: {
-  exercise: Exercise,
-  index: number,
-  completed: boolean,
-  onComplete: () => void
-}) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [showHint, setShowHint] = useState(false);
-  const [feedback, setFeedback] = useState<{ msg: string; ok: boolean } | null>(null);
-
-  const handleCheck = () => {
-    if (selectedOption === exercise.answer) {
-      setFeedback({ msg: "Correto! Você pensou exatamente como o computador. 🎉", ok: true });
-      if (!completed) onComplete();
-    } else {
-      setFeedback({ msg: "Ainda não... Tente analisar o passo a passo para entender a lógica! ❌", ok: false });
-    }
-  };
-
-  return (
     <div style={{
-      background: completed ? 'rgba(34,197,94,0.05)' : 'rgba(30, 30, 36, 0.4)',
-      border: completed ? '1px solid rgba(34, 197, 94, 0.2)' : '1px solid rgba(255, 255, 255, 0.05)',
-      borderRadius: 16, overflow: 'hidden', transition: 'all 0.2s ease',
+      background: 'rgba(25,25,35,0.6)',
+      backdropFilter: 'blur(10px)',
+      borderRadius: 24,
+      border: `1px solid ${completed ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.05)'}`,
+      overflow: 'hidden',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: completed ? '0 10px 40px -10px rgba(16,185,129,0.1)' : '0 10px 40px -10px rgba(0,0,0,0.3)',
+      position: 'relative'
     }}>
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        style={{ width: '100%', background: 'none', border: 'none', padding: '24px', display: 'flex', alignItems: 'center', cursor: 'pointer', textAlign: 'left' }}
-      >
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 1 }}>DESAFIO {index + 1}</span>
-            {completed && <span style={{ fontSize: 11, fontWeight: 900, color: '#4ade80', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12, textTransform: 'uppercase' }}>Resolvido</span>}
+      {completed && <div style={{ position: 'absolute', top: 0, right: 0, width: 60, height: 60, background: 'linear-gradient(225deg, rgba(16,185,129,0.2) 0%, transparent 70%)', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', padding: 8 }}>
+        <Trophy size={20} color="#10b981" />
+      </div>}
+
+      <div style={{ padding: '24px 28px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isExpanded ? 24 : 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+             <div style={{ 
+               width: 48, height: 48, borderRadius: 14, 
+               background: completed ? 'rgba(16,185,129,0.1)' : 'rgba(255,255,255,0.03)', 
+               display: 'flex', alignItems: 'center', justifyContent: 'center',
+               border: `1px solid ${completed ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.05)'}`
+             }}>
+               {completed ? <CheckCircle2 size={24} color="#10b981" /> : <span style={{ fontSize: 16, fontWeight: 800, color: 'rgba(255,255,255,0.3)' }}>{index + 1}</span>}
+             </div>
+             <div>
+               <h3 style={{ margin: 0, fontSize: 19, fontWeight: 700, color: completed ? '#10b981' : '#f3f4f6' }}>{exercise.title}</h3>
+               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+                 <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                   <Cpu size={12} /> {exercise.lesson.concept}
+                 </span>
+                 <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
+                 <span style={{ fontSize: 12, color: '#fbbf24', fontWeight: 600 }}>+50 XP</span>
+               </div>
+             </div>
           </div>
-          <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <HelpCircle size={20} color={completed ? "#4ade80" : "#c026d3"} />
-            {exercise.title}
-          </h3>
+          <button 
+            onClick={() => setIsExpanded(!isExpanded)}
+            style={{ 
+              width: 40, height: 40, borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: 'none', 
+              color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s ease'
+            }}
+          >
+            <ChevronDown size={20} />
+          </button>
         </div>
-        <ChevronDown size={20} color="rgba(255,255,255,0.3)" style={{ transform: isExpanded ? 'rotate(180deg)' : 'none', transition: '0.3s' }} />
-      </button>
 
-      {isExpanded && (
-        <div style={{ padding: '0 24px 24px', display: 'flex', flexDirection: 'column', gap: 24, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <div style={{ marginTop: 24, padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.05)' }}>
-            <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: '#e2e8f0', whiteSpace: 'pre-wrap' }}>{exercise.description}</p>
-          </div>
-
-          <div style={{ display: 'grid', gap: 12 }}>
-            {exercise.options?.map((opt) => (
-              <button
-                key={opt}
-                onClick={() => { setSelectedOption(opt[0]); setFeedback(null); }}
-                style={{
-                  padding: '16px 20px', borderRadius: 12, textAlign: 'left', border: 'none', cursor: 'pointer',
-                  background: selectedOption === opt[0] ? 'rgba(192, 38, 211, 0.2)' : 'rgba(255,255,255,0.03)',
-                  borderLeft: selectedOption === opt[0] ? '4px solid #c026d3' : '4px solid transparent',
-                  color: selectedOption === opt[0] ? '#fff' : 'rgba(255,255,255,0.5)',
-                  fontSize: 14, fontWeight: 600, transition: 'all 0.2s'
+        {isExpanded && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, animation: 'fadeIn 0.3s ease' }}>
+            <div style={{ display: 'flex', background: 'rgba(0,0,0,0.2)', padding: 6, borderRadius: 14, alignSelf: 'flex-start' }}>
+              <button 
+                onClick={() => setActiveTab('lesson')}
+                style={{ 
+                  padding: '8px 20px', borderRadius: 10, border: 'none', fontSize: 13, fontWeight: 600,
+                  background: activeTab === 'lesson' ? 'rgba(255,255,255,0.05)' : 'transparent',
+                  color: activeTab === 'lesson' ? '#fff' : 'rgba(255,255,255,0.4)',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
                 }}
               >
-                {opt}
+                <BookOpen size={14} /> Lição
               </button>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-            <button
-              onClick={handleCheck}
-              disabled={!selectedOption}
-              style={{
-                padding: '12px 28px', borderRadius: 12, background: '#c026d3', color: '#fff', border: 'none',
-                fontWeight: 800, cursor: selectedOption ? 'pointer' : 'not-allowed', opacity: selectedOption ? 1 : 0.5,
-                boxShadow: selectedOption ? '0 4px 12px rgba(192,38,211,0.3)' : 'none'
-              }}
-            >
-              Verificar Resposta
-            </button>
-
-            <button
-              onClick={() => { setShowHint(!showHint); if (!showHint) setShowExplanation(false); }}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
-                color: '#fbbf24', padding: '10px 16px', borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-            >
-              <Zap size={16} /> {showHint ? 'Esconder Pista' : '💡 Pedir Pista'}
-            </button>
-
-            <button
-              onClick={() => { setShowExplanation(!showExplanation); if (!showExplanation) setShowHint(false); }}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
-                color: '#a78bfa', padding: '10px 16px', borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-            >
-              <Eye size={16} /> {showExplanation ? 'Esconder Explicação' : '🔍 Raio-X do Código'}
-            </button>
-          </div>
-
-          {showHint && exercise.tips && (
-            <div className="animate-in fade-in slide-in-from-top-2 duration-300" style={{ 
-              padding: '20px', background: 'rgba(251,191,36,0.05)', borderRadius: 16, border: '1px solid rgba(251,191,36,0.2)',
-              display: 'flex', flexDirection: 'column', gap: 12
-            }}>
-              <h4 style={{ margin: 0, fontSize: 12, fontWeight: 900, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: 1 }}>💡 Pista do Monitor:</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {exercise.tips.map((tip, i) => (
-                  <p key={i} style={{ margin: 0, fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5 }}>{tip}</p>
-                ))}
-              </div>
+              <button 
+                onClick={() => setActiveTab('editor')}
+                style={{ 
+                  padding: '8px 20px', borderRadius: 10, border: 'none', fontSize: 13, fontWeight: 600,
+                  background: activeTab === 'editor' ? 'rgba(255,255,255,0.05)' : 'transparent',
+                  color: activeTab === 'editor' ? '#fff' : 'rgba(255,255,255,0.4)',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                }}
+              >
+                <CodeXml size={14} /> Laboratório
+              </button>
             </div>
-          )}
 
-          {feedback && (
-            <div style={{
-              padding: '16px', borderRadius: 12,
-              background: feedback.ok ? 'rgba(74,222,128,0.1)' : 'rgba(239,68,68,0.1)',
-              border: `1px solid ${feedback.ok ? '#4ade80' : '#ef4444'}`,
-              color: feedback.ok ? '#4ade80' : '#fca5a5', fontSize: 14, fontWeight: 600
-            }}>
-              {feedback.msg}
-            </div>
-          )}
-
-          {showExplanation && exercise.lesson.explanation && (
-            <div className="animate-in zoom-in-95 duration-300" style={{ 
-              display: 'flex', flexDirection: 'column', gap: 16, padding: '24px', 
-              background: 'rgba(139,92,246,0.03)', borderRadius: 20, border: '1px solid rgba(139,92,246,0.15)',
-              boxShadow: 'inset 0 0 40px rgba(139,92,246,0.05)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                <h4 style={{ margin: 0, fontSize: 12, fontWeight: 900, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: 1.5 }}>🔍 Raio-X do Código:</h4>
-                <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(167,139,250,0.5)', background: 'rgba(167,139,250,0.1)', padding: '2px 8px', borderRadius: 6 }}>MODO DEBUG</div>
-              </div>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {exercise.lesson.explanation.map((step, i) => (
-                  <div key={i} style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'minmax(120px, auto) 1fr', 
-                    gap: 20, 
-                    padding: '12px 16px', 
-                    background: 'rgba(255,255,255,0.02)', 
-                    borderRadius: 12,
-                    border: '1px solid rgba(255,255,255,0.03)',
-                    alignItems: 'center'
-                  }}>
-                    <div style={{ 
-                      fontFamily: 'monospace', fontSize: 13, fontWeight: 700, color: '#fff',
-                      padding: '4px 10px', background: 'rgba(0,0,0,0.3)', borderRadius: 6,
-                      borderLeft: '3px solid #a78bfa', whiteSpace: 'nowrap'
-                    }}>
-                      {step.line}
-                    </div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
-                      {step.text}
+            {activeTab === 'lesson' ? (
+              <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 24 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  <div style={{ background: 'rgba(139,92,246,0.05)', border: '1px solid rgba(139,92,246,0.1)', borderRadius: 16, padding: 20 }}>
+                    <h4 style={{ margin: '0 0 10px', fontSize: 14, fontWeight: 700, color: '#a78bfa', display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <Lightbulb size={16} /> O Desafio
+                    </h4>
+                    <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'rgba(255,255,255,0.8)' }}>
+                      {exercise.description}
+                    </p>
+                  </div>
+                  <div style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 16, padding: 20 }}>
+                    <h4 style={{ margin: '0 0 10px', fontSize: 14, fontWeight: 700, color: '#e2e8f0' }}>Instruções do Mestre</h4>
+                    <div style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: 'rgba(255,255,255,0.5)' }}>
+                      {exercise.lesson.instructions ? (
+                        <p style={{ margin: 0 }}>{exercise.lesson.instructions}</p>
+                      ) : (
+                        <ul style={{ margin: 0, paddingLeft: 20 }}>
+                          {exercise.lesson.steps.map((step, i) => (
+                            <li key={i}>{step}</li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   </div>
-                ))}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {(exercise.lesson.expectedOutput || exercise.description) && (
+                    <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: 16, padding: 20, border: '1px solid rgba(16,185,129,0.1)' }}>
+                      <h4 style={{ margin: '0 0 12px', fontSize: 13, fontWeight: 700, color: '#10b981', textTransform: 'uppercase' }}>Objetivo Final</h4>
+                      <code style={{ fontSize: 15, color: '#fff', fontFamily: 'JetBrains Mono, monospace' }}>
+                        {exercise.lesson.expectedOutput || 'Observe a descrição do desafio'}
+                      </code>
+                    </div>
+                  )}
+                  <button 
+                    onClick={() => setActiveTab('editor')}
+                    style={{ 
+                      marginTop: 'auto', padding: '16px', borderRadius: 16, border: 'none',
+                      background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+                      color: '#fff', fontWeight: 800, fontSize: 15, cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                      boxShadow: '0 8px 20px -6px rgba(139,92,246,0.5)'
+                    }}
+                  >
+                    Começar Missão <ChevronRight size={18} />
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            ) : (
+              <div style={{ height: 600 }}>
+                 <div style={{ height: '100%', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
+                    <CodeEditor 
+                      initialCode={exercise.initialCode || exercise.lesson.example} 
+                      language={language}
+                      onExecute={handleSubmission}
+                      isInitializing={isInitializing}
+                      aiThinking={aiThinking}
+                      feedback={feedback}
+                    />
+                 </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -505,6 +280,8 @@ export default function ExercisesList({
 }) {
   const [activeListId, setActiveListId] = useState<number>(1);
   const [showFundamentals, setShowFundamentals] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [tempKey, setTempKey] = useState(getApiKey());
 
   const activeList = lists.find(l => l.id === activeListId) || lists[0];
 
@@ -519,7 +296,6 @@ export default function ExercisesList({
       paddingBottom: 60,
       marginTop: '4%'
     }}>
-      {/* 📚 Seção de Conceitos Fundamentais (Apenas da Lista Ativa) */}
       {activeList.fundamentals.length > 0 && (
         <div style={{
           background: 'linear-gradient(145deg, rgba(251,191,36,0.1) 0%, rgba(217,119,6,0.05) 100%)',
@@ -540,10 +316,10 @@ export default function ExercisesList({
               </div>
               <div>
                 <p style={{ margin: 0, fontWeight: 800, fontSize: 15, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: 1 }}>
-                  📖 Conceitos Fundamentais de {language === 'python' ? 'Python' : 'C'}
+                  📖 Conceitos Fundamentais de {language === 'python' ? 'Python' : language === 'c' ? 'C' : 'Lógica'}
                 </p>
                 <h2 style={{ margin: '8px 0 0', fontSize: 26, fontWeight: 800, color: '#fff' }}>
-                  Antes de começar a Lista {activeList.id}...
+                   Antes de começar a Lista {activeList.id}...
                 </h2>
                 <p style={{ margin: '12px auto 0', fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: '1.6', maxWidth: 600 }}>
                   Expanda para ler o material base necessário para resolver os desafios desta lista.
@@ -569,16 +345,7 @@ export default function ExercisesList({
                     <span style={{ fontSize: 24, textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{item.icon}</span>
                     <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#f3f4f6' }}>{item.title}</h3>
                   </div>
-                  <p style={{ margin: '0 0 16px', fontSize: 13, lineHeight: '1.6', color: 'rgba(255,255,255,0.6)' }}>
-                    {item.summary}
-                  </p>
-                  <div style={{ background: '#111', padding: '16px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <code style={{ fontFamily: 'monospace', fontSize: 13, lineHeight: '1.5', color: '#4ade80' }}>
-                      {item.example.split('\n').map((line: string, i: number) => (
-                        <div key={i} style={{ whiteSpace: 'pre' }}>{line || ' '}</div>
-                      ))}
-                    </code>
-                  </div>
+                  <p style={{ margin: '0 0 16px', fontSize: 13, lineHeight: '1.6', color: 'rgba(255,255,255,0.6)' }} dangerouslySetInnerHTML={{ __html: item.summary }} />
                 </div>
               ))}
             </div>
@@ -586,68 +353,134 @@ export default function ExercisesList({
         </div>
       )}
 
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-          <Sword size={24} color="#8b5cf6" />
+      {/* 🚀 Seção de Exercícios Práticos */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8, padding: '0 8px' }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(139,92,246,0.3)' }}>
+            <Sword size={22} color="#fff" />
+          </div>
           <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: '#fff' }}>
             {language === 'python' ? '🐍 Missões — Python' : language === 'c' ? '⚙️ Missões — Linguagem C' : '🧠 Desafios de Lógica'}
           </h2>
         </div>
 
         {/* Tab Menu das Listas */}
-        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, scrollbarWidth: 'none', justifyContent: 'center' }}>
-          {lists.map((list) => {
-            const unlocked = isListUnlocked(list.id);
-            const { completed, total } = getListProgress(list.id);
-            const isFullyDone = completed === total && total > 0;
-            const isActive = list.id === activeListId;
+        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, scrollbarWidth: 'none', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 12 }}>
+            {lists.map((list) => {
+              const unlocked = isListUnlocked(list.id);
+              const { completed, total } = getListProgress(list.id);
+              const isFullyDone = completed === total && total > 0;
+              const isActive = list.id === activeListId;
 
-            return (
-              <button
-                key={list.id}
-                disabled={!unlocked}
-                onClick={() => setActiveListId(list.id)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0,
-                  padding: '12px 20px', borderRadius: 20, border: 'none',
-                  background: isActive ? '#8b5cf6' : unlocked ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
-                  color: isActive ? '#fff' : unlocked ? '#e2e8f0' : 'rgba(255,255,255,0.3)',
-                  cursor: unlocked ? 'pointer' : 'not-allowed',
-                  transition: 'all 0.2s ease',
-                  fontWeight: isActive ? 700 : 500,
-                  boxShadow: isActive ? '0 4px 12px rgba(139,92,246,0.3)' : 'none',
-                }}
-              >
-                {!unlocked ? <Lock size={16} /> : isFullyDone ? <CheckCircle2 size={16} /> : <span>{list.icon}</span>}
-                <span>Lista {list.id}</span>
-                {unlocked && (
-                  <span style={{
-                    marginLeft: 4, fontSize: 12,
-                    background: isActive ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.1)',
-                    padding: '2px 8px', borderRadius: 12
-                  }}>
-                    {completed}/{total}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={list.id}
+                  disabled={!unlocked}
+                  onClick={() => setActiveListId(list.id)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0,
+                    padding: '12px 20px', borderRadius: 20, border: 'none',
+                    background: isActive ? '#8b5cf6' : unlocked ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
+                    color: isActive ? '#fff' : unlocked ? '#e2e8f0' : 'rgba(255,255,255,0.3)',
+                    cursor: unlocked ? 'pointer' : 'not-allowed',
+                    transition: 'all 0.2s ease',
+                    fontWeight: isActive ? 700 : 500,
+                    boxShadow: isActive ? '0 4px 12px rgba(139,92,246,0.3)' : 'none',
+                  }}
+                >
+                  {!unlocked ? <Lock size={16} /> : isFullyDone ? <CheckCircle2 size={16} /> : <span>{list.icon}</span>}
+                  <span>Lista {list.id}</span>
+                  {unlocked && (
+                    <span style={{
+                      marginLeft: 4, fontSize: 12,
+                      background: isActive ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.1)',
+                      padding: '2px 8px', borderRadius: 12
+                    }}>
+                      {completed}/{total}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          
+          <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.1)', margin: '0 8px' }} />
+          
+          <div style={{ position: 'relative' }}>
+            <button 
+              onClick={() => setShowSettings(!showSettings)}
+              style={{ 
+                background: showSettings ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.05)', 
+                border: `1px solid ${showSettings ? 'rgba(139,92,246,0.4)' : 'rgba(255,255,255,0.1)'}`,
+                borderRadius: 12, width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', color: showSettings ? '#a78bfa' : 'rgba(255,255,255,0.5)', transition: '0.2s'
+              }}
+              title="Configurar IA"
+              id="ai-settings-button"
+            >
+              <Settings size={20} />
+            </button>
+
+            {showSettings && (
+              <div style={{
+                position: 'absolute', top: '120%', right: 0, width: 320, zIndex: 1000,
+                background: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 20, padding: 20, boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+                animation: 'fadeIn 0.2s ease'
+              }}>
+                <h4 style={{ margin: '0 0 12px', fontSize: 14, color: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}>
+                   <Cpu size={16} color="#8b5cf6" /> Configuração da IA
+                </h4>
+                <p style={{ margin: '0 0 16px', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.4 }}>
+                  Aceitamos chaves do <b>Google Gemini</b> (AIza...) ou do <b>Groq</b> (gsk_...). <br/>
+                  <i>Dica: O Groq é mais rápido e estável para planos gratuitos.</i>
+                </p>
+                <input 
+                  type="password"
+                  value={tempKey}
+                  onChange={(e) => setTempKey(e.target.value)}
+                  placeholder="Cole sua chave aqui (AIza... ou gsk_...)"
+                  id="gemini-api-key-input"
+                  style={{
+                    width: '100%', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: 12, padding: '12px', color: '#fff', fontSize: 13, marginBottom: 16,
+                    outline: 'none', transition: 'border-color 0.2s'
+                  }}
+                />
+                <button 
+                  onClick={() => {
+                    setApiKey(tempKey);
+                    setShowSettings(false);
+                    alert("Configuração salva com sucesso!");
+                  }}
+                  style={{
+                    width: '100%', background: '#8b5cf6', color: '#fff', border: 'none',
+                    borderRadius: 12, padding: '12px', fontWeight: 700, cursor: 'pointer',
+                    transition: '0.2s'
+                  }}
+                >
+                  Salvar Chave
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Exercícios da Lista Selecionada */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {activeList.exercises.map((ex, index) => (
-          <ExerciseCard
-            key={ex.id}
-            listId={activeList.id}
-            exercise={ex}
-            index={index}
-            language={language}
-            completed={isCompleted(activeList.id, ex.id)}
-            onComplete={() => completeExercise(activeList.id, ex.id, 50)}
-          />
-        ))}
+        {/* Exercícios da Lista Selecionada */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {activeList.exercises.map((ex, index) => (
+            <ExerciseCard
+              key={ex.id}
+              listId={activeList.id}
+              exercise={ex}
+              index={index}
+              language={language}
+              completed={isCompleted(activeList.id, ex.id)}
+              onComplete={() => completeExercise(activeList.id, ex.id, 50)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

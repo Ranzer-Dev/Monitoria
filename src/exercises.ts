@@ -113,11 +113,9 @@ export const exercises: Exercise[] = [
     ],
     lesson: {
       concept: 'Para mostrar algo na tela em Python, usamos a função print(). Basta escrever print() e colocar o que você quer mostrar dentro dos parênteses. Se for um texto, coloque entre aspas.',
-      example: `# Mostrando texto na tela
-print("Alo mundo")
-
-# Também pode usar aspas simples
-print('Alo mundo')`,
+      example: `# Mostrando texto na tela\nprint("Alo mundo")`,
+      instructions: 'Escreva exatamente o comando print() com a frase sugerida.',
+      expectedOutput: 'Alo mundo',
       steps: [
         'Abra o editor de código abaixo.',
         'Digite: print("Alo mundo")',
@@ -136,11 +134,9 @@ print('Alo mundo')`,
     ],
     lesson: {
       concept: 'Para receber um valor digitado pelo usuário, usamos input(). O que o usuário digitar fica guardado em uma variável. Depois usamos print() com uma f-string para mostrar o resultado.',
-      example: `# Pedindo um número para o usuário
-numero = input("Digite um número: ")
-
-# Mostrando o resultado com f-string
-print(f"O número informado foi {numero}")`,
+      example: `numero = input("Digite um número: ")\nprint(f"O número informado foi {numero}")`,
+      instructions: 'Capture o valor com input() e use uma f-string para exibir a mensagem formatada.',
+      expectedOutput: 'O número informado foi [X]',
       steps: [
         'Crie uma variável e use input() para pedir o número.',
         'Use print() com f-string para montar a mensagem.',

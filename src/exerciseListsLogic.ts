@@ -12,6 +12,13 @@ export const logicList1: ExerciseListDef = {
       title: 'A Ponte da Lógica',
       summary: 'Programar não é decorar comandos, é traduzir o que você já faz na cabeça para regras que o computador entende: Variáveis (gavetas), Condições (escolhas) e Sequências (passo a passo).',
       example: 'Humano: "Se tiver sol, vou ao mar."\nCódigo: if (clima == "sol") { ir_ao_mar(); }'
+    },
+    {
+      id: 'logic_operators',
+      icon: '⚡',
+      title: 'Operadores Lógicos e Comparação',
+      summary: 'Eles são os sinais de trânsito do código: AND (&&) exige tudo verdadeiro; OR (||) exige apenas um; NOT (!) inverte. Já os comparadores testam igualdade (==), diferença (!=) ou tamanho (>, <, >=, <=).',
+      example: 'Igual: x == 10\nAtribuir: x = 10\nDiferente: x != 0\nE: (a && b)'
     }
   ],
   exercises: [
@@ -31,6 +38,8 @@ export const logicList1: ExerciseListDef = {
       lesson: {
         concept: 'Sequenciamento: No cérebro ou no PC, a ordem altera o produto.',
         example: 'Receita de bolo: bater ovos antes de assar.',
+        instructions: 'Escolha a sequência que faz sentido lógico para o processo do chá.',
+        expectedOutput: 'B) Ferver -> Saquinho -> Água',
         steps: ['Identifique o início.', 'Veja o que "destrava" o próximo passo.', 'Finalize.'],
         explanation: [
           { line: '1. Ferver água', text: 'Estado necessário para a infusão.' },
@@ -42,22 +51,25 @@ export const logicList1: ExerciseListDef = {
     {
       id: 2,
       title: 'T1: O Chá na Memória (Código)',
-      description: 'Como o computador entende o processo do chá usando variáveis?',
+      description: 'Como o computador entende o processo do chá usando variáveis? No código abaixo, o sinal de "=" significa "recebe" (atribuição) e "<" significa "é menor que".',
       options: [
-        'A) xicara = "vazia"; agua = "quente"; xicara = "cheia"',
-        'B) agua = 20; while(agua < 100) { agua++; } xicara = "cheia"',
+        'A) xicara = "vazia"; temperaturaAgua = "quente"; xicara = "cheia"',
+        'B) temperaturaAgua = 20; while(temperaturaAgua < 100) { temperaturaAgua++; } xicara = "cheia"',
         'C) if (xicara == "cheia") { ferver_agua(); }',
         'D) Todas estão erradas.'
       ],
       answer: 'B',
-      tips: ['O computador usa números para saber se a água está pronta (100 graus).'],
+      tips: [
+        'O computador usa números para saber se a água atingiu a temperatura de ebulição (100 graus).',
+        'Dicionário: "=" é Atribuição (guarda o valor na gaveta), "<" é Comparação (checa se é menor).'
+      ],
       lesson: {
-        concept: 'Tradução para Código: Usamos variáveis (agua) e repetições (while) para simular o mundo real.',
-        example: 'Python: while temp < 100: temp += 1\nC: while(temp < 100) { temp++; }',
-        steps: ['Defina o estado inicial (água fria).', 'Crie um loop para atingir o objetivo.', 'Execute a ação final.'],
+        concept: 'Tradução para Código: Usamos variáveis com nomes claros (como temperaturaAgua) e repetições (while) para simular o mundo real.',
+        example: 'Python: while temperaturaAgua < 100: temperaturaAgua += 1\nC: while(temperaturaAgua < 100) { temperaturaAgua++; }',
+        steps: ['Defina o estado inicial (temperatura inicial).', 'Crie um loop para atingir o objetivo.', 'Execute a ação final.'],
         explanation: [
-          { line: 'agua = 20', text: 'Python/C: Criamos uma variável na memória para a temperatura inicial.' },
-          { line: 'while(agua < 100)', text: 'Loop: O computador verifica a condição repetidamente até ser verdadeira.' },
+          { line: 'temperaturaAgua = 20', text: 'Python/C: Criamos uma variável na memória para representar o grau inicial da água.' },
+          { line: 'while(temperaturaAgua < 100)', text: 'Loop: O computador verifica a condição repetidamente até ser verdadeira.' },
           { line: 'xicara = "cheia"', text: 'Atribuição: Após o loop, o estado da xícara muda para cheia.' }
         ]
       }
@@ -89,7 +101,7 @@ export const logicList1: ExerciseListDef = {
     {
       id: 4,
       title: 'T2: O Elevador no IF/ELSE (Código)',
-      description: 'Qual código representa a decisão correta para o elevador (Atual: 5, Destino: 2)?',
+      description: 'Qual código representa a decisão correta para o elevador (Atual: 5, Destino: 2)? Use o dicionário: "<" (menor que) e "==" (é igual a?).',
       options: [
         'A) if (destino > atual) { descer(); }',
         'B) if (destino < atual) { descer(); } else { subir(); }',
@@ -136,7 +148,7 @@ export const logicList1: ExerciseListDef = {
     {
       id: 6,
       title: 'T3: Cálculos no Sistema (Código)',
-      description: 'Como o código calcula o total de litros com base no dinheiro disponível?',
+      description: 'Como o código calcula o total de litros com base no dinheiro disponível? Lembre-se: "=" faz a variável receber o resultado da conta à direita.',
       options: [
         'A) litros = dinheiro * preco',
         'B) litros = dinheiro / preco',
@@ -144,7 +156,7 @@ export const logicList1: ExerciseListDef = {
         'D) if (dinheiro) { litros = 20; }'
       ],
       answer: 'B',
-      tips: ['Dividir o total pelo preço unitário dá a quantidade.'],
+      tips: ['Na programação, "/" é o sinal de divisão e "*" é multiplicação.'],
       lesson: {
         concept: 'Expressões Algébricas: O computador resolve o lado DIREITO do "=" e guarda no ESQUERDO.',
         example: 'Python/C: resultado = a / b',
@@ -168,7 +180,11 @@ export const logicList1: ExerciseListDef = {
         'D) O alarme liga sozinho.'
       ],
       answer: 'B',
-      tips: ['A condição "E" (AND) exige que as DUAS coisas sejam verdadeiras.'],
+      tips: [
+        'A condição "E" (AND) exige que as DUAS condições sejam verdadeiras ao mesmo tempo.',
+        'Observação: Porta Aberta (V) E Sistema Armado (V) -> Toca.',
+        'Se apenas uma for falsa, o alarme não dispara.'
+      ],
       lesson: {
         concept: 'Operador Lógico "E" (AND): Usado para combinar condições obrigatórias.',
         example: 'Para entrar: Ter ingresso E estar na hora certa.',
@@ -182,7 +198,7 @@ export const logicList1: ExerciseListDef = {
     {
       id: 8,
       title: 'T4: Alarme Digital (Código)',
-      description: 'Qual operador lógico o computador usa para verificar as duas condições do alarme?',
+      description: 'Qual operador lógico o computador usa para verificar as duas condições do alarme? Dicionário: "&&" significa E (as duas precisam ser verdade).',
       options: [
         'A) if (porta || armado)',
         'B) if (porta && armado)',
@@ -190,7 +206,10 @@ export const logicList1: ExerciseListDef = {
         'D) if (porta == false)'
       ],
       answer: 'B',
-      tips: ['Python usa "and", enquanto C usa "&&".'],
+      tips: [
+        'Python usa a palavra "and", enquanto C usa o símbolo "&&" para o operador lógico E.',
+        'O operador && (AND) só retorna VERDADEIRO se o lado esquerdo E o lado direito forem verdadeiros.'
+      ],
       lesson: {
         concept: 'Operadores de Conjunção: Combinam múltiplos testes em um só.',
         example: 'Python: if a and b:\nC: if(a && b)',
@@ -214,7 +233,10 @@ export const logicList1: ExerciseListDef = {
         'D) Ligar sempre.'
       ],
       answer: 'B',
-      tips: ['Inverter um estado é a base de muitos botões digitais.'],
+      tips: [
+        'Inverter um estado (NOT) transforma Verdade em Falso e vice-versa.',
+        'Observação: No código, usamos ! (C) ou not (Python) para dizer "O contrário de".'
+      ],
       lesson: {
         concept: 'Negação (NOT): Inverter um valor booleano (Verdade vira Falso).',
         example: 'Se NÃO(Chovendo) -> Sair.',
@@ -228,7 +250,7 @@ export const logicList1: ExerciseListDef = {
     {
       id: 10,
       title: 'T5: O Operador Especial (Código)',
-      description: 'Como inverter o valor de uma variável booleana "ligado" no código?',
+      description: 'Como inverter o valor de uma variável booleana "ligado" no código? Dicionário: "!" (NÃO) inverte o valor.',
       options: [
         'A) ligado = ligado + 1',
         'B) ligado = !ligado',
@@ -236,7 +258,10 @@ export const logicList1: ExerciseListDef = {
         'D) print(!ligado)'
       ],
       answer: 'B',
-      tips: ['O símbolo "!" em C e a palavra "not" em Python invertem o valor.'],
+      tips: [
+        'O símbolo "!" em C e a palavra "not" em Python invertem o valor atual.',
+        'Exemplo: Se a luz está ligada (true), !luz torna ela desligada (false).'
+      ],
       lesson: {
         concept: 'Operador de Negação: Muda o bit de 0 para 1 ou 1 para 0.',
         example: 'Python: status = not status\nC: status = !status;',
@@ -274,7 +299,7 @@ export const logicList1: ExerciseListDef = {
     {
       id: 12,
       title: 'T6: Validação Bancária (Código)',
-      description: 'Qual comando de código valida o saque com segurança (Saldo: 500, Saque: 200, Senha: "123")?',
+      description: 'Qual comando de código valida o saque com segurança (Saldo: 500, Saque: 200)? Dicionário: ">=" (maior ou igual) e "&&" (E).',
       options: [
         'A) if (saldo >= saque && senha == "123")',
         'B) if (saldo == saque || senha == "123")',
@@ -282,7 +307,10 @@ export const logicList1: ExerciseListDef = {
         'D) while (senha != "123") { sacar(); }'
       ],
       answer: 'A',
-      tips: ['O saldo deve ser MAIOR OU IGUAL ao valor do saque.'],
+      tips: [
+        'O saldo deve ser MAIOR OU IGUAL (>=) ao valor do saque.',
+        'Dicionário: "==" testa se é exatamente igual, "=" define um valor.'
+      ],
       lesson: {
         concept: 'Comparadores Compostos: Usamos >= para garantir que o saldo cobre o valor.',
         example: 'Python: if s >= v and p == "1":\nC: if(s >= v && p == 1)',
@@ -321,7 +349,7 @@ export const logicList1: ExerciseListDef = {
     {
       id: 14,
       title: 'T7: O Algoritmo do Pix (Código)',
-      description: 'Como o código gerencia o fluxo em cascata do Pix?',
+      description: 'Como o código gerencia o fluxo em cascata do Pix? No código, cada "if" abre um novo par de chaves "{...}".',
       options: [
         'A) Executa tudo de uma vez sem testar.',
         'B) if(chave_ok) { if(dest_ok) { if(saldo_ok) { concluir(); } } }',
@@ -329,7 +357,10 @@ export const logicList1: ExerciseListDef = {
         'D) Nenhuma das anteriores.'
       ],
       answer: 'B',
-      tips: ['Isso se chama "IFs Alinhados": uma decisão que depende da decisão anterior.'],
+      tips: [
+        'Sistemas reais usam "IFs Alinhados": uma decisão dentro da outra.',
+        'Dicionário: "!=" significa "Diferente de".'
+      ],
       lesson: {
         concept: 'Condicionais Aninhadas: Uma escada de decisões onde só se sobe o degrau se o de baixo estiver firme.',
         example: 'Python: if a: if b: if c: action()\nC: if(a) { if(b) { action(); } }',
