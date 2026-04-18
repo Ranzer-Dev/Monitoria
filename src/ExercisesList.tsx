@@ -19,6 +19,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
   const [activeTab, setActiveTab] = useState<'lesson' | 'editor'>('lesson');
   const [feedback, setFeedback] = useState<{ msg: string; ok: boolean; score?: number } | null>(null);
   const [aiThinking, setAiThinking] = useState(false);
+  const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const { runPython, isInitializing: isPyInitializing } = useInterpreter();
   const { runC } = useCInterpreter();
 
@@ -38,6 +39,8 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
       }
       executionOutput = await runC(currentCode, stdin);
     }
+
+    setConsoleOutput(executionOutput);
 
     try {
       const review = await getAIReview(currentCode, executionOutput, exercise, language, listId);
@@ -243,17 +246,51 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                 </div>
               </div>
             ) : (
-              <div style={{ height: 540 }}>
-                 <div style={{ height: '100%', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                 <div style={{ height: 500, borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
                     <CodeEditor 
                       initialCode={exercise.initialCode || exercise.lesson.example} 
                       language={language}
                       onExecute={handleSubmission}
                       isInitializing={isInitializing}
                       aiThinking={aiThinking}
-                      feedback={feedback}
+                      executionOutput={consoleOutput}
                     />
                  </div>
+
+                 {feedback && (
+                    <div style={{ 
+                      marginTop: 20,
+                      padding: 20, 
+                      borderRadius: 16, 
+                      background: feedback.ok ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+                      border: `1px solid ${feedback.ok ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`,
+                      animation: 'slideUp 0.3s ease-out'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'start', gap: 16 }}>
+                         <div style={{ fontSize: 24 }}>{feedback.ok ? '✅' : '❌'}</div>
+                         <div style={{ flex: 1 }}>
+                            <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 700, color: '#fff', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                              {feedback.ok ? 'Missão Concluída!' : 'Feedback do Mestre'}
+                            </h4>
+                            <p style={{ margin: 0, color: 'rgba(255,255,255,0.8)', fontSize: 14, lineHeight: 1.6 }}>
+                              {feedback.msg}
+                            </p>
+                            {feedback.score !== undefined && (
+                              <div style={{ marginTop: 16, borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 16 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Sincronia do Código</span>
+                                  <span style={{ fontSize: 13, fontWeight: 700, color: '#60a5fa', fontFamily: 'monospace' }}>{feedback.score}/100</span>
+                                </div>
+                                <div style={{ height: 6, width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: 10, overflow: 'hidden' }}>
+                                  <div style={{ height: '100%', background: 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)', width: `${feedback.score}%`, transition: 'width 1s ease-out' }} />
+                                </div>
+                              </div>
+                            )}
+                         </div>
+                      </div>
+                    </div>
+                  )}
               </div>
             )}
           </div>

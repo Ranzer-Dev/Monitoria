@@ -7,8 +7,8 @@ interface CodeEditorProps {
   onExecute: (code: string) => void;
   isInitializing?: boolean;
   aiThinking?: boolean;
-  feedback?: { msg: string; ok: boolean; score?: number } | null;
   onChange?: (code: string) => void;
+  executionOutput?: string[];
 }
 
 export default function CodeEditor({ 
@@ -17,8 +17,8 @@ export default function CodeEditor({
   onExecute, 
   isInitializing = false, 
   aiThinking = false, 
-  feedback = null,
-  onChange 
+  onChange,
+  executionOutput = []
 }: CodeEditorProps) {
   const [code, setCode] = useState(initialCode);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -82,7 +82,7 @@ export default function CodeEditor({
           value={code}
           onChange={e => handleSetCode(e.target.value)}
           className="w-full h-full p-4 font-mono text-sm focus:outline-none resize-none bg-transparent"
-          style={{ color: '#4ade80', caretColor: '#4ade80', minHeight: '300px' }}
+          style={{ color: '#4ade80', caretColor: '#4ade80', minHeight: '270px' }}
           placeholder="// Digite sua solução aqui..."
           spellCheck={false}
         />
@@ -101,32 +101,52 @@ export default function CodeEditor({
         </div>
       </div>
 
-      {/* AI Feedback Panel */}
-      {feedback && (
-        <div style={{ 
-          margin: 16, 
-          padding: 16, 
-          borderRadius: 16, 
-          background: feedback.ok ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
-          border: `1px solid ${feedback.ok ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`,
-          animation: 'slideUp 0.3s ease-out'
+      {/* Terminal Area */}
+      {(executionOutput.length > 0) && (
+        <div style={{
+          margin: '0 16px 16px',
+          background: '#0a0a0a',
+          borderRadius: 12,
+          border: '1px solid rgba(255,255,255,0.05)',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: '230px',
+          animation: 'fadeIn 0.3s ease-out'
         }}>
-          <div className="flex items-start gap-3">
-             <div style={{ fontSize: 20 }}>{feedback.ok ? '✅' : '❌'}</div>
-             <div className="flex-1">
-                <p style={{ margin: 0, color: '#fff', fontSize: 13, lineHeight: 1.5 }}>
-                  {feedback.msg}
-                </p>
-                {feedback.score !== undefined && (
-                  <div className="mt-3 flex items-center gap-2">
-                    <div className="text-[10px] uppercase font-bold text-white/40">Sincronia:</div>
-                    <div className="h-1.5 flex-1 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-blue-500" style={{ width: `${feedback.score}%` }} />
-                    </div>
-                    <div className="text-xs font-mono text-blue-400">{feedback.score}/100</div>
-                  </div>
-                )}
-             </div>
+          <div style={{
+            padding: '6px 12px',
+            background: 'rgba(255,255,255,0.03)',
+            borderBottom: '1px solid rgba(255,255,255,0.05)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8
+          }}>
+             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff5f56' }} />
+             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ffbd2e' }} />
+             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#27c93f' }} />
+             <span style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: 1, marginLeft: 4 }}>
+                Console de Saída
+             </span>
+          </div>
+          <div style={{ 
+            padding: '12px', 
+            overflowY: 'auto', 
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 13,
+            lineHeight: 1.6,
+            color: '#e2e8f0'
+          }}>
+             {executionOutput.map((line, i) => (
+                <div key={i} style={{ 
+                  marginBottom: 4,
+                  color: line.includes('❌') || line.includes('⚠️') ? '#fca5a5' : '#e2e8f0',
+                  borderLeft: line.includes('❌') || line.includes('⚠️') ? '2px solid #ef4444' : 'none',
+                  paddingLeft: line.includes('❌') || line.includes('⚠️') ? 8 : 0
+                }}>
+                   {line}
+                </div>
+             ))}
           </div>
         </div>
       )}
