@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Cpu, HardDrive, Brain, Binary, AlertTriangle, ArrowRight, CheckCircle2, XCircle, Info, Image as ImageIcon, Zap, Layers, Code2 } from 'lucide-react';
+import DevTerm from './DevTerm';
 
 export default function EducationalMaterial() {
   return (
@@ -225,8 +226,8 @@ export default function EducationalMaterial() {
               </div>
               <div style={{ marginTop: 12, padding: '12px 16px', background: 'rgba(251,191,36,0.05)', borderRadius: 12, border: '1px solid rgba(251,191,36,0.1)', display: 'flex', alignItems: 'start', gap: 12 }}>
                 <Info size={16} color="#fbbf24" style={{ marginTop: 2, flexShrink: 0 }} />
-                <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5 }}>
-                  <strong>Realidade:</strong> Cada "0" e "1" acima representa uma instrução de cor.
+                <p style={{ margin: 0, fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5 }}>
+                  <strong style={{ color: '#fbbf24' }}>Realidade:</strong> Cada "0" e "1" acima representa uma instrução de cor. 
                   Mesmo um ícone minúsculo já exige milhares de bits trafegando pelo <strong>barramento</strong>.
                 </p>
               </div>
@@ -257,18 +258,24 @@ export default function EducationalMaterial() {
                 <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 1 }}>Exemplo em C</div>
                 <code style={{ fontSize: 13, fontFamily: 'monospace', color: '#4ade80', lineHeight: 1.8 }}>
                   int x = 10;<br />
-                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>// Reserva 4 gavetas</span><br />
-                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>// Endereços: 0x00 a 0x03</span>
+                  <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, fontWeight: 700 }}>// Reserva 4 gavetas</span><br />
+                  <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, fontWeight: 700 }}>// Endereços: 0x00 a 0x03</span>
                 </code>
               </div>
               <div style={{ flex: '1 1 200px', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)' }}>
                 <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 1 }}>Exemplo em Python</div>
                 <code style={{ fontSize: 13, fontFamily: 'monospace', color: '#fbbf24', lineHeight: 1.8 }}>
                   x = 10<br />
-                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>// O Python gerencia</span><br />
-                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>// automaticamente!</span>
+                  <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, fontWeight: 700 }}>// O Python gerencia</span><br />
+                  <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, fontWeight: 700 }}>// automaticamente!</span>
                 </code>
               </div>
+            </div>
+            <div style={{ padding: '16px 20px', background: 'rgba(96,165,250,0.06)', border: '1px solid rgba(96,165,250,0.2)', borderRadius: 14, marginTop: 8 }}>
+              <p style={{ margin: 0, fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
+                <strong style={{ color: '#60a5fa' }}>📫 Por que o Endereço (0x...)?</strong><br/>
+                Imagine que o computador é uma cidade e a RAM é um bairro de hotéis. O <strong>Endereço</strong> é o número do quarto. Sem ele, a CPU (o hóspede) nunca saberia onde deixou sua mala (os dados). Usamos <strong>Hexadecimal</strong> porque é um <DevTerm id="trade-off">trade-off</DevTerm> elegante: uma forma curta de escrever binários gigantes!
+              </p>
             </div>
           </div>
 
@@ -470,8 +477,26 @@ export default function EducationalMaterial() {
                   <FlowArrow />
                   <DeepStep label="Execução em Runtime" desc="Instruções processadas enquanto o programa roda." icon={<Zap size={14} />} color="#4ade80" />
                 </div>
-                <div style={{ padding: '16px', background: 'rgba(251,191,36,0.03)', borderRadius: 16, border: '1px solid rgba(251,191,36,0.1)', fontSize: 11, fontStyle: 'italic', color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
-                  <strong>Curiosidade:</strong> No Python, se houver um erro na linha 50, as primeiras 49 linhas rodam normalmente antes de parar.
+                <div style={{ padding: '16px', background: 'rgba(251,191,36,0.03)', borderRadius: 16, border: '1px solid rgba(251,191,36,0.1)', fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
+                  <strong style={{ color: '#fbbf24' }}>💡 Curiosidade:</strong> No Python, se houver um erro na linha 50, as primeiras 49 linhas rodam normalmente antes de parar.
+                </div>
+              </div>
+            </div>
+
+            <div style={{ padding: '24px 32px', background: 'rgba(255,255,255,0.02)', borderRadius: 24, border: '1px solid rgba(255,255,255,0.05)', marginTop: 10 }}>
+              <h4 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 900, color: '#2dd4bf', textTransform: 'uppercase', letterSpacing: 1 }}>⚖️ O Grande Trade-off: Qual escolher?</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                <div>
+                  <h5 style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 800, color: '#60a5fa' }}>Por que usar C?</h5>
+                  <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
+                    Para criar o <DevTerm id="backend">Backend</DevTerm> de <strong>Sistemas de Missão Crítica</strong>. Onde a velocidade é tudo: Motores de Jogos e Drivers.
+                  </p>
+                </div>
+                <div>
+                  <h5 style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 800, color: '#fbbf24' }}>Por que usar Python?</h5>
+                  <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
+                    Para o <DevTerm id="frontend">Frontend</DevTerm> de <strong>Soluções Rápidas</strong> ou IA, onde o tempo do programador é mais valioso.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1116,12 +1141,16 @@ function AsciiTool() {
 
       {mode === 'char' ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <input
-            maxLength={1}
-            value={charInput}
-            onChange={e => setCharInput(e.target.value || 'A')}
-            style={{ width: 64, height: 64, fontSize: 32, textAlign: 'center', background: 'rgba(255,255,255,0.03)', border: '2px solid rgba(251,191,36,0.5)', borderRadius: 16, color: '#fbbf24', fontWeight: 900, outline: 'none' }}
-          />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
+            <span style={{ fontSize: 10, fontWeight: 900, color: '#fbbf24', textTransform: 'uppercase', opacity: 0.6 }}>Digite aqui</span>
+            <input
+              maxLength={1}
+              value={charInput}
+              onChange={e => setCharInput(e.target.value)}
+              placeholder="?"
+              style={{ width: 64, height: 64, fontSize: 32, textAlign: 'center', background: 'rgba(255,255,255,0.03)', border: '2px solid rgba(251,191,36,0.5)', borderRadius: 16, color: '#fbbf24', fontWeight: 900, outline: 'none' }}
+            />
+          </div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
             <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 2 }}>Código ASCII → Binário</div>
             <div style={{ fontSize: 28, fontWeight: 900, color: '#fbbf24' }}>{fromChar}</div>
@@ -1130,12 +1159,15 @@ function AsciiTool() {
         </div>
       ) : (
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <input
-            type="number" min={0} max={127}
-            value={numInput}
-            onChange={e => setNumInput(e.target.value)}
-            style={{ width: 72, height: 64, fontSize: 22, textAlign: 'center', background: 'rgba(255,255,255,0.03)', border: '2px solid rgba(96,165,250,0.5)', borderRadius: 16, color: '#60a5fa', fontWeight: 900, outline: 'none' }}
-          />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
+            <span style={{ fontSize: 10, fontWeight: 900, color: '#60a5fa', textTransform: 'uppercase', opacity: 0.6 }}>Digite aqui</span>
+            <input
+              type="number" min={0} max={127}
+              value={numInput}
+              onChange={e => setNumInput(e.target.value)}
+              style={{ width: 72, height: 64, fontSize: 22, textAlign: 'center', background: 'rgba(255,255,255,0.03)', border: '2px solid rgba(96,165,250,0.5)', borderRadius: 16, color: '#60a5fa', fontWeight: 900, outline: 'none' }}
+            />
+          </div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
             <div style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 2 }}>Caractere → Binário</div>
             <div style={{ fontSize: 28, fontWeight: 900, color: '#60a5fa' }}>{fromNumChar}</div>
@@ -1166,17 +1198,17 @@ function MemorySimulator() {
   const activeColor = activeType?.color || '#fff';
 
   return (
-    <div style={{ 
-      display: 'grid', 
-      gridTemplateColumns: 'minmax(100px, 120px) 1fr', 
-      gap: 12, 
-      padding: '16px', 
-      background: 'rgba(255,255,255,0.02)', 
-      borderRadius: 24, 
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'minmax(120px, 120px) 1fr',
+      gap: 6,
+      padding: '16px',
+      background: 'rgba(255,255,255,0.02)',
+      borderRadius: 24,
       border: '1px solid rgba(255,255,255,0.1)',
       minWidth: 0
     }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
         <div style={{ fontSize: 10, fontWeight: 900, color: 'rgba(255,255,255,0.2)', marginBottom: 4, textTransform: 'uppercase' }}>Clique para alocar</div>
         {types.map(t => (
           <button
@@ -1198,15 +1230,15 @@ function MemorySimulator() {
           </button>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
         {Array.from({ length: 16 }).map((_, i) => (
           <div
             key={i}
             style={{
-              width: '100%', aspectRatio: '1/1', borderRadius: 12,
+              width: '90%', aspectRatio: '1/1', borderRadius: 12,
               background: i < activeSize ? `${activeColor}20` : 'rgba(255,255,255,0.02)',
               border: `1px solid ${i < activeSize ? activeColor : 'rgba(255,255,255,0.04)'}`,
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2,
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               fontSize: 9, fontWeight: 900, color: i < activeSize ? activeColor : 'rgba(255,255,255,0.1)',
               transition: 'all 0.2s'
             }}

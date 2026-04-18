@@ -84,7 +84,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
         </div>
 
         <div style={{ background: 'rgba(0,0,0,0.2)', padding: 20, borderRadius: 16, border: '1px solid rgba(255,255,255,0.03)' }}>
-           <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', fontSize: 15 }}>{exercise.description}</p>
+           <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', fontSize: 17 }}>{exercise.description}</p>
         </div>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
@@ -150,7 +150,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                    <Cpu size={12} /> {exercise.lesson.concept}
                  </span>
                  <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
-                 <span style={{ fontSize: 12, color: '#fbbf24', fontWeight: 600 }}>+50 XP</span>
+                 <span style={{ fontSize: 12, color: '#fbbf24', fontWeight: 600, whiteSpace: 'nowrap' }}>+50 XP</span>
                </div>
              </div>
           </div>
@@ -196,17 +196,17 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
             {activeTab === 'lesson' ? (
               <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 24 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  <div style={{ background: 'rgba(139,92,246,0.05)', border: '1px solid rgba(139,92,246,0.1)', borderRadius: 16, padding: 20 }}>
+                  <div style={{ background: 'rgba(139,92,246,0.05)', border: '1px solid rgba(139,92,246,0.1)', borderRadius: 16, padding: 24 }}>
                     <h4 style={{ margin: '0 0 10px', fontSize: 14, fontWeight: 700, color: '#a78bfa', display: 'flex', alignItems: 'center', gap: 8 }}>
                       <Lightbulb size={16} /> O Desafio
                     </h4>
-                    <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'rgba(255,255,255,0.8)' }}>
+                    <p style={{ margin: 0, fontSize: 18, lineHeight: 1.6, color: 'rgba(255,255,255,0.8)' }}>
                       {exercise.description}
                     </p>
                   </div>
                   <div style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 16, padding: 20 }}>
                     <h4 style={{ margin: '0 0 10px', fontSize: 14, fontWeight: 700, color: '#e2e8f0' }}>Instruções do Mestre</h4>
-                    <div style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: 'rgba(255,255,255,0.5)' }}>
+                    <div style={{ margin: 0, fontSize: 16, lineHeight: 1.6, color: 'rgba(255,255,255,0.5)' }}>
                       {exercise.lesson.instructions ? (
                         <p style={{ margin: 0 }}>{exercise.lesson.instructions}</p>
                       ) : (
@@ -243,7 +243,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                 </div>
               </div>
             ) : (
-              <div style={{ height: 600 }}>
+              <div style={{ height: 540 }}>
                  <div style={{ height: '100%', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
                     <CodeEditor 
                       initialCode={exercise.initialCode || exercise.lesson.example} 
@@ -345,7 +345,7 @@ export default function ExercisesList({
                     <span style={{ fontSize: 24, textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{item.icon}</span>
                     <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#f3f4f6' }}>{item.title}</h3>
                   </div>
-                  <p style={{ margin: '0 0 16px', fontSize: 13, lineHeight: '1.6', color: 'rgba(255,255,255,0.6)' }} dangerouslySetInnerHTML={{ __html: item.summary }} />
+                  <p style={{ margin: '0 0 16px', fontSize: 15, lineHeight: '1.6', color: 'rgba(255,255,255,0.6)' }} dangerouslySetInnerHTML={{ __html: item.summary }} />
                 </div>
               ))}
             </div>
@@ -365,8 +365,8 @@ export default function ExercisesList({
         </div>
 
         {/* Tab Menu das Listas */}
-        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, scrollbarWidth: 'none', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ display: 'flex', gap: 12 }}>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none' }}>
             {lists.map((list) => {
               const unlocked = isListUnlocked(list.id);
               const { completed, total } = getListProgress(list.id);
@@ -405,9 +405,9 @@ export default function ExercisesList({
             })}
           </div>
           
-          <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.1)', margin: '0 8px' }} />
+          <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.1)', margin: '0 8px', flexShrink: 0 }} />
           
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', flexShrink: 0 }}>
             <button 
               onClick={() => setShowSettings(!showSettings)}
               style={{ 
@@ -424,7 +424,7 @@ export default function ExercisesList({
 
             {showSettings && (
               <div style={{
-                position: 'absolute', top: '120%', right: 0, width: 320, zIndex: 1000,
+                position: 'absolute', top: '120%', right: 0, width: 320, zIndex: 9999,
                 background: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: 20, padding: 20, boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
                 animation: 'fadeIn 0.2s ease'
@@ -433,14 +433,14 @@ export default function ExercisesList({
                    <Cpu size={16} color="#8b5cf6" /> Configuração da IA
                 </h4>
                 <p style={{ margin: '0 0 16px', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.4 }}>
-                  Aceitamos chaves do <b>Google Gemini</b> (AIza...) ou do <b>Groq</b> (gsk_...). <br/>
-                  <i>Dica: O Groq é mais rápido e estável para planos gratuitos.</i>
+                  Recomendado: <b>Groq API</b> (gsk_...) - Mais rápido e estável.<br/>
+                  Alternativo: <b>Google Gemini</b> (AIza...)
                 </p>
                 <input 
                   type="password"
                   value={tempKey}
                   onChange={(e) => setTempKey(e.target.value)}
-                  placeholder="Cole sua chave aqui (AIza... ou gsk_...)"
+                  placeholder="Cole sua chave aqui (gsk_... ou AIza...)"
                   id="gemini-api-key-input"
                   style={{
                     width: '100%', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)',

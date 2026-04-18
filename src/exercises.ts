@@ -1,24 +1,6 @@
-export type Lesson = {
-  concept: string;
-  example: string;
-  steps: string[];
-};
+import type {Exercise, Fundamental } from './types';
 
-export type Exercise = {
-  id: number;
-  title: string;
-  description: string;
-  tips: string[];
-  lesson: Lesson;
-};
 
-export type Fundamental = {
-  id: string;
-  icon: string;
-  title: string;
-  summary: string;
-  example: string;
-};
 
 export const fundamentals: Fundamental[] = [
   {

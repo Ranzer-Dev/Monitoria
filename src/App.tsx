@@ -4,6 +4,7 @@ import Header from './components/Header';
 import AuthOverlay from './components/AuthOverlay';
 import ExercisesList from './ExercisesList';
 import EducationalMaterial from './components/EducationalMaterial';
+import TermosDev from './components/TermosDev';
 import ErrorCatcher from './ErrorCatcher';
 import { useGamification } from './hooks/useGamification';
 import { allPythonLists } from './exerciseLists';
@@ -21,13 +22,32 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [language, setLanguage] = useState<Language>('python');
-  const [view, setView] = useState<'practice' | 'theory'>('theory');
+  const [view, setView] = useState<'practice' | 'theory' | 'glossary'>('theory');
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {
     const handleResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    const handleViewChange = (e: any) => {
+      console.log("📍 App: Evento recebido:", e.detail);
+      if (e.detail?.view) setView(e.detail.view);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Função Global de Navegação (Source of Truth)
+    (window as any).monitoriaNavigate = (viewName: 'practice' | 'theory' | 'glossary') => {
+      console.log("🚀 App: Navegação Global disparada para:", viewName);
+      setView(viewName);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('monitoria-change-view', handleViewChange);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('monitoria-change-view', handleViewChange);
+      delete (window as any).monitoriaNavigate;
+    };
   }, []);
 
   // Track previous count so confetti only fires on NEW completions
@@ -88,8 +108,10 @@ function App() {
             isListUnlocked={(listId) => isListUnlocked(listId, language)}
             getListProgress={(listId) => getListProgress(listId, language)}
           />
-        ) : (
+        ) : view === 'theory' ? (
           <EducationalMaterial />
+        ) : (
+          <TermosDev />
         )}
       </main>
 

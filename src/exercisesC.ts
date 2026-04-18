@@ -1,4 +1,4 @@
-import type { Exercise, Fundamental } from './exercises';
+import type { Exercise, Fundamental } from './types';
 
 export const fundamentalsC: Fundamental[] = [
   {

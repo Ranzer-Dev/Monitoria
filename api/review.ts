@@ -39,7 +39,7 @@ export default async function handler(req: Request) {
       return new Response(data.choices[0]?.message?.content);
     }
 
-    // 2. SEGUNDA OPÇÃO: GEMINI (Se configurado no Vercel)
+    // 2. SEGUNDA OPÇÃO: GEMINI (Foco em 2026)
     if (geminiKey) {
       console.log('Proxy: Usando Gemini (2.5 Flash Lite)');
       const response = await fetch(
@@ -48,13 +48,19 @@ export default async function handler(req: Request) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: systemPrompt }]
+            },
             contents: [
               {
                 role: "user",
-                parts: [{ text: `INSTRUÇÃO DE SISTEMA:\n${systemPrompt}\n\nENTRADA DO ALUNO:\n${prompt}` }]
+                parts: [{ text: prompt }]
               }
             ],
-            generationConfig: { temperature: 0.7 }
+            generationConfig: { 
+              temperature: 0.7,
+              responseMimeType: "application/json"
+            }
           }),
         }
       );

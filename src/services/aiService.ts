@@ -82,9 +82,9 @@ IMPORTANTE:
     if (studentApiKey) {
       const cleanKey = studentApiKey.trim();
       
-      // DETECÇÃO DE PROVEDOR: GROQ
+      // 1. PRIORIDADE: GROQ
       if (cleanKey.startsWith('gsk_')) {
-        console.log("Detectada chave do Groq. Usando API do Groq (Llama 3.3 70B)...");
+        console.log("🚀 Monitoria: Usando Groq (Llama 3.3 70B)...");
         const response = await axios.post(
           'https://api.groq.com/openai/v1/chat/completions',
           {
@@ -108,20 +108,24 @@ IMPORTANTE:
         if (!rawText) throw new Error("Resposta do Groq veio vazia.");
         resultJSON = cleanJSONResponse(rawText);
       } 
-      // PADRÃO: GEMINI
-      else {
-        console.log("Detectada chave do Google. Usando Gemini API (2.5 Flash Lite)...");
+      // 2. ALTERNATIVA: GEMINI (Suporte a AIza e AQ)
+      else if (cleanKey.startsWith('AIza') || cleanKey.startsWith('AQ')) {
+        console.log("💎 Monitoria: Usando Gemini API (2.5 Flash Lite)...");
         const response = await axios.post(
           `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${cleanKey}`,
           {
+            systemInstruction: {
+              parts: [{ text: SYSTEM_PROMPT }]
+            },
             contents: [
               { 
                 role: "user", 
-                parts: [{ text: `INSTRUÇÃO DE SISTEMA:\n${SYSTEM_PROMPT}\n\nENTRADA DO ALUNO:\n${promptText}` }] 
+                parts: [{ text: promptText }] 
               }
             ],
             generationConfig: { 
-              temperature: 0.7 
+              temperature: 0.7,
+              responseMimeType: "application/json"
             }
           }
         );
@@ -130,8 +134,12 @@ IMPORTANTE:
         if (!rawText) throw new Error("Resposta do Gemini veio vazia.");
         resultJSON = cleanJSONResponse(rawText);
       }
+      else {
+        throw new Error("Chave Inválida: O formato não foi reconhecido como Groq ou Gemini.");
+      }
     } 
     else {
+      // 3. FALLBACK: PROXY SEGURO
       console.log("Tentando chamada via Proxy Seguro...");
       const proxyResponse = await axios.post('/api/review', {
         systemPrompt: SYSTEM_PROMPT,
@@ -154,11 +162,10 @@ IMPORTANTE:
     throw new Error("Formato de resposta inválido.");
 
   } catch (error: any) {
-    console.error("ERRO DETALHADO GEMINI:", error?.response?.data || error.message);
-    const technicalDetail = error?.response?.status ? `(Erro ${error.response.status})` : `(${error.message})`;
+    console.error("ERRO DETALHADO IA:", error?.response?.data || error.message);
     return {
       ...fallbackReview,
-      feedback: `${fallbackReview.feedback}\n\n*(Nota: Usando o Simulador local ${technicalDetail})*`
+      feedback: `${fallbackReview.feedback}`
     };
   }
 }
