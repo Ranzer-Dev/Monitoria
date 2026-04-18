@@ -12,7 +12,7 @@ const DevTerm: React.FC<DevTermProps> = ({ id, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const termRef = useRef<HTMLSpanElement>(null);
-  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const closeTimeoutRef = useRef<any>(null);
   const term = getTerm(id);
 
   if (!term) return <>{children || id}</>;
