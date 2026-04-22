@@ -4,7 +4,6 @@ import Header from './components/Header';
 import AuthOverlay from './components/AuthOverlay';
 import ExercisesList from './ExercisesList';
 import EducationalMaterial from './components/EducationalMaterial';
-import TermosDev from './components/TermosDev';
 import ErrorCatcher from './ErrorCatcher';
 import { useGamification } from './hooks/useGamification';
 import { allPythonLists } from './exerciseLists';

@@ -282,6 +282,63 @@ export default function ProgrammingTechniques() {
           </TechCard>
 
            <TechCard 
+            title="Estruturas de Controle" 
+            icon={<GitBranch size={24} />} 
+            color="#3b82f6"
+            desc="Bifurcações Lógicas: Como ensinar o computador a tomar decisões (IF/ELSE) baseadas em estados da memória."
+          >
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ position: 'relative', height: 80, background: 'rgba(0,0,0,0.3)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', overflow: 'hidden' }}>
+                   {/* Caminho Vermelho */}
+                   <div style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '50%', borderBottom: '2px dashed rgba(239,68,68,0.3)', borderLeft: '2px dashed rgba(239,68,68,0.3)' }} />
+                   {/* Caminho Verde */}
+                   <div style={{ position: 'absolute', bottom: 0, right: 0, width: '50%', height: '50%', borderTop: '2px dashed rgba(74,222,128,0.3)', borderLeft: '2px dashed rgba(74,222,128,0.3)' }} />
+                   
+                   <div style={{ 
+                     position: 'absolute', left: `${10 + (carPos * 30)}%`, top: carStatus === 'stop' ? '15%' : carStatus === 'go' ? '65%' : '40%', 
+                     transform: 'translateY(-50%)', transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)', 
+                     fontSize: 24, zIndex: 10
+                   }}>
+                     {carPos === 0 ? '🤔' : carStatus === 'stop' ? '🛑' : '✅'}
+                   </div>
+                </div>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <button 
+                    onClick={() => { setCarPos(1); setCarStatus('stop'); }}
+                    style={{ flex: 1, padding: '8px', fontSize: 10, background: 'rgba(239,68,68,0.1)', border: '1px solid #ef4444', color: '#fca5a5', borderRadius: 8, cursor: 'pointer', fontWeight: 700 }}
+                  >
+                    IF (Erro)
+                  </button>
+                  <button 
+                    onClick={() => { setCarPos(1); setCarStatus('go'); }}
+                    style={{ flex: 1, padding: '8px', fontSize: 10, background: 'rgba(74,222,128,0.1)', border: '1px solid #4ade80', color: '#86efac', borderRadius: 8, cursor: 'pointer', fontWeight: 700 }}
+                  >
+                    ELSE (Sucesso)
+                  </button>
+                </div>
+             </div>
+          </TechCard>
+
+          <TechCard 
+            title="Procedimentos"
+            icon={<Cpu size={24} />} 
+            color="#60a5fa"
+            desc="Efeitos Colaterais: Uma ordem direta sem retorno. Diferente das funções, eles apenas 'alteram o mundo' ao redor."
+          >
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div style={{ padding: '8px', background: 'rgba(96,165,250,0.1)', borderRadius: 10, border: '1px solid #60a5fa30', fontSize: 10, fontFamily: 'monospace' }}>
+                   void Resetar_Level() {'{\n'}  vidas = 3; score = 0; {'\n}'}
+                </div>
+                <button 
+                  onClick={() => alert("Mundo Alterado! O jogo foi resetado (Efeito Colateral).")}
+                  style={{ background: 'rgba(96,165,250,0.2)', border: '1px solid #60a5fa', color: '#fff', padding: '10px', borderRadius: 8, fontSize: 12, fontWeight: 800, cursor: 'pointer' }}
+                >
+                  Executar Procedimento ⚡
+                </button>
+             </div>
+          </TechCard>
+
+           <TechCard 
             title="Casos de Borda (Edge Cases)" 
             icon={<AlertTriangle size={24} />} 
             color="#ef4444"
@@ -387,13 +444,13 @@ export default function ProgrammingTechniques() {
              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div style={{ display: 'flex', gap: 16 }}>
                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column-reverse', gap: 2, height: 70, borderLeft: '2px solid rgba(244,63,94,0.3)', borderBottom: '2px solid rgba(244,63,94,0.3)', borderRight: '2px solid rgba(244,63,94,0.3)', padding: 4 }} title="LIFO">
-                      {stack.map((item, i) => (
+                      {stack.map((_, i) => (
                         <div key={i} style={{ padding: '4px', background: '#f43f5e', borderRadius: 4, fontSize: 10, textAlign: 'center', color: '#fff', fontWeight: 800 }}>Ação Ctrl+Z</div>
                       ))}
                       {stack.length === 0 && <span style={{ fontSize: 9, textAlign: 'center', color: 'rgba(255,255,255,0.2)', marginTop: 'auto' }}>PILHA VAZIA<br/>LIFO (Último a Entrar, Primeiro a Sair)</span>}
                    </div>
                    <div style={{ flex: 1, display: 'flex', gap: 2, height: 70, borderTop: '2px solid rgba(52,211,153,0.3)', borderBottom: '2px solid rgba(52,211,153,0.3)', padding: 4, alignItems: 'center', overflow: 'hidden' }} title="FIFO">
-                      {queue.map((item, i) => (
+                      {queue.map((_, i) => (
                         <div key={i} style={{ padding: '6px', background: '#34d399', borderRadius: 4, fontSize: 10, color: '#000', fontWeight: 800, writingMode: 'vertical-rl' }}>Música {i+1}</div>
                       ))}
                       {queue.length === 0 && <span style={{ fontSize: 9, textAlign: 'center', width: '100%', color: 'rgba(255,255,255,0.2)' }}>FILA VAZIA<br/>FIFO (Primeiro a Entrar, Primeiro a Sair)</span>}
