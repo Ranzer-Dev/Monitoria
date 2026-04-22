@@ -10,6 +10,18 @@ export default async function handler(req: Request) {
   try {
     const { systemPrompt, prompt } = await req.json();
     
+    // VERIFICAÇÃO DE SEGURANÇA: Token Interno
+    // Isso evita que robôs externos usem seu endpoint como um proxy gratuito.
+    const internalSecret = req.headers.get('x-internal-secret');
+    const expectedSecret = process.env.APP_INTERNAL_SECRET || 'monitoria-secret-dev-2026';
+    
+    if (internalSecret !== expectedSecret) {
+      return new Response(JSON.stringify({ error: 'Acesso Negado: Token de segurança inválido ou ausente.' }), { 
+        status: 403, 
+        headers: { 'content-type': 'application/json' } 
+      });
+    }
+    
     const groqKey = process.env.GROQ_API_KEY;
     const geminiKey = process.env.GEMINI_API_KEY;
 

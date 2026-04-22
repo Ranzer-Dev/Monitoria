@@ -144,6 +144,10 @@ IMPORTANTE:
       const proxyResponse = await axios.post('/api/review', {
         systemPrompt: SYSTEM_PROMPT,
         prompt: promptText
+      }, {
+        headers: {
+          'x-internal-secret': 'monitoria-secret-dev-2026' // DEVE ser igual ao APP_INTERNAL_SECRET no Vercel
+        }
       });
       
       resultJSON = typeof proxyResponse.data === 'string' 

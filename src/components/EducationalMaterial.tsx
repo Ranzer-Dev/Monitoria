@@ -1,8 +1,43 @@
-import { useState } from 'react';
-import { Cpu, HardDrive, Brain, Binary, AlertTriangle, ArrowRight, CheckCircle2, XCircle, Info, Image as ImageIcon, Zap, Layers, Code2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Cpu, HardDrive, Brain, Binary, AlertTriangle, ArrowRight, CheckCircle2, XCircle, Info, Image as ImageIcon, Zap, Layers, Code2, Book, Sparkles } from 'lucide-react';
 import DevTerm from './DevTerm';
+import ProgrammingTechniques from './ProgrammingTechniques';
+import TermosDev from './TermosDev';
 
-export default function EducationalMaterial() {
+interface EducationalMaterialProps {
+  initialTab?: 'fundamentos' | 'tecnicas' | 'glossario';
+}
+
+export default function EducationalMaterial({ initialTab = 'fundamentos' }: EducationalMaterialProps) {
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
+
+  const tabContent = {
+    fundamentos: {
+      icon: <Brain size={40} color="#a78bfa" />,
+      title: <>Fundamentos da <span style={{ color: '#a78bfa' }}>Engenharia Digital</span></>,
+      description: "A ciência por trás do código — desde o transistor que liga uma lâmpada até o programa que você vai escrever.",
+      color: "#a78bfa"
+    },
+    tecnicas: {
+      icon: <Sparkles size={40} color="#fbbf24" />,
+      title: <>Técnicas de <span style={{ color: '#fbbf24' }}>Programação Elite</span></>,
+      description: "Mentalidade e estratégias usadas por desenvolvedores de elite para resolver problemas complexos com elegância.",
+      color: "#fbbf24"
+    },
+    glossario: {
+      icon: <Book size={40} color="#2dd4bf" />,
+      title: <>TermosDev: <span style={{ color: '#2dd4bf' }}>Dicionário</span></>,
+      description: "O seu dicionário de 'Devês para Português'. Entenda os termos técnicos mais comuns do mercado de forma didática.",
+      color: "#2dd4bf"
+    }
+  };
+
+  const current = tabContent[activeTab];
+
   return (
     <div style={{
       maxWidth: 1200,
@@ -16,32 +51,72 @@ export default function EducationalMaterial() {
       paddingRight: 20
     }}>
 
-      {/* 🚀 Header */}
+      {/* 🚀 Header Dinâmico */}
       <div style={{
-        background: 'linear-gradient(145deg, rgba(139, 92, 246, 0.1) 0%, rgba(109, 40, 217, 0.05) 100%)',
-        border: '1px solid rgba(139, 92, 246, 0.2)',
-        borderRadius: 24,
+        background: 'linear-gradient(145deg, rgba(30, 30, 40, 0.4) 0%, rgba(20, 20, 30, 0.4) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        borderRadius: 32,
         padding: '60px 24px',
         textAlign: 'center',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: 20,
-        marginTop: '6.5%'
+        marginTop: '6.5%',
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
-        <div style={{
-          width: 72, height: 72, borderRadius: '50%', background: 'rgba(139, 92, 246, 0.15)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8
+        <div key={activeTab + '-icon'} style={{
+          width: 72, height: 72, borderRadius: '50%', background: `${current.color}10`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8,
+          border: `1px solid ${current.color}20`,
+          animation: 'scaleIn 0.3s ease-out'
         }}>
-          <Brain size={40} color="#a78bfa" />
+          {current.icon}
         </div>
-        <h1 style={{ margin: 0, fontSize: 42, fontWeight: 900, letterSpacing: '-0.03em', color: '#fff' }}>
-          Fundamentos da <span style={{ color: '#a78bfa' }}>Engenharia Digital</span>
+        <h1 key={activeTab + '-title'} style={{ margin: 0, fontSize: 42, fontWeight: 900, letterSpacing: '-0.03em', color: '#fff', animation: 'fadeInUp 0.3s ease-out' }}>
+          {current.title}
         </h1>
-        <p style={{ margin: 0, fontSize: 18, color: 'rgba(255,255,255,0.5)', maxWidth: 750, lineHeight: 1.6 }}>
-          A ciência por trás do código — desde o transistor que liga uma lâmpada até o programa que você vai escrever.
+        <p key={activeTab + '-desc'} style={{ margin: 0, fontSize: 18, color: 'rgba(255,255,255,0.5)', maxWidth: 750, lineHeight: 1.6, animation: 'fadeInUp 0.4s ease-out' }}>
+          {current.description}
         </p>
       </div>
+
+      {/* 📑 Navegação por Abas (Substituído para fora do card) */}
+      <div style={{ 
+        display: 'flex', justifyContent: 'center', gap: 16, marginTop: -20, zIndex: 10
+      }}>
+        <div style={{
+          display: 'flex', gap: 8, padding: 6, 
+          background: 'rgba(15, 15, 20, 0.6)', backdropFilter: 'blur(12px)',
+          borderRadius: 24, border: '1px solid rgba(255,255,255,0.05)',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+        }}>
+           <TabBtn 
+             active={activeTab === 'fundamentos'} 
+             label="Fundamentos" 
+             icon={<Binary size={16} />} 
+             color="#a78bfa"
+             onClick={() => setActiveTab('fundamentos')} 
+           />
+           <TabBtn 
+             active={activeTab === 'tecnicas'} 
+             label="Técnicas de Elite" 
+             icon={<Sparkles size={16} />} 
+             color="#fbbf24"
+             onClick={() => setActiveTab('tecnicas')} 
+           />
+           <TabBtn 
+             active={activeTab === 'glossario'} 
+             label="Glossário Dev" 
+             icon={<Book size={16} />} 
+             color="#2dd4bf"
+             onClick={() => setActiveTab('glossario')} 
+           />
+        </div>
+      </div>
+
+      {activeTab === 'fundamentos' && (
+        <>
 
       {/* 🌟 Módulo 0: Por que 0 e 1? */}
       <TheoryCard
@@ -549,10 +624,20 @@ export default function EducationalMaterial() {
 
         </div>
       </TheoryCard>
+    </>
+  )}
 
+      {activeTab === 'tecnicas' && <ProgrammingTechniques />}
+      
+      {activeTab === 'glossario' && (
+        <div style={{ animation: 'fadeIn 0.4s ease-out' }}>
+           <TermosDev />
+        </div>
+      )}
     </div>
   );
 }
+
 
 // -----------------------------------------------------------------------------
 // Componente: TruthTableSimulator
@@ -1290,9 +1375,45 @@ function TheoryCard({ index, title, description, icon, accentColor, children }: 
   );
 }
 
-// -----------------------------------------------------------------------------
-// Componente: ArchitectureLogicView — Visualização de "Arquitetura/Circuito"
-// -----------------------------------------------------------------------------
+const styles = `
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .glow-active {
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.2);
+  }
+`;
+
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement("style");
+  styleSheet.innerText = styles;
+  document.head.appendChild(styleSheet);
+}
+
+function TabBtn({ active, label, icon, color, onClick }: { active: boolean; label: string; icon: React.ReactNode; color: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        padding: '10px 20px', borderRadius: 16, border: 'none', cursor: 'pointer',
+        fontWeight: 700, fontSize: 13, transition: 'all 0.2s',
+        display: 'flex', alignItems: 'center', gap: 8,
+        background: active ? `${color}15` : 'transparent',
+        color: active ? color : 'rgba(255,255,255,0.4)',
+        boxShadow: active ? `0 0 0 1px ${color}30` : 'none',
+      }}
+      className={active ? 'glow-active' : ''}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+}
 function ArchitectureLogicView({ gate, inputA, inputB, result, setInputA, setInputB }: {
   gate: 'AND' | 'OR' | 'NOT',
   inputA: number,

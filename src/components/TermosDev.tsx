@@ -31,31 +31,8 @@ const TermosDev: React.FC = () => {
       display: 'flex', 
       flexDirection: 'column', 
       gap: 32, 
-      animation: 'fadeIn 0.4s ease-out',
-      marginTop: '4%'
+      animation: 'fadeIn 0.4s ease-out'
     }}>
-      {/* Header da Página */}
-      <div style={{ textAlign: 'center', maxWidth: 800, margin: '0 auto' }}>
-        <h1 style={{ fontSize: 42, fontWeight: 900, marginBottom: 16, background: 'linear-gradient(135deg, #fff 0%, #a78bfa 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          TermosDev
-        </h1>
-        <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
-          O seu dicionário de "Devês para Português". Entenda os termos técnicos mais comuns do mercado de forma didática e direta.
-        </p>
-        
-        {/* Banner Pedagógico para Redução de Carga Cognitiva */}
-        <div style={{ 
-          marginTop: 24, padding: '12px 20px', background: 'rgba(167,139,250,0.1)', 
-          border: '1px solid rgba(167,139,250,0.2)', borderRadius: 16, 
-          display: 'inline-flex', alignItems: 'center', gap: 12, textAlign: 'left'
-        }}>
-          <span style={{ fontSize: 20 }}>💡</span>
-          <p style={{ margin: 0, fontSize: 13, color: 'rgba(167,139,250,0.9)', fontWeight: 500, lineHeight: 1.4 }}>
-            <strong>Dica Pedagógica:</strong> Não tente memorizar tudo! Use o TermosDev como um guia de consulta. 
-            Sempre que encontrar uma palavra estranha nas aulas, ela estará aqui para te salvar.
-          </p>
-        </div>
-      </div>
 
       {/* Busca e Filtros */}
       <div style={{ 

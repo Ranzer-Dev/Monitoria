@@ -22,21 +22,36 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [language, setLanguage] = useState<Language>('python');
-  const [view, setView] = useState<'practice' | 'theory' | 'glossary'>('theory');
+  const [view, setView] = useState<'practice' | 'theory'>('theory');
+  const [theoryTab, setTheoryTab] = useState<'fundamentos' | 'tecnicas' | 'glossario'>('fundamentos');
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {
     const handleResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     const handleViewChange = (e: any) => {
       console.log("📍 App: Evento recebido:", e.detail);
-      if (e.detail?.view) setView(e.detail.view);
+      if (e.detail?.view) {
+        if (e.detail.view === 'glossary') {
+            setView('theory');
+            setTheoryTab('glossario');
+        } else {
+            setView(e.detail.view);
+            if (e.detail.tab) setTheoryTab(e.detail.tab);
+        }
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     // Função Global de Navegação (Source of Truth)
-    (window as any).monitoriaNavigate = (viewName: 'practice' | 'theory' | 'glossary') => {
-      console.log("🚀 App: Navegação Global disparada para:", viewName);
-      setView(viewName);
+    (window as any).monitoriaNavigate = (viewName: 'practice' | 'theory' | 'glossary', tabName?: 'fundamentos' | 'tecnicas' | 'glossario') => {
+      console.log("🚀 App: Navegação Global disparada para:", viewName, tabName);
+      if (viewName === 'glossary') {
+        setView('theory');
+        setTheoryTab('glossario');
+      } else {
+        setView(viewName as any);
+        if (tabName) setTheoryTab(tabName);
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -94,7 +109,10 @@ function App() {
         language={language}
         onLanguageChange={setLanguage}
         view={view}
-        onViewChange={setView}
+        onViewChange={(v, t) => {
+          setView(v);
+          if (t) setTheoryTab(t);
+        }}
       />
 
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 md:px-8 pt-40 pb-8">
@@ -108,10 +126,8 @@ function App() {
             isListUnlocked={(listId) => isListUnlocked(listId, language)}
             getListProgress={(listId) => getListProgress(listId, language)}
           />
-        ) : view === 'theory' ? (
-          <EducationalMaterial />
         ) : (
-          <TermosDev />
+          <EducationalMaterial initialTab={theoryTab} />
         )}
       </main>
 

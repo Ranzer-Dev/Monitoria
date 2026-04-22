@@ -217,6 +217,86 @@ export const glossaryData: GlossaryItem[] = [
     category: 'backend',
     tags: ['ia', 'dados', 'busca'],
     explanation: 'É um tipo de banco de dados onde guardamos informações não por "nome", mas por "sentido". Isso permite que a IA encontre coisas relacionadas por contexto, mesmo que as palavras sejam diferentes.'
+  },
+  {
+    id: 'recursividade',
+    term: 'Recursividade',
+    translation: 'Auto-Chamada',
+    category: 'conceitos',
+    tags: ['lógica', 'loops', 'matemática'],
+    explanation: 'É quando uma função resolve um problema chamando a si mesma com uma versão menor do mesmo problema. Imagine dois espelhos um de frente para o outro.'
+  },
+  {
+    id: 'big-o',
+    term: 'Big O',
+    translation: 'Nível de Esforço',
+    category: 'conceitos',
+    tags: ['performance', 'algoritmos', 'eficiência'],
+    explanation: 'É a régua que usamos para medir quão "pesado" um código fica quando aumentamos a quantidade de dados. Ajuda a saber se seu site vai travar com 1 milhão de usuários.'
+  },
+  {
+    id: 'ponteiro',
+    term: 'Ponteiro',
+    translation: 'O GPS da Memória',
+    category: 'conceitos',
+    tags: ['memória', 'c', 'baixo nível'],
+    explanation: 'É uma variável que não guarda um valor (como 10), mas sim o endereço de onde outro dado está na RAM. É como guardar o papel com o endereço da casa em vez da casa.'
+  },
+  {
+    id: 'modularizacao',
+    term: 'Modularização',
+    translation: 'Peças de LEGO',
+    category: 'processos',
+    tags: ['organização', 'arquitetura', 'limpeza'],
+    explanation: 'É o ato de dividir um programa gigante em peças menores e independentes (módulos). Facilita o conserto e permite que mais pessoas trabalhem no mesmo projeto.'
+  },
+  {
+    id: 'kiss',
+    term: 'KISS',
+    translation: 'Mantenha Simples',
+    category: 'conceitos',
+    tags: ['filosofia', 'simplicidade', 'design'],
+    explanation: 'Sigla para "Keep It Simple, Stupid". É o princípio de que a maioria dos sistemas funciona melhor se forem mantidos simples em vez de complicados.'
+  },
+  {
+    id: 'abstracao',
+    term: 'Abstração',
+    translation: 'Esconder Detalhes',
+    category: 'conceitos',
+    tags: ['poo', 'arquitetura', 'design'],
+    explanation: 'É focar no "o que" algo faz em vez de "como" faz. Você usa o controle remoto (interface simples) sem precisar entender os circuitos internos (detalhes complexos).'
+  },
+  {
+    id: 'poo',
+    term: 'POO',
+    translation: 'Programação de Objetos',
+    category: 'conceitos',
+    tags: ['objetos', 'classes', 'arquitetura'],
+    explanation: 'A Programação Orientada a Objetos é um jeito de organizar o código como se fossem "coisas" do mundo real (Objetos), que têm características e ações próprias.'
+  },
+  {
+    id: 'borda',
+    term: 'Caso de Borda (Edge Case)',
+    translation: 'Situação Limite',
+    category: 'conceitos',
+    tags: ['erros', 'testes', 'segurança'],
+    explanation: 'São situações raras que acontecem nos "limites" do sistema. Ex: O que acontece se o usuário tentar sacar R$ 0,00 ou R$ -1,00?'
+  },
+  {
+    id: 'procedimento',
+    term: 'Procedimento (Void)',
+    translation: 'Tarefa Pura',
+    category: 'conceitos',
+    tags: ['funções', 'lógica', 'instrução'],
+    explanation: 'É um bloco de código que executa uma ação mas não "devolve" nada. É como mandar alguém lavar a louça: a ação é feita, mas não sai um resultado (valor) da mão da pessoa.'
+  },
+  {
+    id: 'controle',
+    term: 'Estruturas de Controle',
+    translation: 'Cruzamentos do Código',
+    category: 'conceitos',
+    tags: ['lógica', 'if', 'else'],
+    explanation: 'São os comandos que decidem qual caminho o programa vai seguir. O IF/ELSE decide se vira para esquerda ou direita, e o LOOP decide se volta para o começo.'
   }
 ];
 
