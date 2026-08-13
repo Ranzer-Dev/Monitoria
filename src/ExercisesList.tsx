@@ -95,7 +95,8 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
             <button
               key={i}
               onClick={() => {
-                if (opt === exercise.correctAnswer) {
+                const correctAns = exercise.answer || exercise.correctAnswer;
+                if (opt === correctAns || (correctAns && opt.startsWith(String(correctAns)))) {
                   onComplete();
                 } else {
                   alert("Tente novamente!");
