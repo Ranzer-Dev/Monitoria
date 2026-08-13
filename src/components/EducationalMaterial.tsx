@@ -24,8 +24,8 @@ export default function EducationalMaterial({ initialTab = 'fundamentos' }: Educ
     },
     tecnicas: {
       icon: <Sparkles size={40} color="#fbbf24" />,
-      title: <>Técnicas de <span style={{ color: '#fbbf24' }}>Programação Elite</span></>,
-      description: "Mentalidade e estratégias usadas por desenvolvedores de elite para resolver problemas complexos com elegância.",
+      title: <>Técnicas de <span style={{ color: '#fbbf24' }}>Programação</span></>,
+      description: "Mentalidade e estratégias usadas por desenvolvedores para resolver problemas complexos com elegância.",
       color: "#fbbf24"
     },
     glossario: {
@@ -100,7 +100,7 @@ export default function EducationalMaterial({ initialTab = 'fundamentos' }: Educ
            />
            <TabBtn 
              active={activeTab === 'tecnicas'} 
-             label="Técnicas de Elite" 
+             label="Técnicas de Programação" 
              icon={<Sparkles size={16} />} 
              color="#fbbf24"
              onClick={() => setActiveTab('tecnicas')} 

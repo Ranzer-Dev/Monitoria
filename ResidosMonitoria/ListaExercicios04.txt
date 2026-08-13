@@ -1,0 +1,99 @@
+﻿LISTA DE EXERCÍCIOS 4 
+
+Atenção! Na literatura, você vai encontrar um sinônimo de LISTA... São os Vetores!  Abaixo você vai encontrar exercícios que 
+pedem esta estrutura de dados (vetores). É a mesma coisa que listas!!  
+
+1. Faça um Programa que leia uma lista de 5 números inteiros e mostre-os. 
+2. Faça um Programa que leia uma lista de 10 números reais e mostre-os na ordem inversa. 
+3. Faça um Programa que leia 4 notas, mostre as notas e a média na tela. 
+4. Faça um Programa que leia um vetor de 10 caracteres, e diga quantas consoantes foram lidas. Imprima as consoantes. 
+5. Faça um Programa que leia 20 números inteiros e armazene-os em uma lista. Armazene os números pares na lista PAR e 
+
+os números IMPARES na lista impar. Imprima as três listas. 
+6. Faça um Programa que peça as quatro notas de 10 alunos, calcule e armazene num vetor a média de cada aluno, imprima 
+
+o número de alunos com média maior ou igual a 7.0. 
+7. Faça um Programa que leia um vetor de 5 números inteiros, mostre a soma, a multiplicação e os números. 
+8. Faça um Programa que peça a idade e a altura de 5 pessoas, armazene cada informação no seu respectivo vetor. Imprima 
+
+a idade e a altura na ordem inversa a ordem lida. 
+9. Faça um Programa que leia um vetor A com 10 números inteiros, calcule e mostre a soma dos quadrados dos elementos 
+
+do vetor. 
+10. Faça um Programa que leia dois vetores com 10 elementos cada. Gere um terceiro vetor de 20 elementos, cujos valores 
+
+deverão ser compostos pelos elementos intercalados dos dois outros vetores. 
+11. Foram anotadas as idades e alturas de 30 alunos. Faça um Programa que determine quantos alunos com mais de 13 anos 
+
+possuem altura inferior à média de altura desses alunos. 
+12. Faça um programa que receba a temperatura média de cada mês do ano e armazene-as em uma lista. Após isto, calcule 
+
+a média anual das temperaturas e mostre todas as temperaturas acima da média anual, e em que mês elas ocorreram 
+(mostrar o mês por extenso: 1 – Janeiro, 2 – Fevereiro, . . . ). 
+
+13. Faça um programa que leia um número indeterminado de valores, correspondentes a notas, encerrando a entrada de dados 
+quando for informado um valor igual a -1 (que não deve ser armazenado). Após esta entrada de dados, faça: 
+
+a. Mostre a quantidade de valores que foram lidos; 
+b. Exiba todos os valores na ordem em que foram informados, um ao lado do outro; 
+c. Exiba todos os valores na ordem inversa à que foram informados, um abaixo do outro; 
+d. Calcule e mostre a soma dos valores; 
+e. Calcule e mostre a média dos valores; 
+f. Calcule e mostre a quantidade de valores acima da média calculada; 
+g. Calcule e mostre a quantidade de valores abaixo de sete; 
+h. Encerre o programa com uma mensagem; 
+
+14. Utilize uma lista para resolver o problema a seguir. Uma empresa paga seus vendedores com base em comissões. O 
+vendedor recebe $200 por semana mais 9 por cento de suas vendas brutas daquela semana. Por exemplo, um vendedor 
+que teve vendas brutas de $3000 em uma semana recebe $200 mais 9 por cento de $3000, ou seja, um total de $470. 
+Escreva um programa (usando um array de contadores) que determine quantos vendedores receberam salários nos 
+seguintes intervalos de valores: 
+
+a. $200 - $299 
+b. $300 - $399 
+c. $400 - $499 
+d. $500 - $599 
+e. $600 - $699 
+f. $700 - $799 
+g. $800 - $899 
+h. $900 - $999 
+i. $1000 em diante 
+
+Desafio: Crie ma fórmula para chegar na posição da lista a partir do salário, sem fazer vários ifs aninhados. 
+
+15. Uma empresa de pesquisas precisa tabular os resultados da seguinte enquete feita a um grande quantidade de 
+organizações: 
+
+"Qual o melhor Sistema Operacional para uso em servidores?" 
+ 
+As possíveis respostas são: 
+ 
+1- Windows Server 
+2- Unix 
+3- Linux 
+4- Netware 
+5- Mac OS 
+6- Outro 
+
+Você foi contratado para desenvolver um programa que leia o resultado da enquete e informe ao final o resultado da 
+mesma. O programa deverá ler os valores até ser informado o valor 0, que encerra a entrada dos dados. Não deverão ser 
+aceitos valores além dos válidos para o programa (0 a 6). Os valores referentes a cada uma das opções devem ser 
+
+
+
+armazenados num vetor. Após os dados terem sido completamente informados, o programa deverá calcular a percentual 
+de cada um dos concorrentes e informar o vencedor da enquete. O formato da saída foi dado pela empresa, e é o seguinte: 
+
+Sistema Operacional     Votos   % 
+-------------------     -----   --- 
+Windows Server           1500   17% 
+Unix                     3500   40% 
+Linux                    3000   34% 
+Netware                   500    5% 
+Mac OS                    150    2% 
+Outro                     150    2% 
+-------------------     ----- 
+Total                    8800 
+ 
+O Sistema Operacional mais votado foi o Unix, com 3500 votos, correspondendo a 40% 
+dos votos.

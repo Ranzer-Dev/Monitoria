@@ -249,7 +249,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                  <div style={{ height: 500, borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
                     <CodeEditor 
-                      initialCode={exercise.initialCode || exercise.lesson.example} 
+                      initialCode={exercise.initialCode || ''} 
                       language={language}
                       onExecute={handleSubmission}
                       isInitializing={isInitializing}

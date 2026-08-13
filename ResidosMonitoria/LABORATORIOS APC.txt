@@ -1,0 +1,2986 @@
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES 
+CIÊNCIA DA COMPUTAÇÃO
+
+
+1- Cronograma Previsto
+SemanaAssunto Previsto1Apresentação da Disciplina e critérios de avaliação2Regras de Trabalho – Equipes – Sistema Computacional e Sistema Operacional3Um exemplo simples de programa em C - Edição de programa e correção de erros – Execução de programas – Cópias de segurança  - Restauração de Programas4Tipos Primitivos de Dados  suportados por C -  Operações  e Operadores – Constantes e Variáveis - Declarações e Expressões - Valores e Variáveis  - Outros tipos de dados - Comandos de Entrada e Saída
+5Comando Condicional6Comandos de Seleção: switch
+Comandos de Escape: break e continue 7Comandos Iterativos
+- while
+- do
+- for8Conceito de Programa em C -  A função main() – Funções de biblioteca – Funções do usuário – Exemplo de programa envolvendo funções de biblioteca – Exemplo de programa envolvendo funções simples desenvolvidas pelo usuário9Avaliação10Correção/Recuperação11Vetores em C12Vetores de caracteres - Strings13Matrizes14Matrizes15Estruturas e Uniões16Apontadores em C - Variáveis Estáticas e Variáveis Dinâmicas – Comandos new e delete17Vetores e estruturas dinâmicas18Avaliação19Revisão Geral203ª.Avaliação
+
+OBS: O exercícios foram elaborados por professores que ministram/ministraram a disciplina na PUC-Campinas e complementado com material didático sobre a Linguagem C elaborado pela UFMG e encontrado nos seguintes livros:
+Kernighan, B. & Ritchie, D. C - A linguagem de programação padrão ANSI. Editora Campus. 
+Schildt, H. Turbo C - guia do usuário . Editora McGraw-Hill,. 
+Schildt, H. C - completo e total . Editora McGraw-Hill. 
+Carpenter, V. Learn C/C++ today : http://www.cyberdiem.com/vin/learn.html (uma coleção de referências e tutoriais sobre as linguagens C e C++ disponíveis na Internet) 
+Mizrahi, V. V. Treinamento em linguagem C - Módulos 1 e 2. Editora McGraw-Hill. 
+ 
+
+
+
+2- Enunciados e  Roteiros para as práticas de laboratório:
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades de: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 1                                                                Data: ___/___/___
+
+Professor: Apresentação da disciplina e critérios de avaliação
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+CIÊNCIA DA COMPUTAÇÃO
+
+Prática de Laboratório no 2                                                                Data: ___/___/___
+
+Professor: Regras de Trabalho – Equipes – Sistema Computacional e Sistema Operacional
+
+Aluno: Cada aluno deverá fazer o seu cadastramento no sistema. Para tanto deverá  executar o roteiro fornecido pelo laboratório. Treinar o LOGIN e LOGOUT individualmente, memorizar rotina e senha de acesso. Breves noções sobre o computador e o Sistema Operacional.  Possíveis problemas deverão serem resolvidos com o auxílio do professor e do pessoal do laboratório. Esses assuntos não serão objeto de nenhuma das aulas de laboratório seguintes.
+
+
+-------------------------
+Aplicação de uma avaliação diagnóstica para verificar o grau de entendimento Lógico dos alunos.
+---------------------------------------------------------------------------------------------------------
+
+
+Estas Notas de Aula, visam aumentar a produtividade dos alunos nas aulas teóricas, evitando a cópia das teorias expostas. Grande parte dos exemplos analisados em sala de aula e enunciados de exercícios constam nesta apostila, além da resolução de alguns destes. Os EC (exercícios de classe), serão normalmente baseados nos exercícios complementares de cada Aula a serem desenvolvidos preferencialmente no laboratório.
+Habitualmente antes de resolvermos exemplos ou exercícios, elaboraremos o algoritmo, que nada mais é que uma seqüência de operações cuja execução produz um resultado que é a resposta de um problema proposto.
+Um programa de computador nada mais é que a codificação de um algoritmo numa linguagem de programação. Linguagens como C, Pascal, BASIC, ALGOL, Clipper, COBOL, etc., são chamadas de procedurais, devido ao fato das instruções serem executadas de forma seqüencial, enquanto que as linguagens baseadas no conceito de eventos como C++, Visual BASIC, Visual Objects, utilizam outra estratégia de programação (Programação Orientada ao Objeto), a ser vista em outro módulo do curso (OOP), em C utilizaremos a metodologia estruturada.
+Os algoritmos podem ser estruturados ou não, conforme exemplificamos a seguir no cálculo do máximo divisor comum entre dois números inteiros positivos, com operações elementares:
+Linear
+Leia m,n
+(1)	se n = 0 então
+imprima m
+pare
+k <- m - Int(m / n) * n
+m <- n 
+n <- k
+vá para (1)
+
+
+Em Quick BASIC teríamos      	    	     Em BASICA teríamos
+
+   input m : input n           10 input m : input n
+10 if n = 0 then               20 if n <> 0 then 50
+      print m                  30 imprima m
+   end if                      40 end
+   k = m - Int(m / n) * n      50 k = m - Int(m / n) * n
+   m = n                       60 m = n
+   n = k                       70 n = k
+   goto 10                     80 goto 20
+
+O Algoritmo de Euclides anteriormente apresentado , apesar de muito simples, executado normalmente por qualquer criança de primeiro grau, ganha contornos de aparente dificuldade quando transcrito para o GW-BASIC, um dialeto BASIC, que exige numeração de linhas, que nos obrigou a alterar um pouco a estratégia de resolução do problema. Já a versão em Quick BASIC, poderia ser transcrita por qualquer pessoa com um mínimo de conhecimento em algoritmos e BASIC.
+Estruturado
+Inteiros m,n
+Leia m,n
+enquanto n <> 0 faça
+k <- m - Int(m / n) * n
+m <- n
+n <- k
+imprima m
+pare
+Em C teríamos                               Em Clipper teríamos
+main()                         input to a
+{                              input to b
+  int m,n,k;                   do while n <> 0
+  scanf(“%d”,&m);                 k = m - Int(m / n) * n
+  scanf(“%d”,&n);                 m = n
+  while (n != 0) {                n = k
+    k = m - m / n * n;         enddo
+  		m = n;                  	  ? m
+		n = k;
+  }
+printf(“%d”,m);
+}
+
+Nas Linguagens estruturadas a representação fica idêntica, quer em C quer em Clipper. Ficaria a mesma forma em Quick BASIC, Pascal ou COBOL Estruturado, daí a preferência na abordagem dita estruturada. No decorrer deste curso nos deteremos detalhadamente no estudo dos algoritmos estruturados e analisaremos alguns (poucos, porém importantes) casos onde a programação linear é mais adequada que a estruturada.
+
+Simulação
+Por melhor que seja o conhecimento do Analista/Programador, este só poderá ter certeza que sua “estratégia” foi bem sucedida após testar o programa num computador.
+Bons programadores tem poucas surpresas quando testam seus programas, fazendo normalmente umas poucas correções para que o programa funcione de maneira adequada.
+Programadores iniciantes criam uma estratégia (algoritmo) muitas vezes ineficiente e normalmente “correm” para o computador visando testar o programa e acabam por perder um tempo enorme. Não é raro ouvirmos de iniciantes a frase “Nunca conseguirei fazer um programa ...”. Certamente, não conseguirá mesmo, caso não tenha uma estratégia definida.
+Imagine uma “tarefa” muito simples, como por exemplo fritar um ovo. Caso você não soubesse “operar” o fogão provavelmente não conseguiria acendê-lo. Se nunca tivesse visto alguém quebrar um ovo, provavelmente não conseguiria fazê-lo sem perder parte de seu conteúdo. A fritura seria algo desastroso, caso você desconhecesse a utilidade do óleo. E o sabor seria frustrante, caso o tempero utilizado fosse açúcar.
+O Programador iniciante que não simula seu algoritmo, se compara ao cozinheiro desastrado descrito acima. E como simular?
+Basta “agirmos” como se fossemos o próprio computador, ou seja devemos “fingir” que nosso raciocíneo é baseado no conteúdo de variáveis. De fato, usualmente antes de tomarmos alguma decisão analisamos uma série de fatores (as tais variáveis dos programas). Desta forma, caso fizermos uma análise apurada sobre os conteúdos das variáveis, poderemos “descobrir” a função de cada programa.
+Primeiramente vamos resolver o problema como aprendemos no primeiro grau.
+Supondo M = 120 e N = 28.
+Dividendo=120288Divisor=2884   -->MDCQuociente=432Resto=840
+Simulação:
+
+MNKImpressoInstruçõesComentários12028Declarações e Leituras8Enquanto n <> 0
+k = m - m / n * nCálculo do Resto288m = n; n = kNovos Divisor e Dividendos4Enquanto n <> 0
+k = m - m / n * nVoltando ao Teste
+Cálculo do Resto40m = n; n = kNovos Divisor e DividendosEnquanto n <> 0N é Zero4Achou MDC!Observação Final: Obviamente caso você se sinta seguro a resolver diretamente o problema na linguagem diretamente no computador, faça isto. Porém se surgirem dificuldades, não se esqueça de fazer o algoritmo e a simulação. Lembre-se do cozinheiro desastrado, que se tivesse consultado uma simples receita (todo algoritmo não passa de uma receita sofisticada), poderia ao menos fritar o ovo!
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+CIÊNCIA DA COMPUTAÇÃO
+
+Prática de Laboratório no 3                                                                Data: ___/___/___
+
+Tema: Um exemplo simples de programa em C - Edição e Correção de erros – Execução de programas – Cópias de segurança  - Restauração de Programas.
+
+
+
+Objetivos:
+* Tornar o Aluno apto a programar em C (pequenos programas).
+* Conhecimento do C Clássico (Classic C).
+* Conhecimento do Turbo C (compilador voltado ao aprendizado e também usado comercialmente).
+Estrutura do Curso:
+* Aulas Teóricas: Exposição, Exemplos e Exercícios.
+* Aulas Práticas: Processar Programas Prontos e Elaboração de Exercícios.
+
+Introdução
+Desenvolvida nos laboratórios Bell na década de 70, a partir da Linguagem B (criada no final dos anos 60 por Ken Thompson), que foi reformulada por Brian Kernighan e Dennis M. Ritchie e posteriormente renomeada para C.
+Podendo ser considerada como uma linguagem de médio nível, pois possui instruções que a tornam ora uma linguagem de alto nível e estruturada como o Pascal, se assim se fizer necessário, ora uma linguagem de baixo nível pois possui instruções tão próximas da máquina, que só o Assembler possui.
+De fato com a linguagem C podemos construir programas organizados e concisos (como o Pascal), ocupando pouco espaço de memória com alta velocidade de execução (como o Assembler). Infelizmente, dada toda a flexibilidade da linguagem, também poderemos escrever programas desorganizados e difíceis de serem compreendidos (como usualmente são os programas em BASIC).
+Devemos lembrar que a linguagem C foi desenvolvida a partir da necessidade de se escrever programas que utilizassem recursos próprios da linguagem de máquina de uma forma mais simples e portável que o assembler.
+Uma análise superficial dos programas escritos em C e Clipper (Aula 01 - Algoritmos Estruturados), nos permite perceber que a linguagem C supera em muito em dificuldade o programa análogo em Clipper. Ora, então porque não desenvolvermos programas somente em Clipper?
+A inúmeras razões para a escolha da linguagem C como a predileta para os desenvolvedores “profissionais”. As características da Linguagem C servirão para mostrar o porquê de sua ampla utilização.
+
+Características da Linguagem C
+* Portabilidade entre máquinas e sistemas operacionais.
+* Dados compostos em forma estruturada.
+* Programas Estruturados.
+* Total interação com o Sistema Operacional.
+* Código compacto e rápido, quando comparado ao código de outras linguagem de complexidade análoga.
+
+Aplicações Escritas em C
+Atualmente, nos USA, C é a linguagem mais utilizada pelos programadores, por permitir, dadas suas características, a escrita de programas típicos do Assembler, BASIC, COBOL e Clipper, sempre com maior eficiência e portabilidade, como podemos constatar pelos exemplos abaixo relacionados:
+* Sistema Operacional: UNIX (Sistema Operacional executável em micro computadores e em mainframes).
+* Montadores: Clipper (O utilitário de banco de dados mais usado no Brasil).
+* Planilhas: 1,2,3 e Excel (A planilha eletrônica com maior volume de vendas mundial).
+* Banco de Dados: dBase III, IV e Access (o gerenciador de base de dados mais utilizado no mundo).
+* InfoStar: O Editor de Texto mais utilizado nos USA no Sistema Operacional UNIX.
+* Utilitários: FormTool (Editor de formulário mais vendido no mundo).
+* Aplicações Gráficas: Efeitos Especiais de filmes com Star Trek e Star War.
+* Linguagens como o Power Builder e o Visual Basic, respectivamente as linguagens mais utilizadas nos EUA e no Brasil.
+No Brasil utilizada por empresas especializadas na elaboração de vinhetas e outros efeitos especiais.
+
+C comparado a outras linguagens
+Devemos entender Nível Alto como sendo a capacidade da linguagem em compreender instruções escritas em “dialetos” próximos do inglês (Ada e Pascal, por exemplo) e Nível Baixo para aquelas linguagens que se aproximam do assembly, que é a linguagem própria da máquina, compostas por instruções binárias e outras incompreensíveis para o ser humano não treinado para este propósito. Infelizmente, quanto mais clara uma linguagem for para o humano (simplicidade >) mais obscura o será para a máquina (velocidade <).
+Observemos o esquema a seguir:
+Nível BaixoNível MédioNível AltoVELOCIDADECLAREZAAssemblerMacro Assembler
+ForthCFortranBasic
+COBOLPascalAda
+MODULA-2
+Antes da linguagem C tornar-se um padrão de fato (meados de 1.988, nos USA), tínhamos aproximadamente, o seguinte perfil de mercado:
+* Aplicações de Banco de Dados
+* Mainframe: COBOL e gerenciadores
+* Micros: dBase, Clipper e BASIC e gerenciadores como Btrieve
+* Aplicações Gráficas: Pascal.
+* Aplicações Científicas: FORTRAN e Pascal.
+* Utilitários, Sistemas Operacionais e Compiladores: Assembler.
+
+A chegada de poderosos compiladores C (Borland, Microsoft e Zortech-Symantec), revolucionou totalmente estes conceitos pois passou a permitir a construção de praticamente qualquer tipo de aplicação na Linguagem C, normalmente mais rápidas do que na linguagem original e portável entre os diversos ambientes (“roda” em DOS, UNIX, etc. com poucas mudanças). Devemos entender no entanto, que apenas temos uma relativa portabilidade, pois a verdadeira portabilidade depende necessariamente da implementação do sistema operacional, necessariamento aberto, o que não existe fora do mundo Unix.
+
+Quadro de características de linguagens:
+Linguagens
+Características IdeaisAssemblerBASIC
+PascalClipperCOBOLCExecutáveis Curtosótimo :) fraco :(péssimo :(:(fraco :(ótimo :)Executáveis Rápidosótimo :)bomrazoávelfraco :(bomPortáveispéssimo :(:(bomótimo :)ótimo :)bomManipulação de Bitsótimo :)razoávelpéssimo :(:(fraco :(ótimo :)
+O quadro anterior, deixa claro o porquê da revolução causada pela Linguagem C, dados os inúmeros pontos fortes da linguagem e a inexistência de pontos fracos da mesma. Não devemos concluir apressadamente que poderemos desenvolver tudo em C e abandonarmos todas as outras linguagens, pelos seguintes motivos:
+* Alta base de programas escritos em Assembler, COBOL, BASIC, Pascal.
+* Conhecimento amplo de linguagens concorrentes como COBOL, Clipper e BASIC.
+* Melhor adaptação de alguma linguagem para tarefa específica como Gráficos (Pascal), Inteligência Artificial (Prolog, LISP), matemáticas (Pascal e FORTRAN), aplicações comerciais (COBOL, Clipper e BASIC).
+* As versões atuais das linguagens BASIC, C, Clipper, Pascal e COBOL, estão muito mais semelhantes do que o eram ao tempo em que este quadro foi elaborado, portanto na prática muitas vezes este quadro, meramente teórico, pode tornar-se inaplicável.
+
+A médio prazo, podemos afirmar que a linguagem C deverá ir desalojando as outras linguagens podendo até mesmo tornar-se um padrão de direito, porém devemos lembrar que algumas linguagens foram propostas para isto (Algol, PL/1) e não só não conseguiram atingir seus objetivos como praticamente desapareceram. 
+A tabela anteior não esgota todas as possibilidades, pois alguns dialetos de linguagem destacam recursos que na maior parte das implementações da linguagem não são muito fortes. O inverso também pode ocorrer, de modo que as vezes uma implementação corrige algum defeito da linguagem (por exemplo aumenta drasticamente seu desempenho) e piora outras (portabilidade inexistente). Este problema afeta sensivelmente o BASIC e as implementações xBase (Fox, dBase e Clipper) e em menor grau o Pascal e a própria linguagem C.
+
+Nota de Revisão: Apesar da Linguagem C ter crescido de cerca de 3% das instalações no Brasil, quando da escrita da primeira versão desta apostila (1989),  para cerca de 20% das instalações atualmente (1997), o número atual esconde uma realidade que deve ser mencionada. Muitas das instalações usuárias da linguagem C, também são usuárias do VB (Visual Basic) da Microsoft.Desta forma, a linguagem C está presente normalmente para construção de rotinas mais sofisticadas impossíveis de implementação em VB. Contrariamente as empresas usuárias do Delphi (Borland) e do Power Builder (Sybase), geralmente estão abrindo mão em suas instalações da Linguagem C, tendo em vista a capacidade destas implementações em realizar tarefas geralmente destinadas a linguagem C. A linguagem Java, que é claramente baseada em C, também começa a penetrar em áreas onde C reinava abosulta.
+
+Exemplo: Desejo desenvolver um processador de textos, a partir do início (não possuo qualquer código de programa pronto). Qual linguagem escolherei?
+Solução:
+Características IdeaisClasseValorExecutáveis CurtosNão Importa0Executáveis RápidosFundamental3PortáveisDesejável1SimplicidadeDesejável1Manipulação de BitsNecessário2Onde 0- Não Importa, 1- Desejável, 2- Necessário, 3- Fundamental
+
+
+
+
+
+
+
+
+
+Juntando as Características do Projeto as Características da Linguagem, temos:
+
+Linguagens
+Características Ideais
+Pt
+Assembler
+Basic Pascal
+Clipper
+COBOL
+CExecutáveis Curtos07x0=01x0=00x0=0 0*0=07*0=0Executáveis Rápidos37*3=215x3=153x3=91x3=35x3=15Portáveis10*1=03*1=31*1=15*1=57*1=7Simplicidade10*1=05*1=57*1=77*1=75*1=5Manipulação de Bits27*2=143*2=51*2=20*2=07*2=14--> 35 <--27191541Onde 0- Péssimo, 1- Fraco, 3- Razoável, 5- Bom e 7- Ótimo
+
+Resposta: Linguagens Adequadas C ou Assembler. Caso se dê prioridade a portabilidade C é ainda mais adequada. O número talvez surpreendentemente alto para Pascal e BASIC serve para demonstrar o porquê da existência de Editores feitos total ou parcialmente em Pascal. O fraco desempenho do Clipper e do COBOL era esperado pois são linguagens mais apropriadas para manipulação de dados. Na prática devemos observar a existência de dois critérios também importantes, que são a existência de programadores especialistas na linguagem adequada e a possibilidade de junção de mais de uma linguagem numa implantação qualquer.
+Exercícios
+1-	Desejo criar um vírus de computador, qual a linguagem ideal?
+2-	Desejo criar um utilitário de Banco de Dados, semelhante a dBase. Qual a linguagem ideal?
+3-	Supondo ter uma empresa concluído ser ideal desenvolver internamente sua  folha de pagamento. O Gerente de Informática, atento ao movimento do Mercado definiu a escrita dos programas em C, visando poder migrar a aplicação entre ambientes. Supondo ainda que a equipe desconhece totalmente a Linguagem C, mas que é bastante gabaritada em COBOL, em sua opinião nosso Gerente foi feliz em sua decisão? Justifique.
+
+
+
+NO LABORATÓRIO:
+Exercício Proposto: Fazer um programa para escrever os nomes dos participantes da equipe na tela do computador. 
+
+Roteiro básico sugerido:
+
+1- Ativar o ambiente VISUAL C seguindo o roteiro fornecido pelo professor (ou algum outro de preferência da equipe). Nomear o programa com o rótulo LAB_APC_01 (ou algum outro nome de preferência da equipe).
+2- Editar o texto do programa tendo o cuidado de comentar todos os trechos que achar importante.
+3- Salvar o programa na área de trabalho de um dos alunos da equipe.
+4- Compilar o texto editado e analisar o resultado. Se não ocorreu erro pular para o passo 6.
+5- Tentar identificar os erros através das indicações dadas pelo compilador. Corrigir até depurar todos os erros. Utilizar o Help do compilador se for necessário.
+6-  Executar o programa e verifique se o resultado era o esperado.
+7- Fazer modificações no seu programa e tornar a compilar até obter o resultado desejado. Salvar o programa.
+8- Tentar salvar o programa numa área não permitida.
+9- Salvar o programa num disquete.
+10- Desativar o compilador.
+11- Ativar o compilador novamente. Restaurar o programa.
+
+Exercícios Adicionais:
+
+Preencher individualmente o formulário LAB - APC – Rel 01  e entregue-o na próxima aula de laboratório.
+
+LAB – APC – Rel  01
+
+Nome: ________________________________________________________________ RA:______________
+
+  Data:___/___/____
+
+
+
+1- Enumere os meios ou ferramentas que você utilizou na solução do problema.
+
+
+
+
+
+
+
+2- Tente descobrir outras soluções para o problema, diferentes da que você utilizou.
+
+
+
+
+
+
+
+3- Cite alguns fatos ou coisas que você já sabia e alguns que você aprendeu resolvendo o exercício.
+
+
+
+
+
+
+
+
+Observações:
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+CIÊNCIA DA COMPUTAÇÃO
+
+Prática de Laboratório no 4                                                                Data: ___/___/___
+
+Tema: Tipos Primitivos de Dados  suportados por C -  Operações  e Operadores – Constantes e Variáveis - Declarações e Expressões - Valores e Variáveis  - Outros tipos de dados.
+
+O C é "Case Sensitive"
+Vamos começar o nosso curso ressaltando um ponto de suma importância: o C é "Case Sensitive", isto é, maiúsculas e minúsculas fazem diferença. Se se declarar uma variável com o nome soma ela será diferente de Soma, SOMA, SoMa ou sOmA. Da mesma maneira, os comandos do C if e for, por exemplo, só podem ser escritos em minúsculas pois senão o compilador não irá interpretá-los como sendo comandos, mas sim como variáveis. 
+Primeiros Programas
+Vejamos um primeiro programa em C:
+       #include <stdio.h> 
+        main ()    /* Um Primeiro Programa */ 
+        { 
+        printf ("Ola! Eu estou vivo!\n"); 
+        }
+Compilando e executando este programa você verá que ele coloca a mensagem  Ola! Eu estou vivo!  na tela. 
+Vamos analisar o programa por partes. 
+ A linha #include <stdio.h> diz ao compilador que ele deve incluir o arquivo-cabeçalho stdio.h. Neste arquivo existem definições de funções úteis para entrada e saída de dados (std = standard, padrão em inglês; io = Input/Output, entrada e saída ==> stdio = Entrada e saída padronizadas). Toda vez que você quiser usar uma destas funções deve-se incluir este comando. O C possui diversos arquivos-cabeçalhos. 
+ Quando fazemos um programa, uma boa idéia é usar comentários que ajudem a elucidar o funcionamento do mesmo. No caso acima temos um comentário: /* Um Primeiro Programa */. O compilador C desconsidera qualquer coisa que esteja começando com /* e terminando com */. Um comentário pode, inclusive, ter mais de uma linha. 
+ A linha main() define uma função de nome main. Todos os programas em C têm que ter uma função main, pois é esta função que será chamada quando o programa for executado. O conteúdo da função é delimitado por chaves { }. O código que estiver dentro das chaves será executado sequencialmente quando a função for chamada. 
+Os Tipos do C
+O C tem 5 tipos básicos: char, int, float, double, void. Destes não vimos ainda os dois últimos. O double é o ponto flutuante duplo e pode ser visto como um ponto flutuante com muito mais precisão. O void (vazio em inglês) é um tipo especial e deixaremos o seu estudo para mais adiante. 
+ Para cada um dos tipos de variáveis existem os modificadores de tipo. Os modificadores de tipo do C são quatro: signed, unsigned, long e short. Ao float não se pode aplicar nenhum e ao double pode-se aplicar apenas o long. Os quatro podem ser aplicados a inteiros. A intenção é que short e long devam prover tamanhos diferentes de inteiros onde isto for prático. int normalmente terá o tamanho natural para uma determinada máquina. Assim, numa máquina de 16 bits, int provavelmente terá 16 bits. Numa máquina de 32, int deverá ter 32 bits. Na verdade, cada compilador é livre para escolher tamanhos adequados para o seu próprio hardware, com a única restrição de que shorts e ints devem ocupar pelo menos 16 bits, longs pelo menos 32 bits, e short não pode ser maior que int, que não pode ser maior que long. A seguir estão listados os tipos de dados permitidos e seu valores máximos e mínimos em um compilador típico para um hardware de 16 bits: 
+
+<div align="center">
+TipoNum de bitsIntervaloInicioFimChar8-128127Unsigned char80255Signed char8-128127int16-32.76832.767unsigned int16065.535signed int16-32.76832.767short int16-32.76832.767unsigned short int16065.535signed short int16-32.76832.767long int32-2.147.483.6482.147.483.647signed long int32-2.147.483.6482.147.483.647unsigned long int3204.294.967.295float323,4E-383.4E+38double641,7E-3081,7E+308long double803,4E-49323,4E+4932</div>
+O tipo long double é o tipo de ponto flutuante com maior precisão. É importante observar que os intervalos de ponto flutuante, na tabela acima, estão indicados em faixa de expoente, mas os números podem assumir valores tanto positivos quanto negativos. 
+
+
+Declaração e Inicialização de Variáveis
+As variáveis no C devem ser declaradas antes de serem usadas. A forma geral da declaração de variáveis é: 
+ tipo_da_variável lista_de_variáveis; 
+ As variáveis da lista de variáveis terão todas o mesmo tipo e deverão ser separadas por vírgula. Como o tipo default do C é o int, quando vamos declarar variáveis int com algum dos modificadores de tipo, basta colocar o nome do modificador de tipo. Assim um long basta para declarar um long int. 
+Por exemplo, as declarações 
+                char ch, letra;
+                long count;
+                float pi;
+declaram duas variáveis do tipo char (ch e letra), uma variavel long int (count) e um float pi. 
+ Há três lugares nos quais podemos declarar variáveis. O primeiro é fora de todas as funções do programa. Estas variáveis são chamadas variáveis globais e podem ser usadas a partir de qualquer lugar no programa. Pode-se dizer que, como elas estão fora de todas as funções, todas as funções as vêem. O segundo lugar no qual se pode declarar variáveis é no início de um bloco de código. Estas variáveis são chamadas locais e só têm validade dentro do bloco no qual são declaradas, isto é, só a função à qual ela pertence sabe da existência desta variável, dentro do bloco no qual foram declaradas.  O terceiro lugar onde se pode declarar variáveis é na lista de parâmetros de uma função. Mais uma vez, apesar de estas variáveis receberem valores externos, estas variáveis são conhecidas apenas pela função onde são declaradas. 
+Veja o programa abaixo: 
+                #include <stdio.h>
+                int contador;
+                int func1(int j) {
+                ...
+                }
+
+                main()
+                {
+                  char condicao;
+                  int i;
+                  for (i=0; ...) 
+                  {              /* Bloco do for */
+                    float f2;
+                    ...
+                    func1(i);
+                  }  
+                  ...  
+                }
+ 
+A variável contador e uma variável global, e é acessível de qualquer parte do programa. As variáveis condição  e i, só existem dentro de main(), isto é são variáveis locais de main. A variável float f2 é um exemplo de uma variável de bloco, isto é, ela somente é conhecida dentro do bloco do for, pertencente à função main. A variável inteira j é um exemplo de declaração na lista de parâmetros de uma função (a função func1). 
+ As regras que regem onde uma variável é válida chamam-se regras de escopo da variável. Há mais dois detalhes que devem ser ressaltados. Duas variáveis globais não podem ter o mesmo nome. O mesmo vale para duas variáveis locais de uma mesma função. Já duas variáveis locais, de funções diferentes, podem ter o mesmo nome sem perigo algum de conflito. 
+ Podemos inicializar variáveis no momento de sua declaração. Para fazer isto podemos usar a forma geral 
+ tipo_da_variável nome_da_variável = constante; 
+ Isto é importante pois quando o C cria uma variável ele não a inicializa. Isto significa que até que um primeiro valor seja atribuído à nova variável ela tem um valor indefinido e que não pode ser utilizado para nada. Nunca presuma que uma variável declarada vale zero ou qualquer outro valor. Exemplos de inicialização são dados abaixo: 
+  
+                char ch='D';
+                int count=0;
+                float pi=3.141;
+  
+Operadores Aritméticos e de Atribuição
+Os operadores aritméticos são usados para desenvolver operações matemáticas. A seguir apresentamos a lista dos operadores aritméticos do C:   
+Operador   
++  
+-  
+*  
+/  
+%  
+++  
+--Ação  
+
+Soma (inteira e ponto flutuante)  
+Subtração ou Troca de sinal (inteira e ponto flutuante)  
+Multiplicação (inteira e ponto flutuante)  
+Divisão (inteira e ponto flutuante)  
+Resto de divisão (de inteiros)  
+Incremento (inteiro e ponto flutuante)  
+Decremento (inteiro e ponto flutuante)O C possui operadores unários e binários. Os unários agem sobre uma variável apenas, modificando ou não o seu valor, e retornam o valor final da variável. Os binários usam duas variáveis e retornam um terceiro valor, sem alterar as variáveis originais. A soma é um operador binário pois pega duas variáveis, soma seus valores, sem alterar as variáveis, e retorna esta soma. Outros operadores binários são os operadores - (subtração), *, / e %. O operador - como troca de sinal é um operador unário que não altera a variável sobre a qual é aplicado, pois ele retorna o valor da variável multiplicado por -1. 
+O operador / (divisão) quando aplicado a variáveis inteiras, nos fornece o resultado da divisão inteira; quando aplicado a variáveis em ponto flutuante nos fornece o resultado da divisão "real". Assim seja o seguinte trecho de código: 
+        int a = 17, b = 3; 
+        int x, y; 
+        float z = 17. , z1, z2; 
+        x = a / b; 
+        y = a % b; 
+        z1 = z / b; 
+        z2 = a/b; 
+ao final da execução destas linhas, os valores calculados seriam  x = 5,  y = 2,  z1 = 5.666666 e z2 = 5.0 . Note que na linha correspondente a z2, primeiramente é feita uma divisão inteira (pois os dois operandos são inteiros). Somente após efetuada a divisão é que o resultado é atribuído a uma variável float. 
+ Os operadores de incremento e decremento são unários que alteram a variável sobre a qual estão aplicados. O que eles fazem é incrementar ou decrementar, a variável sobre a qual estão aplicados, de 1. Então   
+                x++;
+                x--;
+são equivalentes a 
+                x=x+1;
+                x=x-1;
+Estes operadores podem ser pré-fixados ou pós- fixados. A diferença é que quando são pré- fixados eles incrementam e retornam o valor da variável já incrementada. Quando são pós-fixados eles retornam o valor da variável sem o incremento e depois incrementam a variável. Então, em   
+                x=23;
+                y=x++;
+teremos, no final, y=23 e x=24. Em 
+                x=23;
+                y=++x;
+teremos, no final, y=24 e x=24. Uma curiosidade: a linguagem de programação C tem este nome pois ela seria um "incremento" da linguagem C padrão. A linguagem C é igual a linguagem C só que com extensões que permitem a programação orientada a objeto, o que é um recurso extra. 
+ O operador de atribuição do C é o =. O que ele faz é pegar o valor à direita e atribuir à variável da esquerda. Além disto ele retorna o valor que ele atribuiu. Isto faz com que as seguintes expressões sejam válidas: 
+  
+                x=y=z=1.5;      /* Expressao 1 */
+
+                if (k=w) ...    /* Expressao 2 */
+A expressão 1 é válida, pois quando fazemos z=1.5 ela retorna 1.5, que é passado adiante. A expressão dois será verdadeira se w for diferente de zero, pois este será o valor retornado por k=w. Pense bem antes de usar a expressão dois, pois ela pode gerar erros de interpretação. Você não está comparando k e w. Você está atribuindo o valor de w a k e usando este valor para tomar a decisão. 
+Operadores Relacionais e Lógicos
+Os operadores relacionais do C realizam comparações entre variáveis. São eles:   
+<div align="center">
+Operador   
+>  
+>=  
+<  
+<=  
+==  
+!=Ação   
+Maior do que  
+Maior ou igual a  
+Menor do que  
+Menor ou igual a  
+Igual a  
+Diferente de</div>
+Os operadores relacionais retornam verdadeiro (1) ou falso (0). Para fazer operações com valores lógicos (verdadeiro e falso) temos os operadores lógicos: 
+  <div align="center">
+Operador  
+&&  
+||  
+!Ação   
+AND (E)  
+OR (OU)  
+NOT (NÃO)</div>
+Usando os operadores relacionais e lógicos podemos realizar uma grande gama de testes. A tabela-verdade destes operadores é dada a seguir:   
+<div align="center">
+p   
+falso  
+falso  
+verdadeiro  
+verdadeiroq   
+falso  
+verdadeiro  
+falso  
+verdadeirop AND q   
+falso  
+falso  
+falso  
+verdadeirop OR q   
+falso  
+verdadeiro  
+verdadeiro  
+verdadeiro</div>
+  
+Modeladores (Casts)
+Um modelador é aplicado a uma expressão. Ele força a mesma a ser de um tipo especificado. Sua forma geral é: 
+  (tipo)expressão   Um exemplo: 
+  
+        #include <stdio.h>
+        main ()
+        {
+        int num;
+        float f;
+        num=10;
+        f=(float)num/7;
+        printf ("%f",f);
+        }
+Se não tivéssemos usado o modelador no exemplo acima o C faria uma divisão inteira entre 10 e 7. O resultado seria um e este seria depois convertido para float mas continuaria a ser 1.0. Com o modelador temos o resultado correto. 
+
+Introdução Básica às Entradas e Saídas
+* Caracteres 
+* Strings 
+* printf 
+* scanf 
+
+Caracteres
+Os caracteres são um tipo de dado: o char. O C trata os caracteres como sendo variáveis de um byte (8 bits). Já os inteiros (ints) têm tem um número maior de bytes. Dependendo da implementação do compilador, eles podem ter 2 bytes (16 bits) ou 4 bytes (32 bits). Assim sendo, podemos usar um char para armazenar tanto valores numéricos inteiros de 0 a 255 quanto um caractere de texto. Para indicar um caractere de texto usamos apóstrofes. Veja um exemplo de programa que usa caracteres: 
+  
+#include <stdio.h>
+main ()
+{
+ char Ch;
+ Ch='D';
+ printf ("%c",Ch);
+}
+
+No programa acima, %c indica que printf() deve colocar um caractere na tela. Muitas vezes queremos ler um caractere fornecido pelo usuário. Para isto as funções mais usadas, quando se está trabalhando em ambiente DOS ou Windows, são getch() e getche(). Ambas retornam o caractere pressionado. getche() imprime o caractere na tela antes de retorná-lo e getch() apenas retorna o caractere pressionado sem imprimí-lo na tela. Ambas as funções podem ser encontradas na biblioteca conio.h. Esta biblioteca não está disponível em ambiente Unix (compiladores cc e gcc) e podem, nestes ambientes, ser substituídas pela função scanf(), porém sem as mesmas funcionalidades. Eis um exemplo que usa a função getch(), e seu correspondente em ambiente Unix:   
+#include <stdio.h>
+#include <conio.h>
+main ()
+{
+ char Ch;
+ Ch=getch();
+ printf ("Voce pressionou a tecla %c",Ch);
+}
+
+Equivalente para os compiladores cc e gcc do programa acima, sem usar getch():
+
+#include <stdio.h>
+main ()
+{
+ char Ch;
+ scanf("%c", &Ch);
+ printf ("Voce pressionou a tecla %c",Ch);
+}
+A principal diferença da versão que utiliza getch() para a versão que não utiliza getch() é que no primeiro caso o usuário simplesmente aperta a tecla e o sistema lê diretamente a tecla pressionada. No segundo caso, é necessário apertar também a tecla <ENTER>. 
+
+Strings
+O Pascal, ao contrário do C, possui um tipo específico para tratar de strings (sequência de caracteres). No C uma string é um vetor de caracteres terminado com um caractere nulo. O caracter nulo é um caractere com valor igual a zero. O terminador nulo pode ser escrito usando a convenção de barra invertida do C como sendo '\0'. Para declarar uma string podemos usar o seguinte formato geral: 
+ char nome_da_string[tamanho_da_string]; 
+ Note que, como temos que reservar um caractere para ser o terminador nulo, temos que declarar o comprimento da string como sendo, no mínimo, um caractere maior que a maior string que pretendemos armazenar. Vamos supor que declaremos uma string de 7 posições e coloquemos a palavra João nela. Teremos:   <div align="center">
+J o a o \0 ... ... </div>
+No caso acima, as duas células não usadas têm valores indeterminados. Isto acontece porque o C não inicializa variáveis, cabendo ao programador esta tarefa. Se quisermos ler uma string fornecida pelo usuário podemos usar a função gets(). Um exemplo do uso desta função é apresentado abaixo. A função gets() coloca o terminador nulo na string, quando você aperta a tecla "Enter". 
+#include <stdio.h> main () 
+{ 
+char string[100]; 
+printf ("Digite uma string: "); 
+gets (string); 
+printf ("\n\nVoce digitou %s",string); 
+} 
+Como as strings são vetores de caracteres, para se acessar um determinado caracter de uma string, basta "indexarmos", ou seja, usarmos um índice para acessarmos o caracter desejado dentro da string. Suponha uma string chamada str. Podemos acessar a segunda letra de str da seguinte forma: 
+   str[1] = 'a'; 
+Para isto, basta você lembrar-se que o índice sempre começa em zero. Assim, a primeira letra da string sempre estará na posição 0. A segunda letra sempre estará na posição 1 e assim sucessivamente. Segue um exemplo que imprimirá a segunda letra da string "Joao", apresentada acima. Em seguida, ele mudará esta letra e apresentará a string no final. 
+#include <stdio.h> 
+main() 
+{ 
+char str[10] = "Joao"; 
+printf("\n\nString: %s", str); 
+printf("\nSegunda letra: %c", str[1]); 
+str[1] = 'U'; 
+printf("\nAgora a segunda letra eh: %c", str[1]); 
+printf("\n\nString resultante: %s", str); 
+} 
+Nesta string, o terminador nulo está na posição 4. Das posições 0 a 4, sabemos que temos caracteres válidos, e portanto podemos escrevê-los. Note a forma como inicializamos a string str com os caracteres 'J' 'o' 'a' 'o'  e '\0'  simplesmente declarando char str[10] = "Joao". Veremos, posteriormente que "Joao" (uma cadeia de caracteres entre aspas) é o que chamamos de string constante, isto é, uma cadeia de caracteres que está pré-carregada com valores que não podem ser modificados. Já a string str é uma string variável, pois podemos modificar o que nela está armazenado, como de fato fizemos. 
+No programa acima, %s indica que printf() deve colocar uma string na tela. Vamos agora fazer uma abordagem inicial às duas funções que já temos usado para fazer a entrada e saída. 
+  
+printf
+A função printf() tem a seguinte forma geral: 
+ printf (string_de_controle,lista_de_argumentos); 
+ Teremos, na string de controle, uma descrição de tudo que a função vai colocar na tela. A string de controle mostra não apenas os caracteres que devem ser colocados na tela, mas também quais as variáveis e suas respectivas posições. Isto é feito usando-se os caracteres de controle, que usam a notação %. Na string de controle indicamos quais, de qual tipo e em que posição estão as variáveis a serem apresentadas. É muito importante que, para cada caractere de controle, tenhamos um argumento na lista de argumentos. Apresentamos agora alguns dos códigos %: 
+  
+<div align="center">
+Código Significado%d Inteiro%f Float%c Caractere%s String%% Coloca na tela um %  
+ </div>
+Vamos ver alguns exemplos de printf() e o que eles exibem: 
+  
+printf ("Teste %% %%") -> "Teste % %"
+printf ("%f",40.345) -> "40.345"
+printf ("Um caractere %c e um inteiro %d",'D',120) -> "Um caractere D e um inteiro 120"
+printf ("%s e um exemplo","Este") -> "Este e um exemplo"
+printf ("%s%d%%","Juros de ",10) -> "Juros de 10%"
+
+Maiores detalhes sobre a função printf() serão vistos posteriormente, mas podem ser consultados de antemão pelos interessados. 
+
+scanf
+O formato geral da função scanf() é: 
+ scanf (string-de-controle,lista-de-argumentos); 
+ Usando a função scanf() podemos pedir dados ao usuário. Mais uma vez, devemos ficar atentos a fim de colocar o mesmo número de argumentos que o de caracteres de controle na string de controle. Outra coisa importante é lembrarmos de colocar o & antes das variáveis da lista de argumentos. É impossível justificar isto agora, mas veremos depois a razão para este procedimento.  
+
+
+Exercício Proposto:  Dadas as medidas dos 2 lados de um retângulo, fazer um  programa em C para determinar:
+
+a) Qual o seu perímetro;
+
+b) Qual a sua área.
+
+Diretivas para resolução do exercício:  Antes de começar a escrever o código o aluno deve ter bem claro as seguintes respostas (Não comece de forma alguma antes de ter as respostas):
+
+1) Qual é o problema que me foi proposto?
+2) O que eu tenho disponível para resolver o problema?
+3) Quais as restrições impostas?
+4) Quais as soluções possíveis?
+5) Qual das soluções é a mais conveniente?
+
+No caso do problema proposto é fundamental para o aluno saber o que seja:
+	Retângulo
+	Lados de um retângulo
+	Perímetro de um retângulo
+	Área de um retângulo
+	Programa em C
+ Dominados os conceitos acima o aluno deve verificar as suas possibilidades de resolver o problema:
+	Como determinar o retângulo ==> Como representar os seus lados e como operar sobre essa representação ?
+
+	Como determinar o perímetro de retângulo representado por seus lados ?
+
+	Como determinar a área do retângulo representado por seus lados ?
+
+Para responder as perguntas anteriores há alguma restrição? (Por exemplo na representação dos lados ou na linguagem que o programa deve ser escrito ou no compilador utilizado).
+
+      Quais as soluções possíveis e qual a mais conveniente?
+	
+Exercícios Adicionais: 
+
+
+1- Programa para o cálculo do valor da expressão: (a + b) / (c + d) onde a, b, c e d são inteiros quaisquer.
+
+2- Elaborar um programa para imprimir a raiz quadrada da soma de 3 números inteiros.
+
+3- Elaborar um programa para calcular o volume de um sólido na forma de um paralelepípedo à partir da altura, largura e comprimento a serem lidos.
+
+
+Os programas deverão utilizar dados explicitamente definidos dentro do programa ou introduzidos através do teclado. Sugere-se que o aluno exercite as duas coisas.
+
+Adicionalmente o aluno deverá neste exercício,( preencher formulário LAB – APC – Rel  02 , entregar na próxima aula) observar.
+ 
+a) Para os diversos tipos do C, determinar qual a faixa de valores suportada pelo compilador Visual C;
+
+b) Verificar restrições aos identificadores das variáveis;
+
+c) Verificar o que ocorre quando da tentativa de se utilizar, dentro do programa, uma variável não declarada;
+
+d) Verificar o que ocorre quando da declaração de uma variável que não é nunca utilizada dentro do programa
+
+e) Verificar restrições à aplicação do operador de divisão (/).
+
+
+
+LAB – APC – Rel  02
+
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Conclusões quanto às faixas de valores de variáveis no Visual C:
+
+int:                                                                                   unsigned int:
+
+long int:                                                                           unsigned long int:
+
+short int:                                                                          unsigned short int:
+
+float:
+
+double:
+
+Conclusão quanto aos identificadores das variáveis:
+
+
+
+
+
+
+Conclusão quanto a utilização de variáveis não declaradas dentro de um programa:
+
+
+
+
+
+Conclusão quanto a declarar variáveis e depois não utilizá-las:
+
+
+
+
+
+
+Conclusão quanto as restrições ao operador de divisão: 
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+CIÊNCIA DA COMPUTAÇÃO
+
+Prática de Laboratório no  5                                                              Data: ___/___/___
+
+O Comando if
+* O else 
+* O if-else-if 
+* A expressão condicional 
+* ifs aninhados 
+* O operador ? 
+* 
+
+O comando if tem forma geral: 
+ if (condição) declaração; 
+
+ A expressão, na condição, será avaliada. Se ela for zero, a declaração não será executada. Se a condição for diferente de zero a declaração será executada. Aqui apresentamos o exemplo de um uso do comando if: 
+  
+#include <stdio.h>
+main ()
+{
+int num;
+printf ("Digite um numero: ");
+scanf ("%d",&num);
+if (num>10)
+   printf ("\n\nO numero e maior que 10");
+if (num==10)
+        {
+        printf ("\n\nVoce acertou!\n");
+        printf ("O numero e igual a 10.");
+        }
+if (num<10)
+   printf ("\n\nO numero e menor que 10");
+}
+
+O else
+Podemos pensar no comando else como sendo um complemento do comando if. O comando if completo tem a seguinte forma geral: 
+
+ if (condição) declaração_1; 
+else declaração_2; 
+
+A expressão da condição será avaliada. Se ela for diferente de zero a declaração 1 será executada. Se for zero a declaração 2 será executada. É importante nunca esquecer que, quando usamos a estrutura if-else, estamos garantindo que uma das duas declarações será executada. Nunca serão executadas as duas ou nenhuma delas. Abaixo está um exemplo do uso do if-else .
+
+
+
+
+#include <stdio.h>
+main ()
+{
+int num;
+printf ("Digite um numero: ");
+scanf ("%d",&num);
+if (num==10)
+      {
+      printf ("\n\nVoce acertou!\n");
+      printf ("O numero e igual a 10.\n");
+      }
+else 
+      {
+      printf ("\n\nVoce errou!\n");
+      printf ("O numero e diferente de 10.\n");
+      }
+}
+O if-else-if
+A estrutura if-else-if é apenas uma extensão da estrutura if-else. Sua forma geral pode ser escrita como sendo: 
+
+ if (condição_1) declaração_1; 
+else if (condição_2) declaração_2; 
+else if (condição_3) declaração_3; 
+. 
+. 
+. 
+else if (condição_n) declaração_n; 
+else declaração_default; 
+ A estrutura acima funciona da seguinte maneira: o programa começa a testar as condições começando pela 1 e continua a testar até que ele ache uma expressão cujo resultado dê diferente de zero. Neste caso ele executa a declaração correspondente. Só uma declaração será executada, ou seja, só será executada a declaração equivalente à primeira condição que der diferente de zero. A última declaração (default) é a que será executada no caso de todas as condições darem zero e é opcional. Um exemplo da estrutura acima: 
+  
+#include <stdio.h>
+main ()
+{
+int num;
+printf ("Digite um numero: ");
+scanf ("%d",&num);
+if (num>10)
+     printf ("\n\nO numero e maior que 10");
+else if (num==10)
+        {
+        printf ("\n\nVoce acertou!\n");
+        printf ("O numero e igual a 10.");
+        }
+     else if (num<10) 
+             printf ("\n\nO numero e menor que 10");
+}
+
+A expressão condicional
+Quando o compilador avalia uma condição, ele quer um valor de retorno para poder tomar a decisão. Mas esta expressão não necessita ser uma expressão no sentido convencional. Uma variável sozinha pode ser uma "expressão" e esta retorna o seu próprio valor. Isto quer dizer que teremos as seguintes equivalências: 
+  
+                int num;
+                if (num!=0) ....
+                if (num==0) ....
+equivale a 
+  
+                int num;
+                if (num) ....
+                if (!num) ....
+Isto quer dizer que podemos simplificar algumas expressões simples. 
+  
+ifs aninhados
+O if aninhado é simplesmente um if dentro da declaração de um outro if externo. O único cuidado que devemos ter é o de saber exatamente a qual if um determinado else está ligado. Vejamos um exemplo: 
+
+#include <stdio.h>
+main ()
+{
+int num;
+printf ("Digite um numero: ");
+scanf ("%d",&num);
+if (num==10)
+        {
+        printf ("\n\nVoce acertou!\n");
+        printf ("O numero e igual a 10.\n");
+        }
+else
+        {
+        if (num>10)
+                {
+                printf ("O numero e maior que 10.");
+                }
+        else
+                {
+                printf ("O numero e menor que 10.");
+                }
+        }
+}
+
+Operador ?
+
+A declaração Se—Então—Senão pode ser substituída por:
+Exp1 ? Exp2 : Exp3
+
+Se Exp1 for verdadeira, então Exp2 é avaliada tornando-se o valor de Exp1, senão Exp3 é que será avaliada e tornar-se-á o valor da expressão.
+
+Exemplo: Uso do ?.                                      
+x = 10;
+y = (x > 20) ? 200 : 100;
+
+assim y valerá 100
+
+
+
+Exercício Proposto: Fazer um programa em DEV C++ ou  MS_Visual C que declare duas variáveis A e B, leia um valor para cada uma delas e depois troque os valores entre elas.
+
+Diretivas para resolução do exercício:  
+- Ativar o compilador C;
+- Na função main():
+- Declarar as variáveis A, B e AUX,  todas de um mesmo tipo (int, por exemplo);
+- Utilizar o comando cin para ler valores para as variáveis (não esquecer do #include correspondente)
+- Exibir os nomes das variáveis e os respectivos conteúdos originais usando o comando cout;
+- Utilizando a variável auxiliar AUX trocar os conteúdos das variáveis A e B;
+- Exibir os nomes das variáveis e os respectivos conteúdos;
+- Verificar se está de acordo com o pretendido, se não estiver faça as correções que forem necessárias até obter o resultado desejado.
+- Faça melhorias no programa (otimize o código, melhore a interface com o usuário, confirme os comentários, verifique a identação, melhore o lay out da tela, etc.).
+- Salve a versão final na sua área e em disquete.
+  
+Exercícios Adicionais:
+
+1- Fazer um programa que leia dois valores em ponto flutuante e determine qual é o maior. 
+
+2- Fazer um programa que leia 3 valores numéricos e determine qual o menor.
+
+3- Fazer um programa que leia 3 valores numéricos e os escreva em ordem crescente.
+
+Adicionalmente o aluno deverá, neste exercício ( preencher formulário LAB – APC – Rel  03 , entregar na próxima aula)  observar os seguintes  detalhes:
+
+- o valor inicial de uma variável quando acaba de ser declarada
+
+- na atribuição de um valor a uma variável observar se o valor anteriormente atribuído é preservado
+
+- Como reage o compilador a misturas de tipo ?
+
+- Para que está sendo o comando condicional ? Você vê alguma maneira de evitar esse uso ?
+
+
+ 
+
+
+LAB – APC – Rel  03
+
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Conclusões obtidas quanto ao valor de uma variável que foi declarada mas ainda não inicializada ( Justifique com exemplos) :
+
+
+
+
+
+
+
+
+Conclusão quanto ao efeito causado por uma atribuição a uma variável (como fica o valor anterior ?):
+
+
+
+
+
+
+Conclusão quanto a atribuição de valores de tipos diferentes ao tipo de declaração da variável:
+
+
+
+
+
+Conclusão sobre uso do comando condicional ( como você faria sem usar o if ?):
+
+
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 6                                                                Data: ___/___/___
+
+Tema: Comandos de Seleção: switch
+Comandos de Escape: break e continue
+O Comando switch
+O comando if-else e o comando switch são os dois comandos de tomada de decisão. Sem dúvida alguma o mais importante dos dois é o if, mas o comando switch tem aplicações valiosas. Mais uma vez vale lembrar que devemos usar o comando certo no local certo. Isto assegura um código limpo e de fácil entendimento. O comando switch é próprio para se testar uma variável em relação a diversos valores preestabelecidos. Sua forma geral é:   
+switch (variável)
+{
+case constante_1: 
+declaração_1; 
+break; 
+case constante_2: 
+declaração_2; 
+break; 
+. 
+. 
+. 
+case constante_n: 
+decalração_n; 
+break; 
+default 
+declaração_default; 
+} 
+ Podemos fazer uma analogia entre o switch e a estrutura if-else-if apresentada anteriormente. A diferença fundamental é que a estrutura switch não aceita expressões. Aceita apenas constantes. O switch testa a variável e executa a declaração cujo case corresponda ao valor atual da variável. A declaração default é opcional e será executada apenas se a variável, que está sendo testada, não for igual a nenhuma das constantes. 
+ O comando break, faz com que o switch seja interrompido assim que uma das declarações seja executada. Mas ele não é essencial ao comando switch. Se após a execução da declaração não houver um break, o programa continuará executando. Isto pode ser útil em algumas situações, mas eu recomendo cuidado. Veremos agora um exemplo do comando switch: 
+#include <stdio.h>
+main ()
+{
+int num;
+printf ("Digite um numero: ");
+scanf ("%d",&num);
+switch (num)
+        {
+        case 9:
+                printf ("\n\nO numero e igual a 9.\n");
+        break;
+        case 10:
+                printf ("\n\nO numero e igual a 10.\n");
+        break;
+        case 11:
+                printf ("\n\nO numero e igual a 11.\n");
+        break;
+        default:
+                printf ("\n\nO numero nao e nem 9 nem 10 nem 11.\n");
+        }
+}
+
+
+Exercício Proposto: Fazer um programa em C para simular uma calculadora com as operações SOMA, SUBTRAÇÂO, MULTIPLICAÇÂO e DIVISÂO de inteiros usando os comandos switch , break e continue.
+
+Diretivas para resolução do exercício:  
+- Ativar o compilador C;
+- Na função main():
+- Declarar a OPERANDO_1, OPERANDO_2, OPERAÇÃO e RESULTADO com os tipos que forem julgados os mais convenientes. Declarar também variáveis auxiliares que forem julgadas necessárias;
+- Utilizar o comando cin para ler valores para as variáveis de entrada (OPERANDO_1, OPERANDO_2 e OPERAÇÃO). Se for necessário, esses valores devem ser validados;
+- Proceder ao cálculo usando os switch , break e continue;
+- Exibir o resultado calculado;
+- Verificar se o resultado está de acordo com o esperado;
+- Verificar se há alguma restrição ao seu algoritmo.
+- Faça melhorias no programa (otimize o código, melhore a interface com o usuário, confirme os comentários, verifique a identação, melhore o lay out da tela, etc.).
+- Salve a versão final na sua área e em disquete.
+- Para entregar na próxima aula preencha o formulário LAB – APC – Rel  04.
+
+Exercícios para esta aula:
+
+1- Fazer um programa em C++ para o cálculo de dias transcorridos desde o início do ano até uma dada data do mesmo.
+
+2- Faça um programa que solicite o ano de casamento, o ano atual e escreva as seguintes mensagens, para os seguintes casos: 25 anos – “Bodas de Prata”; 50 anos – “Bodas de Ouro” e 75 anos – “Bodas de Diamante”. Nos casos restantes escrever apenas o número de anos de casados. Utilize o comando switch.
+
+
+3- Faça um programa que gere o balanço de um edifício, segundo as especificações:
+Dados de entrada: nome do edifício, total de apartamentos, total de moradores e valor do condomínio por apartamento.
+Cálculos: média de moradores por apartamento e total arrecadado.
+Resultados: (segundo o seguinte formato):
+
+****************************************************************
+*                                             Edifício__________                                               *
+****************************************************************
+*   Total de apartamentos:     ____________                                                        *
+*   Total de moradores    :     ____________                                                        *
+*   Valor do Condomínio:     ____________                                                        *
+****************************************************************
+*                                            Balanço Final                                                          *
+****************************************************************
+*   Média de Moradores/Apto.: ____________                                                    *
+*   Total Arrecadado               : ____________                                                    *
+****************************************************************
+
+
+LAB – APC – Rel  04
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Conclusões obtidas quanto a validade do programa que foi desenvolvido para a implementação de uma calculadora aritmética:
+
+
+
+
+
+
+
+
+Justifique as possíveis restrições e sugira soluções:
+
+
+
+
+
+
+Discuta possíveis ampliações na calculadora (outras operações e outros tipos de dados):
+
+
+
+
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 7                                                                Data: ___/___/___
+
+Tema: Comandos Iterativos
+- while
+- do
+- for
+
+O Comando for
+
+for é a primeira de uma série de três estruturas para se trabalhar com loops de repetição. As outras são  while e  do. As três compõem a segunda família de comandos de controle de fluxo. Podemos pensar nesta família como sendo a das estruturas de repetição controlada. 
+ Como já foi dito, o loop for é usado para repetir um comando, ou bloco de comandos, diversas vezes, de maneira que se possa ter um bom controle sobre o loop. Sua forma geral é: 
+ for (inicialização;condição;incremento) declaração; 
+ O melhor modo de se entender o loop for é ver como ele funciona "por dentro". O loop for é equivalente a se fazer o seguinte: 
+  
+inicialização;
+if (condição)
+{
+declaração; 
+incremento; 
+"Volte para o comando if" 
+} 
+Podemos ver, então, que o for executa a inicialização incondicionalmente e testa a condição. Se a condição for falsa ele não faz mais nada. Se a condição for verdadeira ele executa a declaração, faz o incremento e volta a testar a condição. Ele fica repetindo estas operações até que a condição seja falsa. Um ponto importante é que podemos omitir qualquer um dos elementos do for, isto é, se não quisermos uma inicialização poderemos omiti-la. Abaixo vemos um programa que coloca os primeiros 100 números inteiros na tela: 
+  
+#include <stdio.h>
+main ()
+{
+int count;
+for (count=1;count<=100;count++) printf ("%d ",count);
+}
+Note que, no exemplo acima, há uma diferença em relação ao exemplo anterior. O incremento da variável count é feito usando o operador de incremento que nós agora já conhecemos. Esta é a forma usual de se fazer o incremento (ou decremento) em um loop for. 
+ Todas as linguagens de programação possuem algo parecido com o for do C. Mas, o for na linguagem C é muito mais flexível e poderoso. Temos acesso à inicialização, à condição e ao incremento. Isto nos permite fazer o que quisermos. Este é o poder do C. 
+  
+O loop infinito
+O loop infinito tem a forma 
+ for (;;) declaração; 
+ Este loop chama-se loop infinito porque será executado para sempre, a não ser que ele seja interrompido. Para interromper um loop como este usamos o comando break. O comando break vai quebrar o loop infinito e o programa continuará sua execução normalmente. 
+  Como exemplo vamos ver um programa que faz a leitura de uma tecla e sua impressão na tela, até que o usuario aperte uma tecla especial, denominada FLAG. O nosso FLAG será a letra 'X'. 
+  
+#include <stdio.h>
+main ()
+{
+int Count;
+char ch;
+for (Count=1;;Count++)
+        {
+        fflush(NULL);
+        scanf("%c",&ch);
+        if (ch == 'X') break;
+        printf("\nLetra: %c\n",ch);
+        }
+}
+Atenção ao comando fflush(NULL). O papel deste comando é limpar o buffer do teclado para que outros caracteres armazenados no buffer do computador sejam liberados. Desta forma a leitura de caracter que acontece logo após a sua execução não ficará prejudicada.  
+
+O loop sem conteúdo
+Loop sem conteúdo é aquele no qual se omite a declaração. Sua forma geral é portanto (atenção ao ponto e vírgula!): 
+ for (inicialização;condição;incremento); 
+ Uma das aplicações desta estrutura é gerar tempos de espera. O programa 
+
+#include <stdio.h>
+main ()
+{
+long int i;
+printf("\a");                /* Imprime o caracter de alerta (um beep) */
+for (i=0; i<10000000; i++);  /* Espera 10.000.000 de iteracoes */
+printf("\a");                /* Imprime outro caracter de alerta */
+}
+demonstra o espaço de tempo gerado. 
+
+ O Comando while
+O comando while tem a seguinte forma geral: 
+ while (condição) declaração; 
+ Assim como fizemos para o comando anterior, vamos tentar mostrar como o while funciona fazendo uma analogia. Então o while seria: 
+
+
+  
+if (condição)
+{
+declaração; 
+"Volte para o comando if" 
+} 
+ 
+Podemos ver que a estrutura while testa uma condição. Se esta for verdadeira a declaração é executada e faz-se o teste novamente, e assim por diante. Assim como no caso do for, podemos fazer um loop infinito. Para tanto basta colocar uma expressão eternamente verdadeira na condição. Pode-se também omitir a declaração e fazer um loop sem conteúdo. Vamos ver um exemplo do uso do while. O programa abaixo espera que usuário digitar a tecla 'q' e só depois finaliza: 
+
+#include <stdio.h>
+main ()
+{
+char Ch;
+Ch='\0';
+while (Ch!='q') 
+       {
+       fflush(NULL);
+       scanf("%c",&Ch);
+       }
+}
+
+O Comando do-while
+A terceira estrutura de repetição que veremos é o do-while de forma geral:   
+do {
+declaração; 
+} while (condição); 
+  Mesmo que a declaração seja apenas um comando é uma boa prática deixar as chaves. O ponto-e- vírgula final é obrigatório. Vamos, como anteriormente, ver o funcionamento da estrutura do-while "por dentro": 
+ declaração; 
+if (condição) "Volta para a declaração" 
+ Vemos pela análise do bloco acima que a estrutura do-while executa a declaração, testa a condição e, se esta for verdadeira, volta para a declaração. A grande novidade no comando do-while é que ele, ao contrário do for e do while, garante que a declaração será executada pelo menos uma vez. 
+ Um dos principais usos da extrutura do-while é em menus, nos quais você quer garantir que o valor digitado pelo usuário seja válido. Um caso está exemplificado abaixo: 
+  
+#include <stdio.h>
+main ()
+{
+char Ch;
+do
+        {
+        printf ("\n\nEscolha um:\n\n");
+        printf ("\t(1)...Mamao\n");
+        printf ("\t(2)...Abacaxi\n");
+        printf ("\t(3)...Laranja\n\n");
+        fflush(NULL);
+        scanf("%c",&Ch);
+        } 
+while ((Ch!='1')&&(Ch!='2')&&(Ch!='3'));
+switch (Ch)
+        {
+        case '1':
+                printf ("\t\tVoce escolheu Mamao.\n");
+        break;
+        case '2':
+                printf ("\t\tVoce escolheu Abacaxi.\n");
+        break;
+        case '3':
+                printf ("\t\tVoce escolheu Laranja.\n");
+        break;
+        }
+}
+O Comando break
+Nós já vimos dois usos para o comando break: interrompendo os comandos switch e for. Na verdade, estes são os dois usos do comando break: ele pode quebrar a execução de um comando (como no caso do switch) ou interromper a execução de qualquer loop (como no caso do for, do while ou do do while). O break faz com que a execução do programa continue na primeira linha seguinte ao loop ou  bloco que está sendo interrompido. 
+O Comando continue
+O comando continue pode ser visto como sendo o oposto do break. Ele só funciona dentro de um loop. Quando o comando continue é encontrado, o loop pula para a próxima iteração, sem o abandono do loop, ao contrário do que acontecia no comando break. 
+O programa abaixo exemplifica o uso do continue: 
+#include <stdio.h>
+main()
+{
+int opcao;
+while (opcao != 5)
+       {
+       printf("\n\n Escolha uma opcao entre 1 e 5: ");
+       scanf("%d", &opcao);
+       if ((opcao > 5)||(opcao <1)) continue;  /* Opcao invalida: volta ao inicio do loop */
+       switch (opcao)
+          { 
+          case 1: 
+               printf("\n --> Primeira opcao..");
+          break; 
+          case 2: 
+               printf("\n --> Segunda opcao..");
+          break; 
+          case 3: 
+               printf("\n --> Terceira opcao..");
+          break; 
+          case 4: 
+               printf("\n --> Quarta opcao..");
+          break; 
+          case 5: 
+               printf("\n --> Abandonando..");
+          break; 
+          } 
+       }
+}
+O programa acima ilustra uma simples e útil aplicação para o continue. Ele recebe uma opção do usuário. Se esta opção for inválida, o continue faz com que o fluxo seja desviado de volta ao início do loop. Caso a opção escolhida seja válida o programa segue normalmente. 
+
+
+
+Exercício Proposto: Seja n um inteiro positivo. Fatorial de n , representado por n!, é definido por:
+
+	Se n for igual a 0
+              então
+                    n!  é igual a 1
+	senão
+                    n!  é igual a n *  n-1 *  n-2 * ...* n – (n – 1)           ou          n é igual a n *  (n – 1)!
+
+Fazer um programa em C para ler da entrada um número inteiro N e, se for possível, calcular o seu fatorial. 
+
+Diretivas para resolução do exercício:  
+- Ativar o compilador C;
+- Na função main():
+- Declarar a variável N que representará o número do qual se deseja calcular o fatorial. Declare também variáveis auxiliares que julgar necessárias;
+- Utilizar o comando cin para ler valores para N. Não esqueça de estabelecer uma condição de saída e da necessidade de se validar N;
+- Exibir o valor do número do qual se quer calcular o fatorial;
+- Proceder o cálculo do fatorial usando o comando while como estrutura de controle;
+- Exibir o fatorial calculado;
+- Verificar se o resultado está de acordo com a definição fornecida;
+- Verificar se há alguma restrição ao seu algoritmo.
+- Faça melhorias no programa (otimize o código, melhore a interface com o usuário, confirme os comentários, verifique a identação, melhore o lay out da tela, etc.).
+- A partir da versão otimizada que você obteve gere mais duas novas versões do programa: uma que utilize o comando do para o cálculo do fatorial de N e outra que utilize o comando for. 
+- Salve a versão final na sua área e em disquete.
+- Para a próxima aula preencha e entregue  o formulário LAB – APC – Rel  05.
+
+Exercícios Adicionais:
+
+1- Fazer um programa em C para determinar o valor da somatória dos primeiros 100 números inteiros positivos. Usar o comando for.
+
+2- Fazer um programa em C para ler inteiros do teclado e, para cada inteiro introduzido, dizer se o mesmo é par ou impar. O programa deverá parar quando for introduzido o inteiro –100. Usar o comando do.
+
+3-  Fazer um programa em C para esperar a entrada de determinada tecla. Usar o comando while.
+
+LAB – APC – Rel  05
+
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Conclusões obtidas quanto a validade do programa que foi desenvolvido para o cálculo do fatorial de um número inteiro positivo N:
+
+
+
+
+
+
+
+
+Justifique as possíveis restrições:
+
+
+
+
+
+
+Sugira soluções:
+
+
+
+
+
+Qual dos comandos while, do ou for é o mais adequado ao problema proposto? Justifique. 
+
+
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+
+ Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 8                                                                Data: ___/___/___
+
+Tema: Conceito de Programa em C -  A função main() – Funções de biblioteca – Funções do usuário – Exemplo de programa envolvendo funções de biblioteca e  funções simples desenvolvidas pelo usuário.
+
+* A Função 
+* O Comando return 
+* Protótipos de Funções 
+* O Tipo void 
+* Arquivos-Cabeçalhos 
+* Escopo de Variáveis 
+* Variáveis locais 
+* Parâmetros formais 
+* Variáveis globais 
+* Chamada por Valor e Chamada por Referência 
+
+A Função
+Funções são as estruturas que permitem ao usuário separar seus programas em blocos. Se não as tivéssemos, os programas teriam que ser curtos e de pequena complexidade. Para fazermos programas grandes e complexos temos de construí-los bloco a bloco. 
+ Uma função no C tem a seguinte forma geral: 
+tipo_de_retorno nome_da_função (declaração_de_parâmetros) 
+{ 
+corpo_da_função 
+}
+ O tipo-de-retorno é o tipo de variável que a função vai retornar. O default é o tipo int, ou seja, uma função para qual não declaramos o tipo de retorno é considerada como retornando um inteiro. A declaração de parâmetros é uma lista com a seguinte forma geral: 
+ tipo nome1, tipo nome2, ... , tipo nomeN 
+ Repare que o tipo deve ser especificado para cada uma das N variáveis de entrada. É na declaração de parâmetros que informamos ao compilador quais serão as entradas da função (assim como informamos a saída no tipo-de-retorno). 
+ O corpo da função é a sua alma. É nele que as entradas são processadas, saídas são geradas ou outras coisas são feitas. 
+
+O Comando return
+O comando return tem a seguinte forma geral: 
+ return valor_de_retorno; ou return; 
+ Digamos que uma função está sendo executada. Quando se chega a uma declaração return a função é encerrada imediatamente e, se o valor de retorno é informado, a função retorna este valor. É importante lembrar que o valor de retorno fornecido tem que ser, pelo menos, compatível com o tipo de retorno declarado para a função. 
+ Uma função pode ter mais de uma declaração return. Isto se torna claro quando pensamos que a função é terminada quando o programa chega à primeira declaração return. Abaixo estão dois exemplos de uso do return:   
+#include <stdio.h>
+int Square (int a)
+{
+ return (a*a);
+}
+
+main ()
+{
+ int num;
+ printf ("Entre com um numero: ");
+ scanf ("%d",&num);
+ num=Square(num);
+ printf ("\n\nO seu quadrado vale: %d\n",num);
+}
+
+#include <stdio.h>
+int EPar (int a)
+{
+if (a%2)                 /* Verifica se a e divisivel por dois */
+        return 0;        /* Retorna 0 se nao for divisivel */
+else
+        return 1;        /* Retorna 1 se for divisivel */
+}
+
+main ()
+{
+ int num;
+ printf ("Entre com numero: ");
+ scanf ("%d",&num);
+ if (EPar(num))
+        printf ("\n\nO numero e par.\n");
+else
+        printf ("\n\nO numero e impar.\n");
+}
+É importante notar que, como as funções retornam valores, podemos aproveitá-los para fazer atribuições. Mas não podemos fazer: 
+  
+                func(a,b)=x;    /* Errado! */
+No segundo exemplo vemos o uso de mais de um return em uma função. 
+ Fato importante: se uma função retorna um valor você não precisa aproveitar este valor. Se você não fizer nada com o valor de retorno de uma função ele será descartado. Por exemplo, a função printf() retorna um inteiro que nós nunca usamos para nada. Ele é descartado. 
+  
+Protótipos de Funções
+Até agora, nos exemplos apresentados, escrevemos as funções antes de escrevermos a função main(). Isto é, as funções estão fisicamente antes da função main(). Isto foi feito por uma razão. Imagine-se na pele do compilador. Se você fosse compilar a função main(), onde são chamadas as funções, você teria que saber com antecedência quais são os tipos de retorno e quais são os parâmetros das funções para que você pudesse gerar o código corretamente. Foi por isto as funções foram colocadas antes da função main(): quando o compilador chegasse à função main() ele já teria compilado as funções e já saberia seus formatos. 
+ Mas, muitas vezes, não poderemos nos dar ao luxo de escrever nesta ordem. Muitas vezes teremos o nosso programa espalhado por vários arquivos. Ou seja, estaremos chamando funções em um arquivo que serão compiladas em outro arquivo. Como manter a coerência? 
+ A solução são os protótipos de funções. Protótipos são nada mais, nada menos, que declarações de funções. Isto é, você declara uma função que irá usar. O compilador toma então conhecimento do formato daquela função antes de compilá-la. O código correto será então gerado. Um protótipo tem o seguinte formato: 
+ tipo_de_retorno nome_da_função (declaração_de_parâmetros); 
+ onde o tipo-de-retorno, o nome-da-função e a declaração-de-parâmetros são os mesmos que você pretende usar quando realmente escrever a função. Repare que os protótipos têm uma nítida semelhança com as declarações de variáveis. Vamos implementar agora um dos exemplos da seção anterior com algumas alterações e com protótipos: 
+  
+#include <stdio.h>
+float Square (float a);
+main ()
+{
+ float num;
+ printf ("Entre com um numero: ");
+ scanf ("%f",&num);
+ num=Square(num);
+ printf ("\n\nO seu quadrado vale: %f\n",num);
+}
+
+float Square (float a)
+{
+ return (a*a);
+}
+Observe que a função Square() está colocada depois de main(), mas o seu protótipo está antes. Sem isto este programa não funcionaria corretamente. 
+ Usando protótipos você pode construir funções que retornam quaisquer tipos de variáveis. É bom ressaltar que funções podem também retornar ponteiros sem qualquer problema. Eles não só ajudam o compilador. Eles ajudam a você também. Usando protótipos o compilador evita erros, não deixando que o programador use funções com os parâmetros errados e com o tipo de retorno errado, o que é uma grande ajuda. 
+
+O Tipo void
+Agora vamos ver o único tipo da linguagem C que não vimos ainda: o void. Em inglês, void quer dizer vazio e é isto mesmo que o void é. Ele nos permite fazer funções que não retornam nada e funções que não têm parâmetros! Podemos agora escrever o protótipo de uma função que não retorna nada: 
+ void nome_da_função (declaração_de_parâmetros); 
+ Numa função, como a acima, não temos valor de retorno na declaração return. Aliás, neste caso, o comando return não é necessário na função. 
+ Podemos, também, fazer funções que não têm parâmetros: 
+ tipo_de_retorno nome_da_função (void); 
+ ou, ainda, que não tem parâmetros e não retornam nada: 
+ void nome_da_função (void); 
+
+ Um exemplo de funções que usam o tipo void:   
+#include <stdio.h>
+void Mensagem (void);
+main ()
+{
+Mensagem();
+printf ("\tDiga de novo:\n");
+Mensagem();
+}
+void Mensagem (void)
+{
+printf ("Ola! Eu estou vivo.\n");
+}
+
+Usando nossos conhecimentos de funções, podemos agora eliminar de vez aquela irritante mensagem de aviso que o compilador tem nos dado, muitas vezes, desde o início do nosso curso! Se quisermos que a função retorne algo, devemos usar a declaração return. Se não quisermos, basta declarar a função como tendo tipo-de-retorno void. Devemos lembrar agora que a função main() é uma função e como tal devemos tratá-la. O compilador acha que a função main() deve retornar um inteiro. Isto pode ser interessante se quisermos que o sistema operacional receba um valor de retorno da função main(). Se assim o quisermos, devemos nos lembrar da seguinte convenção: se o programa retornar zero, significa que ele terminou normalmente, e, se o programa retornar um valor diferente de zero, significa que o programa teve um termino anormal. Se não estivermos interessados neste tipo de coisa, basta declarar a função main como retornando void. 
+ As duas funções main() abaixo são válidas e não geram mensagens de aviso: 
+  
+main (void)
+{
+....
+return 0;
+}
+
+void main (void)
+{
+....
+}
+Pronto. Estamos livres daquelas mensagens de aviso. 
+
+Arquivos-Cabeçalhos
+Arquivos-cabeçalhos são aqueles que temos mandado o compilador incluir no início de nossos exemplos e que sempre terminam em .h. Já vimos exemplos como stdio.h, conio.h, string.h. Eles, na verdade, não possuem os códigos completos das funções. Eles só contêm protótipos de funções. É o que basta. O compilador lê estes protótipos e, baseado nas informações lá contidas, gera o código correto. O corpo das funções cujos protótipos estão no arquivo-cabeçalho, no caso das funções do próprio C, já estão compiladas e normalmente são incluídas no programa no instante da "linkagem". Este é o instante em que todas as referências a funções cujos códigos não estão nos nossos arquivos fontes são resolvidas, buscando este código nos arquivos de bibliotecas. 
+Escopo de Variáveis
+* Variáveis locais 
+* Parâmetros formais 
+* Variáveis globais 
+
+Já foi dada uma introdução ao escopo de variáveis. O escopo é o conjunto de regras que determinam o uso e a validade de variáveis nas diversas partes do programa. 
+  
+Variáveis locais
+O primeiro tipo de variáveis que veremos são as variáveis locais. Estas são aquelas que só têm validade dentro do bloco no qual são declaradas. Sim. Podemos declarar variáveis dentro de qualquer bloco. Só para lembrar: um bloco começa quando abrimos uma chave e termina quando fechamos a chave. Até agora só tínhamos visto variáveis locais para funções completas. Mas um comando for pode ter variáveis locais e que não serão conhecidas fora dali. A declaração de variáveis locais é a primeira coisa que devemos colocar num bloco. A característica que torna as variáveis locais tão importantes é justamente a de serem exclusivas do bloco. Podemos ter quantos blocos quisermos com uma variável local chamada x, por exemplo, e elas não apresentarão conflito entre elas. 
+ A palavra reservada do C auto serve para dizer que uma variável é local. Mas não precisaremos usá-la pois as variáveis declaradas dentro de um bloco já são consideradas locais. 
+ Abaixo vemos um exemplo de variáveis locais:  
+
+func1 (...)
+{
+int abc,x;
+...
+}
+func (...)
+{
+int abc;
+...
+}
+main ()
+{
+int a,x,y;
+for (...)
+        {
+        float a,b,c;
+        ...
+        }
+...
+}
+No programa acima temos três funções. As variáveis locais de cada uma delas não irão interferir com as variáveis locais de outras funções. Assim, a variável abc de func1() não tem nada a ver (e pode ser tratada independentemente) com a variável abc de func2(). A variável x de func1() é também completamente independente da variável x de main(). As variáveis a, b e c são locais ao bloco for. Isto quer dizer que só são conhecidas dentro deste bloco for e são desconhecidas no resto da função main(). Quando usarmos a variável a dentro do bloco for estaremos usando a variável a local ao for e não a variável a da função main(). 
+  
+Parâmetros formais
+O segundo tipo de variável que veremos são os parâmetros formais. Estes são declarados como sendo as entradas de uma função. Não há motivo para se preocupar com o escopo deles. É fácil: o parâmetro formal é como se fosse uma variável local da função. Você pode também alterar o valor de um parâmetro formal, pois esta alteração não terá efeito na variável que foi passada à função. Isto tem sentido, pois quando o C passa parâmetros para uma função, são passadas apenas cópias das variáveis. Isto é, os parâmetros formais existem independentemente das variáveis que foram passadas para a função. Eles tomam apenas uma cópia dos valores passados para a função. 
+  
+Variáveis globais
+Variáveis globais são declaradas, como já sabemos, fora de todas as funções do programa. Elas são conhecidas e podem ser alteradas por todas as funções do programa. Quando uma função tem uma variável local com o mesmo nome de uma variável global a função dará preferência à variável local. Vamos ver um exemplo: 
+  
+int z,k;
+func1 (...)
+{
+int x,y;
+...
+}
+func2 (...)
+{
+int x,y,z;
+...
+z=10;
+...
+}
+main ()
+{
+int count;
+...
+}
+
+No exemplo acima as variáveis z e k são globais. Veja que func2() tem uma variável local chamada z. Quando temos então, em func2(), o comando z=10 quem recebe o valor de 10 é a variável local, não afetando o valor da variável global z. 
+ Evite ao máximo o uso de variáveis globais. Elas ocupam memória o tempo todo (as locais só ocupam memória enquanto estão sendo usadas) e tornam o programa mais difícil de ser entendido e menos geral. 
+
+Chamada por Valor e Chamada por Referência
+Já vimos que, na linguagem C, quando chamamos uma função os parâmetros formais da função copiam os valores dos parâmetros que são passados para a função. Isto quer dizer que não são alterados os valores que os parâmetros têm fora da função. Este tipo de chamada de função é denominado chamada por valor. Isto ocorre porque são passados para a função apenas os valores dos parâmetros e não os próprios parâmetros. Veja o exemplo abaixo: 
+#include <stdio.h>
+float sqr (float num);
+void main (void)
+{
+ float num,sq;
+ printf ("Entre com um numero: ");
+ scanf ("%f",&num);
+ sq=sqr(num);
+ printf ("\n\nO numero original e: %f\n",num);
+ printf ("O seu quadrado vale: %f\n",sq);
+}
+float sqr (float num)
+{
+ num=num*num;
+ return num;
+}
+
+No exemplo acima o parâmetro formal num da função sqr() sofre alterações dentro da função, mas a variável num da função main() permanece inalterada: é uma chamada por valor. 
+ Outro tipo de passagem de parâmetros para uma  função ocorre quando alterações nos parâmetros formais, dentro da função, alteram os valores dos parâmetros que foram passados para a função. Este tipo de chamada de função tem o nome de "chamada por referência". Este nome vem do fato de que, neste tipo de chamada, não se passa para a função os valores das variáveis, mas sim suas referências (a função usa as referências para alterar os valores das variáveis fora da função). 
+ O C só faz chamadas por valor. Isto é bom quando queremos usar os parâmetros formais à vontade dentro da função, sem termos que nos preocupar em estar mexendo nos valores dos parâmetros que foram passados para a função. Mas isto também pode ser ruim às vezes, porque podemos querer mudar os valores dos parâmetros fora da função também. O C++ tem um recurso que permite ao programador fazer chamadas por referência. Há entretanto, no C, um recurso de programação que podemos usar para simular uma chamada por referência. 
+ Quando queremos alterar as variáveis que são passadas para uma função, nós podemos declarar seus parâmetros formais como sendo ponteiros. Os ponteiros são a "referência" que precisamos para poder alterar a variável fora da função. O único inconveniente é que, quando usarmos a função, teremos de lembrar de colocar um & na frente das variáveis que estivermos passando para a função. Veja um exemplo: 
+  
+#include <stdio.h>
+void Swap (int *a,int *b);
+void main (void)
+{
+ int num1,num2;
+ num1=100;
+ num2=200;
+ Swap (&num1,&num2);
+ printf ("\n\nEles agora valem %d  %d\n",num1,num2);
+}
+void Swap (int *a,int *b)
+{
+ int temp;
+ temp=*a;
+ *a=*b;
+ *b=temp;
+}
+
+Não é muito difícil. O que está acontecendo é que passamos para a função Swap o endereço das variáveis num1 e num2. Estes endereços são copiados nos ponteiros a e b. Através do operador * estamos acessando o conteúdo apontado pelos ponteiros e modificando-o. Mas, quem é este conteúdo? Nada mais que os valores armazenados em num1 e num2, que, portanto, estão sendo modificados! 
+Espere um momento... será que nós já não vimos esta história de chamar uma função com as variáveis precedidas de &? Já. É assim que nós chamamos a função scanf(). Mas porquê? Vamos pensar um pouco. A função scanf() usa chamada por referência porque ela precisa alterar as variáveis que passamos para ela! Não é para isto mesmo que ela é feita? Ela lê variáveis para nós e portanto precisa alterar seus valores. Por isto passamos para a função o endereço da variável a ser modificada!
+Matrizes como Argumentos de Funções
+Quando vamos passar uma matriz como argumento de uma função, podemos declarar a função de três maneiras equivalentes. Digamos que temos a seguinte matriz: 
+  
+                int matrx [50];
+e que queiramos passá-la como argumento de uma função func(). Podemos declarar func() das três maneiras seguintes: 
+  
+                void func (int matrx[50]);
+                void func (int matrx[]);
+                void func (int *matrx);
+
+Nos três casos, teremos dentro de func() um int* chamado matrx. Ao passarmos uma matriz para uma função, na realidade estamos passando um ponteiro. Neste ponteiro é armazenado o endereço do primeiro elemento da matriz. Isto significa que  não é feita uma cópia, elemento a elemento da matriz. Isto faz com que possamos alterar o valor desta matriz dentro da função. 
+
+
+Exercício Proposto: Fazer um programa em C que leia dois inteiros A e B quaisquer do teclado e calcule os resultados A/B, A%B,  A^B e ABS (A) (valor absoluto de A) quando possível. Exibir a operação efetuada e o seu resultado da operação. As mensagens de instrução ou de aviso ou advertência deverão ser efetuadas através de chamadas de funções simples (sem passagem de parâmetros nem retorno de valores). Os cálculos podem ser feitos através de funções de biblioteca nos casos mais complicados. 
+
+Funções do usuário:
+	Adv_01() ==> Sinaliza tentativa de divisão por zero
+	Adv_02() ==> Sinaliza operação inválida;
+	Operador_A() ==> Solicita entrada do operador A ;
+	Operador_B() ==> Solicita do operador B;
+	Operação() ==> Solicita entrada da operação a ser realizada;
+Funções de biblioteca:
+	Função para cálculo de A^B ==>  Pesquisar na biblioteca de funções do compilador
+	Função para cálculo de  ABS(A) ==> Pesquisar na biblioteca de funções do compilador
+
+Para entregar na próxima aula preencha o formulário LAB – APC – Rel  06.
+
+Exercícios Adicionais:
+ 
+1- Função para exibir uma dada mensagem durante um determinado tempo, findo o mesmo a mensagem deve ser apagada.
+2- Função para exibir na tela um relógio no formato hh/mm/ss. O relógio deve ser atualizado em cada segundo.
+ 
+
+LAB – APC – Rel  06
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Conclusões obtidas quanto ao uso de diversas funções em um programa:
+
+
+
+
+
+
+
+
+Mostre algumas vantagens e algumas desvantagens da utilização de diversas funções ao invés de apenas uma:
+
+
+
+
+
+
+Discuta possíveis simplificações que foram impostas neste exercício:
+
+
+
+
+
+
+
+
+Quais as principais vantagens no uso de funções de bibliotecas?
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 9                                                                Data: ___/___/___
+
+
+Prova 1 de Laboratório
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 10                                                                Data: ___/___/___
+
+
+Correção/Recuperação da Prova 1 de Laboratório
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 11                                                                Data: ___/___/___
+
+
+Substitutiva da Prova 1 de Laboratório
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 12                                                                Data: ___/___/___
+
+Tema: Vetores em C
+Vetores
+Vetores nada mais são que matrizes unidimensionais. Vetores são uma estrutura de dados muito utilizada. É importante notar que vetores, matrizes bidimensionais e matrizes de qualquer dimensão são caracterizadas por terem todos os elementos pertencentes ao mesmo tipo de dado. Para se declarar um vetor podemos utilizar a seguinte forma geral: 
+ tipo_da_variável nome_da_variável [tamanho]; 
+ Quando o C vê uma declaração como esta ele reserva um espaço na memória suficientemente grande para armazenar o número de células especificadas em tamanho. Por exemplo, se declararmos: 
+  
+                float exemplo [20];
+o C irá reservar 4x20=80 bytes. Estes bytes são reservados de maneira contígua. Na linguagem C a numeração começa sempre em zero. Isto significa que, no exemplo acima, os dados serão indexados de 0 a 19. Para acessá-los vamos escrever: 
+  
+                exemplo[0]
+                exemplo[1]
+                .
+                .
+                .
+                exemplo[19]
+Mas ninguém o impede de escrever:   
+                exemplo[30]
+                exemplo[103]
+Por quê? Porque o C não verifica se o índice que você usou está dentro dos limites válidos. Este é um cuidado que você deve tomar. Se o programador não tiver atenção com os limites de validade para os índices ele corre o risco de ter variáveis sobreescritas ou de ver o computador travar. Bugs terríveis podem surgir. Vamos ver agora um exemplo de utilização de vetores: 
+  
+#include <stdio.h>
+main ()
+{
+int num[100];  /* Declara um vetor de inteiros de 100 posicoes */
+int count=0;  
+int totalnums;
+do
+        {
+        printf ("\nEntre com um numero (-999 p/ terminar): ");
+        scanf ("%d",&num[count]);
+        count++;
+        } while (num[count-1]!=-999);
+totalnums=count-1;
+printf ("\n\n\n\t Os números que você digitou foram:\n\n");
+for (count=0;count<totalnums;count++)
+        {
+        printf (" %d",num[count]);
+        }
+}
+No exemplo acima, o inteiro count é inicializado em 0. O programa pede pela entrada de números até que o usuário entre com o Flag -999. Os números são armazenados no vetor num. A cada número armazenado, o contador do vetor é incrementado para na próxima iteração escrever na próxima posição do vetor. Quando o usuário digita o flag, o programa abandona o primeiro loop e armazena o total de números gravados. Por fim, todos os números são impressos. É bom lembrar aqui que nenhuma restrição é feita quanto a quantidade de números digitados. Se o usuário digitar mais de 100 números, o programa tentará ler normalmente, mas o programa os escreverá em uma parte não alocada de memória, pois o espaço alocado foi para somente 100 inteiros. Isto pode resultar nos mais variados erros no instante da  execução do programa. 
+
+Exercício Proposto: Escrever um programa para ler um vetor de n elementos do tipo inteiro (n ? 20) e ordenar seus elementos em ordem crescente. Imprimir o vetor antes e após a ordenação.
+
+Para entregar na próxima aula preencha o formulário LAB – APC – Rel  07.
+
+Exercícios Adicionais:
+
+1) Escrever um programa para ler um vetor de n elementos do tipo inteiro (n ? 20) e ordenar seus elementos em ordem decrescente. Imprimir o vetor antes e após a ordenação.
+2) Escrever um programa para ler dois vetores de inteiros, de ordem n e m respectivamente (n ? 15 e m ? 25). Calcular o vetor interseção dos dois vetores dados, imprimido os três vetores. Se não houver a interseção, imprimir uma mensagem explicativa adequada.
+3) Ler um número inteiro ? [ 1, 100]. Encontrar a representação deste número na base dois, usando um vetor. Imprimir o número encontrado.
+4) Ler um vetor contendo 20 elementos reais e dividir este vetor em dois outros vetores, um deles com n elementos (você deve consistir n; pense como o fará) e o outro com o restante dos elementos. Imprimir os três vetores.
+5) Ler três vetores de n elementos cada um (n < 30) organizados da seguinte forma:
+
+    O primeiro e o terceiro são vetores de elementos reais;
+O segundo vetor é de caracteres e deve conter os símbolos que representam as operações aritméticas básicas ( *, /, +, -). 
+
+O primeiro e o terceiro vetor serão operados aritmeticamente de acordo com as operações existentes no segundo vetor, criando um novo vetor, conforme exemplo a seguir:
+
+       A = (1,3,5,7,9)       B = ('*  ', '/ ', '- ','+ ', '* ')        C = (-2, 4, -5, 3, 6)
+
+       D = (-2, 0.75, 10, 10, 54)       ( elementos do vetor A operados com elementos do vetor B)
+
+       Imprimir os quatro vetores.
+ 
+
+LAB – APC – Rel  07
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Conclusões obtidas quanto às vantagens do uso de vetor na solução de um problema:
+
+
+
+
+
+
+
+
+Conclusões obtidas quanto às desvantagens do uso de vetor na solução de um problema:
+
+
+
+
+
+
+Descreva, em alto nível, o algoritmo utilizado para a ordenação do vetor:
+
+
+
+
+
+
+
+
+Apresente uma outra alternativa de solução:
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no  13                                                                Data: ___/___/___
+
+Tema: Vetores de caracteres - Strings
+Strings
+* gets 
+* strcpy 
+* strcat 
+* strlen 
+* strcmp 
+
+Strings são vetores de chars. Nada mais e nada menos. As strings são o uso mais comum para os vetores. Devemos apenas ficar atentos para o fato de que as strings têm o seu último elemento como  um '\0'. A declaração geral para uma string é: 
+ char nome_da_string [tamanho]; 
+ Devemos lembrar que o tamanho da string deve incluir o '\0' final. A biblioteca padrão do C possui diversas funções que manipulam strings. Estas funções são úteis pois não se pode, por exemplo, igualar duas strings: 
+  
+                string1=string2;        /* NAO faca isto */
+Fazer isto é um desastre. Quando você terminar de ler a seção que trata de ponteiros você entenderá porquê. As strings devem ser igualadas elemento a elemento. 
+ Quando vamos fazer programas que tratam de string muitas vezes podemos fazer bom proveito do fato de que uma string termina com '\0' (isto é, o número inteiro 0). Veja, por exemplo, o programa abaixo que serve para igualar duas strings (isto é, copia os caracteres de uma string para o vetor da outra): 
+  
+#include <stdio.h>
+main ()
+{
+int count;
+char str1[100],str2[100];
+....            /* Aqui o programa le str1 que sera copiada para str2 */
+for (count=0;str1[count];count++)
+        {
+        str2[count]=str1[count];
+        }
+str2[count]='\0';
+....            /* Aqui o programa continua */
+}
+A condição no loop for acima é baseada no fato de que a string que está sendo copiada termina em '\0'. Este tipo de raciocínio é a base do C e você deve fazer um esforço para entender como é que o programa acima funciona. Quando o elemento encontrado em str1[count] é o '\0', o valor retornado para o teste condicional é falso (nulo). Desta forma a expressão que vinha sendo verdadeira (não zero) continuamente, torna-se falsa. 
+ Vamos ver agora algumas funções básicas para manipulação de strings. 
+  
+gets
+A função gets() lê uma string do teclado. Sua forma geral é: 
+ gets (nome_da_string); 
+ O programa abaixo demonstra o funcionamento da função gets(): 
+  
+#include <stdio.h>
+main ()
+{
+char string[100];
+printf ("Digite o seu nome: ");
+gets (string);
+printf ("\n\n Ola %s",string);
+}
+Repare que é válido passar para a função printf() o nome da string. Você verá mais adiante porque isto é válido. Como o primeiro argumento da função printf() é uma string também é válido fazer: 
+  
+                printf (string);
+  isto simplesmente imprimirá a string. 
+
+strcpy
+Sua forma geral é: 
+ strcpy (string_destino,string_origem); 
+ A função strcpy() copia a string-origem para a string- destino. Seu funcionamento é semelhante ao da rotina apresentada na seção anterior. As funções apresentadas nestas seções estão no arquivo cabeçalho string.h. A seguir apresentamos um exemplo de uso da função strcpy(): 
+  
+#include <stdio.h>
+#include <string.h>
+main ()
+{
+char str1[100],str2[100],str3[100];
+printf ("Entre com uma string: ");
+gets (str1);
+strcpy (str2,str1);
+strcpy (str3,"Voce digitou a string ");
+printf ("\n\n%s%s",str3,str2);
+}
+strcat
+A função strcat() tem a seguinte forma geral: 
+ strcat (string_destino,string_origem); 
+ A string de origem permanecerá inalterada e será anexada ao fim da string de destino. Um exemplo: 
+  
+#include <stdio.h>
+#include <string.h>
+main ()
+{
+char str1[100],str2[100];
+printf ("Entre com uma string: ");
+gets (str1);
+strcpy (str2,"Voce digitou a string ");
+strcat (str2,str1);
+printf ("\n\n%s",str2);
+}
+
+strlen
+Sua forma geral é: 
+ strlen (string); 
+ A função strlen() retorna o comprimento da string fornecida. O terminador nulo não é contado. Isto quer dizer que, de fato, o comprimento do vetor da string deve ser um a mais que o inteiro retornado por strlen(). Um exemplo do seu uso: 
+  
+#include <stdio.h>
+#include <string.h>
+main ()
+{
+int size;
+char str[100];
+printf ("Entre com uma string: ");
+gets (str);
+size=strlen (str);
+printf ("\n\nA string que voce digitou tem tamanho %d",size);
+}
+
+strcmp
+Sua forma geral é: 
+ strcmp (string1,string2); 
+ A função strcmp() compara a string 1 com a string 2. Se as duas forem idênticas a função retorna zero. Se elas forem diferentes a função retorna não-zero. Um exemplo da sua utilização: 
+  
+#include <stdio.h>
+#include <string.h>
+main ()
+{
+char str1[100],str2[100];
+printf ("Entre com uma string: ");
+gets (str1);
+printf ("\n\nEntre com outra string: ");
+gets (str2);
+if (strcmp(str1,str2))
+        printf ("\n\nAs duas strings são diferentes.");
+else printf ("\n\nAs duas strings são iguais.");
+}
+
+
+
+
+Exercício Proposto: Faça um programa que leia um string da entrada e determine a quantidade de dígitos numéricos presentes no mesmo. Dígito numérico é qualquer elemento que pertença ao conjunto: {‘0’,’1’,’2’,’3’,’4’,’5’,’6’,’7’,’8’,’9’}.
+
+Para entregar na próxima aula preencha o formulário LAB – APC – Rel  08.
+
+Exercícios Adicionais:
+
+1- Fazer um programa para ler strings e determinar o seu tamanho.
+
+2- Fazer um programa para duplicar um string dado.
+
+3- Fazer um programa para concatenar dois strings dados.
+
+4- Fazer um programa que leia um string e gere o seu inverso. Por exemplo, se  for introduzido o string ANTONIO, o programa deverá gerar o string OINOTNA. Exibir o string original e o string invertido.
+
+5- Faça um programa que leia de  dados para as variáveis dia, mes  e ano todas do tipo unsigned int. Verificar a consistência dos valores introduzidos e, a partir dos mesmos, exibir a data correspondente no formato:
+
+dd/NOME_MES/aaaa
+
+onde :   dd é o dia representado na variável dia;
+             NOME_MES é o nome do mês correspondente ao conteúdo da variável mes e
+             aaaa é o ano representado na variável ano.
+
+Por exemplo, se dia for 10,  mes  for 9 e ano for 2006 o programa deverá exibir:
+
+		10/SETEMBRO/2006
+
+
+LAB – APC – Rel  08
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Como, em C, é implementada uma cadeia de caracteres ?:
+
+
+
+
+
+
+
+
+Sugira uma outra alternativa de implementação. Compare com a implementação do C  :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Enumere algumas situações onde seria adequada a utilização de strings:
+
+
+
+
+
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 14                                                                Data: ___/___/___
+
+Tema: Matrizes
+Matrizes
+* Matrizes bidimensionais 
+* Matrizes de strings 
+* Matrizes multidimensionais 
+* Inicialização 
+* Inicialização sem especificação de tamanho 
+
+
+Matrizes bidimensionais
+Já vimos como declarar matrizes unidimensionais (vetores). Vamos tratar agora de matrizes bidimensionais. A forma geral da declaração de uma matriz bidimensional é muito parecida com a declaração de um vetor: 
+ 
+tipo_da_variável nome_da_variável [altura][largura]; 
+
+É muito importante ressaltar que, nesta estrutura, o índice da esquerda indexa as linhas e o da direita indexa as colunas. Quando vamos preencher ou ler uma matriz no C o índice mais à direita varia mais rapidamente que o índice à esquerda. Mais uma vez é bom lembrar que, na linguagem C, os índices variam de zero ao valor declarado, menos um; mas o C não vai verificar isto para o usuário. Manter os índices na faixa permitida é tarefa do programador. Abaixo damos um exemplo do uso de uma matriz: 
+  
+#include <stdio.h>
+main ()
+{
+int mtrx [20][10];
+int i,j,count;
+count=1;
+for (i=0;i<20;i++)
+        for (j=0;j<10;j++)
+                {
+                mtrx[i][j]=count;
+                count++;
+                }
+}
+No exemplo acima, a matriz mtrx é preenchida, sequencialmente por linhas, com os números de 1 a 200. Você deve entender o funcionamento do programa acima antes de prosseguir. 
+  
+Matrizes de strings
+Matrizes de strings são matrizes bidimensionais. Imagine uma string. Ela é um vetor. Se fizermos um vetor de strings estaremos fazendo uma lista de vetores. Esta estrutura é uma matriz bidimensional de chars. Podemos ver a forma geral de uma matriz de strings como sendo: 
+
+ char nome_da_variável [num_de_strings][compr_das_strings]; 
+
+ Aí surge a pergunta: como acessar uma string individual? Fácil. É só usar apenas o primeiro índice. Então, para acessar uma determinada string faça: 
+ nome_da_variável [índice] 
+
+Aqui está um exemplo de um programa que lê 5 strings e as exibe na tela: 
+  
+#include <stdio.h>
+main ()
+{
+char strings [5][100];
+int count;
+for (count=0;count<5;count++)
+        {
+        printf ("\n\nDigite uma string: ");
+        gets (strings[count]);
+        }
+printf ("\n\n\nAs strings que voce digitou foram:\n\n");
+for (count=0;count<5;count++)
+        {
+        printf ("%s\n",strings[count]);
+        }
+}
+
+Matrizes multidimensionais
+O uso de matrizes multidimensionais na linguagem C é simples. Sua forma geral é: 
+ tipo_da_variável nome_da_variável [tam1][tam2] ... [tamN]; 
+ Uma matriz N-dimensional funciona basicamente como outros tipos de matrizes. Basta lembrar que o índice que varia mais rapidamente é o índice mais à direita. 
+  
+Inicialização
+Podemos inicializar matrizes, assim como podemos inicializar variáveis. A forma geral de uma matriz como inicialização é: 
+ tipo_da_variável nome_da_variável [tam1][tam2] ... [tamN] = {lista_de_valores}; 
+ A lista de valores é composta por valores (do mesmo tipo da variável) separados por vírgula. Os valores devem ser dados na ordem em que serão colocados na matriz. Abaixo vemos alguns exemplos de inicializações de matrizes: 
+  
+        float vect [6] = { 1.3, 4.5, 2.7, 4.1, 0.0, 100.1 };
+        int matrx [3][4] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+        char str [10] = { 'J', 'o', 'a', 'o', '\0' };
+        char str [10] = "Joao";
+        char str_vect [3][10] = { "Joao", "Maria", "Jose" };
+
+O primeiro demonstra inicialização de vetores. O segundo exemplo demonstra a inicialização de matrizes multidimensionais, onde matrx está sendo inicializada com 1, 2, 3 e 4 em sua primeira linha, 5, 6, 7 e 8 na segunda linha e 9, 10, 11 e 12 na última linha. No terceiro exemplo vemos como inicializar uma string e, no quarto exemplo, um modo mais compacto de inicializar uma string. O quinto exemplo combina as duas técnicas para inicializar um vetor de strings. Repare que devemos incluir o ; no final da inicialização. 
+  
+Inicialização sem especificação de tamanho
+Podemos, em alguns casos, inicializar matrizes das quais não sabemos o tamanho a priori. O compilador C vai, neste caso verificar o tamanho do que você declarou e considerar como sendo o tamanho da matriz. Isto ocorre na hora da compilação e não poderá mais ser mudado durante o programa, sendo muito útil, por exemplo, quando vamos inicializar uma string e não queremos contar quantos caracteres serão necessários. Alguns exemplos: 
+  
+                char mess [] = "Linguagem C: flexibilidade e poder.";
+                int matrx [][2] = { 1,2,2,4,3,6,4,8,5,10 };
+No primeiro exemplo, a string mess terá tamanho 36. Repare que o artifício para realizar a inicialização sem especificação de tamanho é não especificar o tamanho! No segundo exemplo o valor não especificado será 5. 
+
+Exercício Proposto: Fazer um programa em MS-Visual C que leia uma matriz MxN (no máximo com 10 linhas e 10 colunas) e imprima o maior valor encontrado na matriz.
+
+Para entregar na próxima aula preencha o formulário LAB – APC – Rel  09.
+
+Exercícios Adicionais:
+
+1- Fazer um programa em MS-Visual C que leia uma matriz MxN (no máximo com 10 linhas e 10 colunas) e imprima o maior valor, o menor valor e o valor médio encontrados na matriz.
+
+2- Fazer um programa para ler duas matrizes A[mxn] e B[kxl] e calcular, se possível, a matriz soma: A + B.
+
+3- Fazer um programa para ler duas matrizes A[mxn] e B[kxl] e calcular, se possível, a matriz produto: 
+
+       A * B.
+
+4- Num teatro a platéia é constituída por 200 lugares organizados em 10 fileiras por 20 colunas. Um lugar nesse teatro é identificado pelo seu número de fileira e seu número de coluna. Supondo que em tal teatro há espetáculos de Quarta a Domingo, um espetáculo por dia, fazer um programa onde seja criada uma variável que represente o mapa de reservas numa semana em tal teatro. Uma vez criada tal variável o programa deverá iniciar a mesma de modo a representar que todos os lugares encontram-se disponíveis para reservas.
+
+
+
+
+LAB – APC – Rel  09
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Como, em C, é implementada uma matriz A de inteiros 100x100? Você consegue ver outras alternativas?:
+
+
+
+
+
+
+
+
+Discutir os problema adicionais propostos.  Qual a sua relação com vetores em C ( É muito importante saber tratar problemas desse tipo) :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 15                                                               Data: ___/___/___
+
+Tema: Estruturas e Uniões
+Estruturas 
+Criando 
+Usando 
+Matrizes de estruturas 
+Atribuindo 
+
+
+Uma estrutura agrupa várias variáveis numa só. Funciona como uma ficha pessoal que tenha nome, telefone e endereço. A ficha seria uma estrutura. 
+Criando
+Para se criar uma estrutura usa-se o comando struct. Sua forma geral é: 
+struct nome_do_tipo_da_estrutura
+{
+tipo_1 nome_1;
+tipo_2 nome_2;
+...
+tipo_n nome_n;
+} variáveis_estrutura;
+O nome_do_tipo_da_estrutura é o nome para a estrutura. As variáveis_estrutura são opcionais e seriam nomes de variáveis que o usuário já estaria declarando e que seriam do tipo nome_do_tipo_da_estrutura. Vamos criar uma estrutura de endereço: 
+struct tipo_endereco
+        {
+        char rua [50];
+        int numero;
+        char bairro [20];
+        char cidade [30];
+        char sigla_estado [3];
+        long int CEP;
+        };
+Vamos agora criar uma estrutura chamada ficha com os dados pessoais de uma pessoa: 
+struct ficha_pessoal
+        {
+        char nome [50];
+        long int telefone;
+        struct tipo_endereco endereco;
+        };
+Vemos, pelos exemplos acima, como declarar uma estrutura e que uma estrutura pode fazer parte de outra. 
+
+Usando
+Vamos agora utilizar as estruturas declaradas na seção anterior para escrever um programa que preencha uma ficha. 
+#include <stdio.h>
+#include <string.h>
+struct tipo_endereco
+        {
+        char rua [50];
+        int numero;
+        char bairro [20];
+        char cidade [30];
+        char sigla_estado [3];
+        long int CEP;
+        };
+struct ficha_pessoal
+        {
+        char nome [50];
+        long int telefone;
+        struct tipo_endereco endereco;
+        };
+void main (void)
+{
+struct ficha_pessoal ficha;
+strcpy (ficha.nome,"Luiz Osvaldo Silva");
+ficha.telefone=4921234;
+strcpy (ficha.endereco.rua,"Rua das Flores");
+ficha.endereco.numero=10;
+strcpy (ficha.endereco.bairro,"Cidade Velha");
+strcpy (ficha.endereco.cidade,"Belo Horizonte");
+strcpy (ficha.endereco.sigla_estado,"MG");
+ficha.endereco.CEP=31340230;
+}
+
+O programa declara uma variável ficha do tipo ficha_pessoal e preenche os seus dados. O exemplo mostra como podemos acessar um elemento de uma estrutura: basta usar o ponto (.). 
+
+Matrizes de estruturas
+Um estrutura é como qualquer outro tipo de dado no C. Podemos, portanto, fazer matrizes de estruturas. Vamos ver como ficaria a declaração de uma matriz de 100 fichas pessoais: 
+struct ficha_pessoal fichas [100];
+Poderíamos então acessar a segunda letra da sigla de estado da décima terceira ficha fazendo: 
+fichas[12].endereco.sigla_estado[1];
+Atribuindo
+Podemos atribuir duas estruturas que sejam do mesmo tipo. O C irá, neste caso, copiar uma estrutura na outra. Esta operação não apresenta problemas pois quando declaramos 
+
+
+struct ficha_pessoal ficha;
+
+ficha não é um ponteiro, mas uma estrutrura. Veja as linhas abaixo: 
+
+void main() 
+{ 
+struct ficha_pessoal primeira, segunda; 
+Le_dados(&primeira); 
+segunda = primeira; 
+Imprime_dados(segunda); 
+} 
+
+São declaradas duas estruturas do tipo ficha_pessoal, uma chamada primeira e outra chamada segunda. Supondo que haja declarada uma função Le_dados() que faça a leitura de uma estrutura, admitimos que após a execução da segunda linha de main(), a estrutura primeira estará preenchida com dados válidos. Os valores de primeira são copiados em segunda apenas com a expressão de atribuição: 
+
+segunda = primeira; 
+
+Todos os campos de primeira serão copiados na ficha chamada segunda. Devemos tomar cuidado com a seguinte declaração: 
+
+struct ficha_pessoal fichas [100];
+
+pois neste caso fichas é um ponteiro para a primeira ficha. Se quisermos a estrutura completa da n-ésima ficha devemos usar fichas[n-1]. 
+
+Declaração Union
+Uma declaração union determina uma única localização de memória onde podem estar armazenadas várias variáveis diferentes. A declaração de uma união é semelhante à declaração de uma estrutura: 
+union nome_do_tipo_da_union
+{
+tipo_1 nome_1;
+tipo_2 nome_2;
+...
+tipo_n nome_n;
+} variáveis_union;
+Como exemplo, vamos considerar a seguinte união: 
+union angulo
+        {
+        float graus;
+        float radianos;
+        };
+
+Nela, temos duas variáveis (graus e radianos) que, apesar de terem nomes diferentes, ocupam o mesmo local da memória. Isto quer dizer que só gastamos o espaço equivalente a um único float. Uniões podem ser feitas também com variáveis de diferentes tipos. Neste caso, a memória alocada corresponde ao tamanho da maior variável no union. Veja o exemplo: 
+#include <stdio.h> 
+#define GRAUS 'G' 
+#define RAD 'R' 
+union angulo 
+        { 
+        int graus; 
+        float radianos; 
+        }; 
+void main() 
+{ 
+union angulo ang; 
+char op; 
+printf("\nNumeros em graus ou radianos? "); 
+scanf("%c",&op); 
+if (op == GRAUS) 
+  { 
+  ang.graus = 180; 
+  printf("\nAngulo: %d\n",ang.graus); 
+  } 
+else if (op == RAD) 
+  { 
+  ang.radianos = 3.1415; 
+  printf("\nAngulo: %f\n",ang.radianos); 
+  } 
+else printf("\nEntrada invalida!!\n"); 
+} 
+Temos que tomar o maior cuidado pois poderíamos fazer: 
+#include <stdio.h>
+union numero
+        {
+        char Ch;
+        int I;
+        float F;
+        };
+main (void)
+{
+union numero N;
+N.graus = 123;
+printf ("%f",N.F);
+return 0;
+}
+O programa acima é muito perigoso pois você está lendo uma região da memória, que foi "gravada" como um inteiro, como se fosse um ponto flutuante. Tome cuidado! O resultado pode não fazer sentido.   
+
+Enumerações
+Numa enumeração podemos dizer ao compilador quais os valores que uma determinada variável pode assumir. Sua forma geral é: 
+enum nome_do_tipo_da_enumeração {lista_de_valores} lista_de_variáveis; 
+Vamos considerar o seguinte exemplo: 
+enum dias_da_semana {segunda, terca, quarta, quinta, sexta, sabado, domingo};
+O programador diz ao compilador que qualquer variável do tipo dias_da_semana só pode ter os valores enumerados. Isto quer dizer que poderíamos fazer o seguinte programa: 
+#include <stdio.h>
+enum dias_da_semana {segunda, terca, quarta, quinta, sexta,
+                                                sabado, domingo};
+main (void)
+{
+enum dias_da_semana d1,d2;
+d1=segunda;
+d2=sexta;
+if (d1==d2)
+        {
+        printf ("O dia e o mesmo.");
+        }
+else
+        {
+        printf ("São dias diferentes.");
+        }
+return 0;
+}
+Você deve estar se perguntando como é que a enumeração funciona. Simples. O compilador pega a lista que você fez de valores e associa, a cada um, um número inteiro. Então, ao primeiro da lista, é associado o número zero, o segundo ao número 1 e assim por diante. As variáveis declaradas são então variáveis int. 
+
+
+
+Exercício Proposto:
+1- Um gerente de Recursos Humanos deseja um programa em MS-Visual C que defina uma estrutura capaz de armazenar as informações associadas ao cadastro básico de um profissional da empresa (registro profissional na empresa, nome completo, idade, salário).  Crie tal estrutura.
+
+2- Dada a estrutura definida no exercício anterior, completar o programa permitindo que o usuário possa fornecer os dados associados a N profissionais (no máximo 30). 
+
+3- Completar o programa do exercício 2 permitindo que após a leitura de todos os dados o programa emita um relatório com os dados de cada empregado, sendo que para cada funcionário deve ser colocado um texto indicando se este é maior de idade (maior que 21 anos).
+
+4- Criar uma união destinada a representar a nota de um aluno. A nota pode ser expressa através de um, e apenas um, dos seguintes formatos:
+a) por um valor real entre 0.0 e 10.0, inclusive
+ou
+b) Por um conceito A, B, C ou D sendo que:
+
+A ==> Muito bom          B ==> Bom         C ==> Regular         D ==> Ruim
+
+Para entregar na próxima aula preencha o formulário LAB – APC – Rel  10.
+
+Exercícios Adicionais:
+
+1- Criar uma união destinada a representar a nota de um aluno. A nota pode ser expressa através de um, e apenas um, dos seguintes formatos:
+c) por um valor real entre 0.0 e 10.0, inclusive
+ou
+d) Por um conceito A, B, C ou D sendo que:
+
+A ==> Muito bom          B ==> Bom         C ==> Regular         D ==> Ruim
+2- Criar uma variável para representar uma classe de até N alunos do seu Centro. De cada aluno deve ser armazenado:
+- Nome
+- Data de nascimento
+- Faculdade que freqüenta;
+- Conceito obtido pelo aluno no vestibular
+O número de alunos da classe deve ser lido da entrada e o conceito do aluno no vestibular pode ser introduzido numa das formas definidas pela união do exercício 2. Esta forma deverá poder ser escolhida dentro do programa que utiliza a variável.
+
+3- Fazer um programa para ler os dados de uma classe de alunos criada como no exercício anterior e ler as notas de vestibular no formato que o usuário preferir. A partir dos dados fornecidos:
+- Se o conceito for fornecido na forma numérica deverá ser calculada a média da classe;
+- Senão, o programa deverá apresentar a porcentagem de cada um dos conceitos (A, B, C ou D) obtidos na classe.
+
+4- Escreva um programa que leia uma data, armazene esta data em uma estrutura (struct) com dia, mês e ano e valide esta data. Se a data digitada for inválida seu programa deve solicitar que a mesma seja  ovamente digitada. Lembrete: Anos bissextos são divisíveis por 4, com exceção dos anos com final 00 não divisíveis por 400 (Ex: 1900 e 1800 não foram anos bissextos. Já 2000 e 1600 foram anos bissextos).  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LAB – APC – Rel  10
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Como, em C,  são representados dados compostos não homogêneos? Como são referidos os seus componentes?:
+
+
+
+
+
+
+
+
+Verificar se em C pode-se copiar diretamente uma struct para outra do mesmo tipo ou se os elementos devem ser copiados um a um.   Como ficaria essa questão com uniões?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 16                                                               Data: ___/___/___
+
+Tema: Apontadores em C - Variáveis Estáticas e Variáveis Dinâmicas – Comandos new e delete
+APONTADORES EM C
+* Como Funcionam os APONTADORES 
+* Declarando e Utilizando APONTADORES 
+* APONTADORES e Vetores 
+* Vetores como APONTADORES 
+* APONTADORES como vetores 
+* Strings 
+* Endereços de elementos de vetores 
+* Vetores de APONTADORES 
+* Inicializando APONTADORES 
+* Cuidados a Serem Tomados ao se Usar APONTADORES 
+
+Como Funcionam os APONTADORES
+Os ints guardam inteiros. Os floats guardam números de ponto flutuante. Os chars guardam caracteres. APONTADORES guardam endereços de memória. Quando você anota o endereço de um colega você está criando um APONTADOR. O APONTADOR é este seu pedaço de papel. Ele tem anotado um endereço. Qual é o sentido disto? Simples. Quando você anota o endereço de um colega, depois você vai usar este endereço para achá-lo. O C funciona assim. Voce anota o endereço de algo numa variável APONTADOR para depois usar. 
+ Da mesma maneira, uma agenda, onde são guardados endereços de vários amigos, poderia ser vista como sendo uma matriz de APONTADORES no C. 
+ Um APONTADOR também tem tipo. Veja: quando você anota um endereço de um amigo você o trata diferente de quando você anota o endereço de uma firma. Apesar de o endereço dos dois locais ter o mesmo formato (rua, número, bairro, cidade, etc.) eles indicam locais cujos conteúdos são diferentes. Então os dois endereços são APONTADORES de tipos diferentes. 
+ No C quando declaramos APONTADORES nós informamos ao compilador para que tipo de variável vamos apontá-lo. Um APONTADOR int aponta para um inteiro, isto é, guarda o endereço de um inteiro. 
+Declarando e Utilizando APONTADORES
+Para declarar um APONTADOR temos a seguinte forma geral: 
+ tipo_do_APONTADOR *nome_da_variável; 
+ É o asterisco (*) que faz o compilador saber que aquela variável não vai guardar um valor mas sim um endereço para aquele tipo especificado. Vamos ver exemplos de declarações: 
+  
+                int *pt;
+                char *temp,*pt2;
+O primeiro exemplo declara um APONTADOR para um inteiro. O segundo declara dois APONTADORES para caracteres. Eles ainda não foram inicializados (como toda variável do C que é apenas declarada). Isto significa que eles apontam para um lugar indefinido. Este lugar pode estar, por exemplo, na porção da memória reservada ao sistema operacional do computador. Usar o APONTADOR nestas circunstânicias pode levar a um travamento do micro, ou a algo pior. O APONTADOR deve ser inicializado (apontado para algum lugar conhecido) antes de ser usado! Isto é de suma importância! 
+ Para atribuir um valor a um APONTADOR recém-criado poderíamos igualá-lo a um valor de memória. Mas, como saber a posição na memória de uma variável do nosso programa? Seria muito difícil saber o endereço de cada variável que usamos, mesmo porque estes endereços são determinados pelo compilador na hora da compilação e realocados na execução. Podemos então deixar que o compilador faça este trabalho por nós. Para saber o endereço de uma variável basta usar o operador &. Veja o exemplo:   
+                int count=10;
+                int *pt;
+                pt=&count;
+Criamos um inteiro count com o valor 10 e um apontador para um inteiro pt. A expressão &count nos dá o endereço de count, o qual armazenamos em pt. Simples, não é? Repare que não alteramos o valor de count, que continua valendo 10. 
+ Como nós colocamos um endereço em pt, ele está agora "liberado" para ser usado. Podemos, por exemplo, alterar o valor de count usando pt. Para tanto vamos usar o operador "inverso" do operador &. É o operador *. No exemplo acima, uma vez que fizemos pt=&count a expressão *pt é equivalente ao próprio count. Isto significa que, se quisermos mudar o valor de count para 12, basta fazer *pt=12. 
+ Vamos fazer uma pausa e voltar à nossa analogia para ver o que está acontecendo. 
+ Digamos que exista uma firma. Ela é como uma variável que já foi declarada. Você tem um papel em branco onde vai anotar o endereço da firma. O papel é um APONTADOR do tipo firma. Você então liga para a firma e pede o seu endereço, o qual você vai anotar no papel. Isto é equivalente, no C, a associar o papel à firma com o operador &. Ou seja, o operador & aplicado à firma é equivalente a você ligar para a mesma e pedir o endereço. Uma vez de posse do endereço no papel você poderia, por exemplo, fazer uma visita à firma. No C você faz uma visita à firma aplicando o operador * ao papel. Uma vez dentro da firma você pode copiar seu conteúdo ou modificá-lo. 
+ Uma observação importante: apesar do símbolo ser o mesmo, o operador * (multiplicação) não é o mesmo operador que o * (referência de APONTADORES). Para começar o primeiro é binário, e o segundo é unário pré-fixado. 
+ Aqui vão dois exemplos de usos simples de APONTADORES: 
+#include <stdio.h>
+main ()
+{
+ int num,valor;
+ int *p;
+ num=55;
+ p=&num;     /* Pega o endereco de num */
+ valor=*p;       /* Valor e igualado a num de uma maneira indireta */
+ printf ("\n\n%d\n",valor);
+ printf ("Endereco para onde o APONTADOR aponta: %p\n",p);
+ printf ("Valor da variavel apontada: %d\n",*p);
+}
+
+#include <stdio.h>
+main ()
+{
+ int num,*p;
+ num=55;
+ p=&num;     /* Pega o endereco de num */
+ printf ("\nValor inicial: %d\n",num);
+ *p=100; /* Muda o valor de num de uma maneira indireta */
+ printf ("\nValor final: %d\n",num);
+}
+
+Nos exemplos acima vemos um primeiro exemplo do funcionamento dos APONTADORES. No primeiro exemplo, o código %p usado na função printf() indica à função que ela deve exibir um endereço. 
+ Podemos fazer algumas operações aritméticas com APONTADORES. A primeira, e mais simples, é igualar dois APONTADORES. Se temos dois APONTADORES p1 e p2 podemos igualá-los fazendo p1=p2. Repare que estamos fazendo com que p1 aponte para o mesmo lugar que p2. Se quisermos que a variável apontada por p1 tenha o mesmo conteúdo da variável apontada por p2 devemos fazer *p1=*p2. Basicamente, depois que se aprende a usar os dois operadores (& e *) fica fácil entender operações com APONTADORES. 
+ As próximas operações, também muito usadas, são o incremento e o decremento. Quando incrementamos um APONTADOR ele passa a apontar para o próximo valor do mesmo tipo para o qual o APONTADOR aponta. Isto é, se temos um APONTADOR para um inteiro e o incrementamos ele passa a apontar para o próximo inteiro. Esta é mais uma razão pela qual o compilador precisa saber o tipo de um APONTADOR: se você incrementa um APONTADOR char* ele anda 1 byte na memória e se você incrementa um APONTADOR double* ele anda 8 bytes na memória. O decremento funciona semelhantemente. Supondo que p é um APONTADOR, as operações são escritas como: 
+  
+                p++;
+                p--;
+Mais uma vez insisto. Estamos falando de operações com APONTADORES e não de operações com o conteúdo das variáveis para as quais eles apontam. Por exemplo, para incrementar o conteúdo da variável apontada pelo APONTADOR p, faz-se:   
+                (*p)++;
+Outras operações aritméticas úteis são a soma e subtração de inteiros com APONTADORES. Vamos supor que você queira incrementar um APONTADOR de 15. Basta fazer:  
+                p=p+15;   ou   p+=15;
+E se você quiser usar o conteúdo do APONTADOR 15 posições adiante:   
+                *(p+15);
+A subtração funciona da mesma maneira. Uma outra operação, às vezes útil, é a comparação entre dois APONTADORES. Mas que informação recebemos quando comparamos dois APONTADORES? Bem, em primeiro lugar, podemos saber se dois APONTADORES são iguais ou diferentes (== e !=). No caso de operações do tipo >, <, >= e <= estamos comparando qual APONTADOR aponta para uma posição mais alta na memória. Então uma comparação entre APONTADORES pode nos dizer qual dos dois está "mais adiante" na memória. A comparação entre dois APONTADORES se escreve como a comparação entre outras duas variáveis quaisquer:   
+                p1>p2
+
+
+Há entretanto operações que você não pode efetuar num APONTADOR. Você não pode dividir ou multiplicar APONTADORES, adicionar dois APONTADORES, adicionar ou subtrair floats ou doubles de APONTADORES. 
+
+APONTADORES e Vetores
+* Vetores como APONTADORES 
+* APONTADORES como vetores 
+* Strings 
+* Endereços de elementos de vetores 
+* Vetores de APONTADORES 
+
+Veremos nestas seções que APONTADORES e vetores têm uma ligação muito forte. 
+  
+Vetores como APONTADORES
+Vamos dar agora uma idéia de como o C trata vetores. 
+ Quando você declara uma matriz da seguinte forma: 
+ tipo_da_variável nome_da_variável [tam1][tam2] ... [tamN]; 
+ o compilador C calcula o tamanho, em bytes, necessário para armazenar esta matriz. Este tamanho é: 
+ tam1 x tam2 x tam3 x ... x tamN x tamanho_do_tipo 
+ O compilador então aloca este número de bytes em um espaço livre de memória. O nome da variável que você declarou é na verdade um APONTADOR para o tipo da variável da matriz. Este conceito é fundamental. Eis porque: Tendo alocado na memória o espaço para a matriz, ele toma o nome da variável (que é um APONTADOR) e aponta para o primeiro elemento da matriz. 
+ Mas aí surge a pergunta: então como é que podemos usar a seguinte notação? 
+ nome_da_variável[índice] 
+ Isto pode ser facilmente explicado desde que você entenda que a notação acima é absolutamente equivalente a se fazer: 
+ *(nome_da_variável+índice) 
+ Agora podemos entender como é que funciona um vetor! Vamos ver o que podemos tirar de informação deste fato. Fica claro, por exemplo, porque é que, no C, a indexação começa com zero. É porque, ao pegarmos o valor do primeiro elemento de um vetor, queremos, de fato, *nome_da_variável e então devemos ter um índice igual a zero. Então sabemos que: 
+ *nome_da_variável é equivalente a nome_da_variável[0] 
+ Outra coisa: apesar de, na maioria dos casos, não fazer muito sentido, poderíamos ter índices negativos. Estaríamos pegando posições de memória antes do vetor. Isto explica também porque o C não verifica a validade dos índices. Ele não sabe o tamanho do vetor. Ele apenas aloca a memória, ajusta o APONTADOR do nome do vetor para o início do mesmo e, quando você usa os índices, encontra os elementos requisitados. 
+ Vamos ver agora um dos usos mais importantes dos APONTADORES: a varredura sequencial de uma matriz. Quando temos que varrer todos os elementos de uma matriz de uma forma sequencial, podemos usar um APONTADOR, o qual vamos incrementando. Qual a vantagem? Considere o seguinte programa para zerar uma matriz: 
+  
+main ()
+{
+float matrx [50][50];
+int i,j;
+for (i=0;i<50;i++)
+        for (j=0;j<50;j++)
+                matrx[i][j]=0.0;
+}
+
+Podemos reescrevê-lo de uma maneira muito mais eficiente como sendo: 
+  
+main ()
+{
+float matrx [50][50];
+float *p;
+int count;
+p=matrx[0];
+for (count=0;count<2500;count++)
+        {
+        *p=0.0;
+        p++;
+        }
+}
+
+Você consegue ver porque é que o segundo programa é mais eficiente? Simplesmente porque cada vez que se faz matrx[i][j] o programa tem que calcular o deslocamento para dar ao APONTADOR. Ou seja, o programa tem que calcular 2500 deslocamentos. No segundo programa o único cálculo que deve ser feito é o de um incremento de APONTADOR. Fazer 2500 incrementos em um APONTADOR é muito mais rápido que calcular 2500 deslocamentos completos. 
+ Há uma diferença entre o nome de um vetor e um APONTADOR que deve ser frisada: um APONTADOR é uma variável, mas o nome de um vetor não é uma variável. Isto significa, que não se consegue alterar o endereço que é apontado pelo "nome do vetor". Seja: 
+
+     int vetor[10];
+     int *APONTADOR, i;
+     APONTADOR = &i;
+
+/* as operacoes a seguir sao invalidas */
+
+     vetor = vetor + 2;     /* ERRADO: vetor nao e' variavel */
+     vetor++;               /* ERRADO: vetor nao e' variavel */
+     vetor = APONTADOR;      /* ERRADO: vetor nao e' variavel */
+
+Teste as operações acima no seu compilador. Ele dará uma mensagem de erro. Alguns compiladores dirão que vetor não é um Lvalue. Lvalue, significa "Left value", um símbolo que pode ser colocado do lado esquerdo de uma expressão de atribuição, isto é, uma variável. Outros compiladores dirão que tem-se "incompatible types in assignment", tipos incompatíveis em uma atribuição. 
+
+/* as operacoes abaixo sao validas */
+
+     APONTADOR = vetor;      /* CERTO: APONTADOR e' variavel */
+     APONTADOR = vetor+2;    /* CERTO: APONTADOR e' variavel */
+  
+APONTADORES como vetores
+Sabemos agora que, na verdade, o nome de um vetor é um APONTADOR constante. Sabemos também que podemos indexar o nome de um vetor. Como consequência podemos também indexar um APONTADOR qualquer. O programa mostrado a seguir funciona perfeitamente: 
+
+
+  
+#include <stdio.h>
+main ()
+{
+int matrx [10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+int *p;
+p=matrx;
+printf ("O terceiro elemento do vetor e: %d",p[2]);
+}
+Podemos ver que p[2] equivale a *(p+2). 
+
+Strings
+Seguindo o raciocínio acima, nomes de strings, são do tipo char*. Isto nos permite escever a nossa função StrCpy(), que funcionará como a função strcpy() da biblioteca: 
+  
+#include <stdio.h>
+#include <string.h>
+StrCpy (char *destino,char *origem)
+{
+while (*origem)
+        {
+        *destino=*origem;
+        origem++;
+        destino++;
+        }
+*destino='\0';
+}
+main ()
+{
+char str1[100],str2[100],str3[100];
+printf ("Entre com uma string: ");
+gets (str1);
+StrCpy (str2,str1);
+StrCpy (str3,"Voce digitou a string ");
+printf ("\n\n%s%s",str3,str2);
+}
+
+Há vários pontos a destacar no programa acima. Observe que podemos passar APONTADORES como argumentos de funções. Na verdade é assim que funções como gets() e strcpy() funcionam. Passando o APONTADOR você possibilita à função alterar o conteúdo das strings. Você já estava passando os APONTADORES e não sabia. No comando while (*origem) estamos usando o fato de que a string termina com '\0' como critério de parada. 
+Endereços de elementos de vetores
+Nesta seção vamos apenas ressaltar que a notação 
+ &nome_da_variável[índice] 
+ é válida e retorna o endereço do ponto do vetor indexado por índice. Isto seria equivalente a nome_da_variável + indice. É interessante notar que, como consequência, o APONTADOR nome_da_variável tem o endereço &nome_da_variável[0], que indica onde na memória está guardado o valor do primeiro elemento do vetor.   
+Inicializando APONTADORES
+Podemos inicializar APONTADORES. Vamos ver um caso interessante dessa inicialização de APONTADORES com strings. 
+ Precisamos, para isto, entender como o C trata as strings constantes. Toda string que o programador insere no programa é colocada num banco de strings que o compilador cria. No local onde está uma string no programa, o compilador coloca o endereço do início daquela string (que está no banco de strings). É por isto que podemos usar strcpy() do seguinte modo: 
+  
+                strcpy (string,"String constante.");
+strcpy() pede dois parâmetros do tipo char*. Como o compilador substitui a string "String constante." pelo seu endereço no banco de strings, tudo está bem para a função strcpy(). 
+ O que isto tem a ver com a inicialização de APONTADORES? É que, para uma string que vamos usar várias vezes, podemos fazer: 
+  
+                char *str1="String constante.";
+Aí poderíamos, em todo lugar que precisarmos da string, usar a variável str1. Devemos apenas tomar cuidado ao usar este APONTADOR. Se o alterarmos vamos perder a string. Se o usarmos para alterar a string podemos facilmente corromper o banco de strings que o compilador criou. 
+ Mais uma vez fica o aviso: APONTADORES são poderosos mas, se usados com descuido, podem ser uma ótima fonte de dores de cabeça. 
+
+Cuidados a Serem Tomados ao se Usar APONTADORES
+O principal cuidado ao se usar um APONTADOR deve ser: saiba sempre para onde o APONTADOR está apontando. Isto inclui: nunca use um APONTADOR que não foi inicializado. Um pequeno programa que demonstra como não usar um APONTADOR: 
+  
+main () /* Errado - Nao Execute */
+{
+int x,*p;
+x=13;
+*p=x;
+}
+Este programa compilará e rodará. O que acontecerá? Ninguém sabe. O APONTADOR pode estar apontando para qualquer lugar. Você estará gravando o número 13 em um lugar desconhecido. Com um número apenas, você provavelmente não vai ver nenhum defeito. Agora, se você começar a gravar números em posições aleatórias no seu computador, não vai demorar muito para travar o micro (se não acontecer coisa pior). 
+
+
+Exercício Proposto: Criar variáveis estáticas e dinâmicas para representar:
+a) O salário de uma pessoa;
+b) O nome de uma pessoa;
+c) A data de nascimento de uma pessoa (dia, mês e ano);
+d) Uma pessoa através do seguinte conjunto de informações: nome, data de nascimento e salário.
+e) Um vetor de 100 pessoas com os dados do item d) acima;
+f) Uma matriz 10x10 de pessoas com os dados do item d) acima.
+
+Para cada variável criada fazer uma atribuição consistente.
+
+Para entregar na próxima aula preencha o formulário LAB – APC – Rel  11.
+
+Exercícios Adicionais:
+
+
+1) Declare uma variável N do tipo inteiro. A seguir declare um apontador APN também do tipo inteiro. Leia um valor para N e atribua a APN o endereço de N (usando &). Por fim, escreva os seguintes valores: N, APN  e *APN e responda quais são as suas conclusões em relação aos apontadores.
+
+
+2) Construa um vetor V contendo 10 elementos do tipo inteiro. Usando um apontador percorra este vetor encontrando o número de ocorrências do valor 12. 
+
+
+3) Para o vetor V do exercício 2, encontre a média dos valores de V  e qual é o maior valor encontrado.
+
+
+
+
+LAB – APC – Rel  11
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+Cite situações onde as variáveis que você criou poderiam ser utilizadas. Quando usar variáveis estáticas e quando usar variáveis dinâmicas?  Porquê?:
+
+
+
+
+
+
+
+
+Para cada linha do código que você escreveu faça um esquema da memória envolvida:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Escreva código para liberar as variáveis dinâmicas e indique as ações sobre o esquema da memória envolvida:
+
+
+
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+
+
+
+Disciplina: ALGORITMOS E PROGRAMAÇÃO PARA COMPUTADORES
+Faculdades: Análise de Sistemas/Engenharia de Computação
+
+Prática de Laboratório no 17                                                               Data: ___/___/___
+
+Tema: Vetores e estruturas dinâmicas
+
+Exercício Proposto: Fazer um programa para cadastro de uma classe de alunos. De cada aluno deve ser armazenado: nome, endereço e curso. A classe deve ser representada apenas por uma variável dinâmica e utilizar a memória da forma mais racional possível. 
+Siga os seguintes passos:
+- Definir uma estrutura necessária para armazenar os dados de um aluno;
+- Ler o número total de alunos da entrada, verificar consistência da entrada;
+- Alocar dinamicamente um vetor de alunos que irá representar a classe;
+- Certifique-se que a alocação foi feita com êxito;
+- Para cada elemento do vetor leia os dados de um aluno;
+- Exiba o conteúdo do vetor. 
+
+Para entregar na próxima aula preencha o formulário LAB – APC – Rel  12.
+
+Exercícios Adicionais:
+
+1- Declare uma struct destinada a conter informações sobre canetas disponíveis para venda em uma papelaria:
+- código do produto ( string de até 10 caracteres)
+- Quantidade em estoque ( um inteiro)
+- Custo unitário (um real).
+
+2- Declare e preencha um vetor V destinado a conter as n (variável inteira) canetas que se encontram disponíveis para a venda em tal papelaria.
+
+3- Baseado no vetor V criado no item 2 acima determine o preço médio de uma caneta em tal papelaria. Liste, para cada modelo em estoque, a quantidade disponível. 
+
+
+LAB – APC – Rel  12
+Nome e RA dos alunos que fizeram este Relatório: 
+
+Nome:__________________________________________________________   RA:_________________
+
+Nome:__________________________________________________________   RA:_________________
+
+A variável que você foi induzido a utilizar neste laboratório é conhecida como um vetor dinâmico. Porquê dinâmico já que todo o vetor foi alocado de uma vez? Não daria para ser mais dinâmica, ou seja, crescer conforme fossem inseridos os alunos? :
+
+
+
+
+
+
+
+
+Como você verifica que a variável dinâmica encontra-se disponível para o uso?:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Escreva código para liberar a variável alocada. Qual o efeito dessa liberação no seu sistema?:
+
+
+
+
+
+
+
+
+Observações Gerais:
+
+
+
+
+
+
+
+CRITÈRIOS DE AVALIAÇÂO
+
+A cada aluno será atribuído um conceito no final do curso variando de 0 a 10 pontos. Nesse conceito os seguintes itens serão considerados:
+
+    Participação do aluno: Freqüência, aplicação em aula, comportamento, entrega de relatórios: 20%
+    
+    Média de Provas: 2 Provas Individuais com igual  peso: 80%
+1
+
+
+24
+
+
+
+
+
+
+
+
+
+
