@@ -79,6 +79,7 @@ INSTRUÇÃO DE AVALIAÇÃO:
       const cleanKey = studentApiKey.trim();
       
       if (cleanKey.startsWith('gsk_')) {
+        console.log("🚀 Monitoria: Enviando requisição para Groq API (Llama 3.3)...");
         const response = await axios.post(
           'https://api.groq.com/openai/v1/chat/completions',
           {
@@ -101,10 +102,12 @@ INSTRUÇÃO DE AVALIAÇÃO:
         const rawText = response.data.choices[0]?.message?.content;
         if (!rawText) throw new Error("Resposta do Groq veio vazia.");
         resultJSON = cleanJSONResponse(rawText);
+        console.log("✅ Monitoria: Resposta da Groq recebida com sucesso!");
       } 
       else if (cleanKey.startsWith('AIza') || cleanKey.startsWith('AQ')) {
+        console.log("💎 Monitoria: Enviando requisição para Gemini API (2.0 Flash Lite)...");
         const response = await axios.post(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${cleanKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${cleanKey}`,
           {
             systemInstruction: {
               parts: [{ text: SYSTEM_PROMPT }]
@@ -125,12 +128,14 @@ INSTRUÇÃO DE AVALIAÇÃO:
         const rawText = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
         if (!rawText) throw new Error("Resposta do Gemini veio vazia.");
         resultJSON = cleanJSONResponse(rawText);
+        console.log("✅ Monitoria: Resposta do Gemini recebida com sucesso!");
       }
       else {
-        throw new Error("Chave não reconhecida.");
+        throw new Error("Formato de chave de API não reconhecido.");
       }
     } 
     else {
+      console.log("📡 Monitoria: Enviando requisição via Proxy Seguro (/api/review)...");
       const proxyResponse = await axios.post('/api/review', {
         systemPrompt: SYSTEM_PROMPT,
         prompt: promptText
@@ -143,9 +148,10 @@ INSTRUÇÃO DE AVALIAÇÃO:
       resultJSON = typeof proxyResponse.data === 'string' 
         ? cleanJSONResponse(proxyResponse.data) 
         : proxyResponse.data;
+      console.log("✅ Monitoria: Resposta do Proxy recebida com sucesso!");
     }
 
-    if (resultJSON) {
+    if (resultJSON && resultJSON.feedback) {
       return {
         approved: resultJSON.approved ?? fallbackReview.approved,
         feedback: `👨‍🏫 IA MONITOR: ${resultJSON.feedback}`,
@@ -153,14 +159,14 @@ INSTRUÇÃO DE AVALIAÇÃO:
       };
     }
     
-    throw new Error("Formato de resposta inválido.");
+    throw new Error("Formato de resposta retornado pela IA é inválido.");
 
   } catch (error: any) {
     const errorDetails = error?.response?.data 
       ? (typeof error.response.data === 'object' ? JSON.stringify(error.response.data) : String(error.response.data))
       : (error?.message || 'Serviço de IA remoto indisponível');
     
-    console.warn("Monitoria IA fallback ativado:", errorDetails);
+    console.warn("⚠️ Monitoria: API remota falhou, ativando fallback local:", errorDetails);
     
     return {
       ...fallbackReview,
