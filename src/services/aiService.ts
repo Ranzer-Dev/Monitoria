@@ -39,6 +39,74 @@ FORMATO DE RESPOSTA (JSON estrito):
   "score": number
 }`;
 
+async function requestGemini(apiKey: string, prompt: string): Promise<Record<string, any>> {
+  console.log("💎 [Tier 1] Monitoria: Tentando Google Gemini API (2.0 Flash Lite)...");
+  const response = await axios.post(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+    {
+      systemInstruction: {
+        parts: [{ text: SYSTEM_PROMPT }]
+      },
+      contents: [
+        { 
+          role: "user", 
+          parts: [{ text: prompt }] 
+        }
+      ],
+      generationConfig: { 
+        temperature: 0.7,
+        responseMimeType: "application/json"
+      }
+    }
+  );
+  
+  const rawText = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!rawText) throw new Error("Resposta do Gemini vazia.");
+  return cleanJSONResponse(rawText);
+}
+
+async function requestGroq(apiKey: string, prompt: string): Promise<Record<string, any>> {
+  console.log("🚀 [Tier 2] Monitoria: Tentando Groq API (Llama 3.3 70B)...");
+  const response = await axios.post(
+    'https://api.groq.com/openai/v1/chat/completions',
+    {
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.7,
+      response_format: { type: "json_object" }
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  
+  const rawText = response.data.choices?.[0]?.message?.content;
+  if (!rawText) throw new Error("Resposta do Groq vazia.");
+  return cleanJSONResponse(rawText);
+}
+
+async function requestProxy(prompt: string): Promise<Record<string, any>> {
+  console.log("📡 [Tier 3] Monitoria: Tentando Proxy Seguro Cascata (/api/review)...");
+  const proxyResponse = await axios.post('/api/review', {
+    systemPrompt: SYSTEM_PROMPT,
+    prompt: prompt
+  }, {
+    headers: {
+      'x-internal-secret': 'monitoria-secret-dev-2026'
+    }
+  });
+  
+  return typeof proxyResponse.data === 'string' 
+    ? cleanJSONResponse(proxyResponse.data) 
+    : proxyResponse.data;
+}
+
 export async function getAIReview(
   code: string,
   output: string[],
@@ -46,7 +114,7 @@ export async function getAIReview(
   language: string,
   listId: number
 ): Promise<AIResponse> {
-  const studentApiKey = getApiKey();
+  const studentApiKey = getApiKey().trim();
   const fallbackReview = simulateAIAnalysis(code, output, exercise, language, listId);
 
   const promptText = `
@@ -72,105 +140,51 @@ INSTRUÇÃO DE AVALIAÇÃO:
 }
 `;
 
-  try {
-    let resultJSON: Record<string, any> | null = null;
+  let resultJSON: Record<string, any> | null = null;
 
-    if (studentApiKey) {
-      const cleanKey = studentApiKey.trim();
-      
-      if (cleanKey.startsWith('gsk_')) {
-        console.log("🚀 Monitoria: Enviando requisição para Groq API (Llama 3.3)...");
-        const response = await axios.post(
-          'https://api.groq.com/openai/v1/chat/completions',
-          {
-            model: "llama-3.3-70b-versatile",
-            messages: [
-              { role: "system", content: SYSTEM_PROMPT },
-              { role: "user", content: promptText }
-            ],
-            temperature: 0.7,
-            response_format: { type: "json_object" }
-          },
-          {
-            headers: {
-              'Authorization': `Bearer ${cleanKey}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        
-        const rawText = response.data.choices[0]?.message?.content;
-        if (!rawText) throw new Error("Resposta do Groq veio vazia.");
-        resultJSON = cleanJSONResponse(rawText);
-        console.log("✅ Monitoria: Resposta da Groq recebida com sucesso!");
-      } 
-      else if (cleanKey.startsWith('AIza') || cleanKey.startsWith('AQ')) {
-        console.log("💎 Monitoria: Enviando requisição para Gemini API (2.0 Flash Lite)...");
-        const response = await axios.post(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${cleanKey}`,
-          {
-            systemInstruction: {
-              parts: [{ text: SYSTEM_PROMPT }]
-            },
-            contents: [
-              { 
-                role: "user", 
-                parts: [{ text: promptText }] 
-              }
-            ],
-            generationConfig: { 
-              temperature: 0.7,
-              responseMimeType: "application/json"
-            }
-          }
-        );
-        
-        const rawText = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!rawText) throw new Error("Resposta do Gemini veio vazia.");
-        resultJSON = cleanJSONResponse(rawText);
-        console.log("✅ Monitoria: Resposta do Gemini recebida com sucesso!");
-      }
-      else {
-        throw new Error("Formato de chave de API não reconhecido.");
-      }
-    } 
-    else {
-      console.log("📡 Monitoria: Enviando requisição via Proxy Seguro (/api/review)...");
-      const proxyResponse = await axios.post('/api/review', {
-        systemPrompt: SYSTEM_PROMPT,
-        prompt: promptText
-      }, {
-        headers: {
-          'x-internal-secret': 'monitoria-secret-dev-2026'
+  if (studentApiKey) {
+    if (studentApiKey.startsWith('AIza') || studentApiKey.startsWith('AQ')) {
+      try {
+        resultJSON = await requestGemini(studentApiKey, promptText);
+      } catch (geminiError: any) {
+        console.warn("⚠️ Gemini falhou, tentando fallback via Proxy/Groq:", geminiError?.message);
+        try {
+          resultJSON = await requestProxy(promptText);
+        } catch (proxyError: any) {
+          console.warn("⚠️ Fallback de Proxy falhou:", proxyError?.message);
         }
-      });
-      
-      resultJSON = typeof proxyResponse.data === 'string' 
-        ? cleanJSONResponse(proxyResponse.data) 
-        : proxyResponse.data;
-      console.log("✅ Monitoria: Resposta do Proxy recebida com sucesso!");
+      }
+    } else if (studentApiKey.startsWith('gsk_')) {
+      try {
+        resultJSON = await requestGroq(studentApiKey, promptText);
+      } catch (groqError: any) {
+        console.warn("⚠️ Groq falhou, tentando fallback via Proxy:", groqError?.message);
+        try {
+          resultJSON = await requestProxy(promptText);
+        } catch (proxyError: any) {
+          console.warn("⚠️ Fallback de Proxy falhou:", proxyError?.message);
+        }
+      }
     }
-
-    if (resultJSON && resultJSON.feedback) {
-      return {
-        approved: resultJSON.approved ?? fallbackReview.approved,
-        feedback: `👨‍🏫 IA MONITOR: ${resultJSON.feedback}`,
-        score: resultJSON.score ?? fallbackReview.score
-      };
+  } else {
+    try {
+      resultJSON = await requestProxy(promptText);
+    } catch (proxyError: any) {
+      console.warn("⚠️ Proxy offline ou sem resposta, ativando IA Simulada Local:", proxyError?.message);
     }
-    
-    throw new Error("Formato de resposta retornado pela IA é inválido.");
+  }
 
-  } catch (error: any) {
-    const errorDetails = error?.response?.data 
-      ? (typeof error.response.data === 'object' ? JSON.stringify(error.response.data) : String(error.response.data))
-      : (error?.message || 'Serviço de IA remoto indisponível');
-    
-    console.warn("⚠️ Monitoria: API remota falhou, ativando fallback local:", errorDetails);
-    
+  if (resultJSON && resultJSON.feedback) {
     return {
-      ...fallbackReview,
-      feedback: fallbackReview.feedback
+      approved: resultJSON.approved ?? fallbackReview.approved,
+      feedback: `👨‍🏫 IA MONITOR: ${resultJSON.feedback}`,
+      score: resultJSON.score ?? fallbackReview.score
     };
   }
+
+  console.log("🛠️ [Tier 4] Monitoria: Resposta gerada via Simulador Local Heurístico.");
+  return {
+    ...fallbackReview,
+    feedback: fallbackReview.feedback
+  };
 }

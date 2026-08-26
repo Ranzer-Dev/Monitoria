@@ -20,66 +20,85 @@ export default async function handler(req: Request) {
       });
     }
     
-    const groqKey = process.env.GROQ_API_KEY;
     const geminiKey = process.env.GEMINI_API_KEY;
-
-    if (groqKey) {
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${groqKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: prompt }
-          ],
-          temperature: 0.7,
-          response_format: { type: "json_object" }
-        }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(`Groq API Error: ${JSON.stringify(data)}`);
-      
-      return new Response(data.choices[0]?.message?.content);
-    }
+    const groqKey = process.env.GROQ_API_KEY;
 
     if (geminiKey) {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${geminiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: systemPrompt }]
-            },
-            contents: [
-              {
-                role: "user",
-                parts: [{ text: prompt }]
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${geminiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              systemInstruction: {
+                parts: [{ text: systemPrompt }]
+              },
+              contents: [
+                {
+                  role: "user",
+                  parts: [{ text: prompt }]
+                }
+              ],
+              generationConfig: { 
+                temperature: 0.7,
+                responseMimeType: "application/json"
               }
-            ],
-            generationConfig: { 
-              temperature: 0.7,
-              responseMimeType: "application/json"
-            }
-          }),
-        }
-      );
+            }),
+          }
+        );
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(`Gemini API Error: ${JSON.stringify(data)}`);
-      
-      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      return new Response(rawText);
+        if (response.ok) {
+          const data = await response.json();
+          const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (rawText) {
+            return new Response(rawText, {
+              status: 200,
+              headers: { 'content-type': 'application/json' }
+            });
+          }
+        }
+      } catch (geminiError: any) {
+        console.warn("Proxy: Gemini falhou, tentando fallback para Groq...", geminiError.message);
+      }
+    }
+
+    if (groqKey) {
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${groqKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: prompt }
+            ],
+            temperature: 0.7,
+            response_format: { type: "json_object" }
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const content = data.choices?.[0]?.message?.content;
+          if (content) {
+            return new Response(content, {
+              status: 200,
+              headers: { 'content-type': 'application/json' }
+            });
+          }
+        }
+      } catch (groqError: any) {
+        console.warn("Proxy: Groq também falhou...", groqError.message);
+      }
     }
 
     return new Response(
-      JSON.stringify({ error: 'Configuração Incompleta: Adicione GROQ_API_KEY ou GEMINI_API_KEY nas variáveis de ambiente da Vercel.' }), 
+      JSON.stringify({ error: 'Nenhum provedor de IA remoto (Gemini ou Groq) respondeu com sucesso.' }), 
       { status: 500, headers: { 'content-type': 'application/json' } }
     );
 
