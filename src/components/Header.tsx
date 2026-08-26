@@ -50,7 +50,7 @@ export default function Header({ stats, language, onLanguageChange, view, onView
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 w-full z-[100] border-b border-white/10 glass"
+        className="fixed top-0 left-0 right-0 w-full z-[100] header-glass"
         style={{ height: '54px' }}
       >
         <div className="max-w-6xl mx-auto px-4 md:px-8 h-full flex items-center justify-between gap-4" style={{ height: '100%' }}>
