@@ -51,7 +51,14 @@ export default function Header({ stats, language, onLanguageChange, view, onView
     <>
       <header
         className="fixed top-0 left-0 right-0 w-full z-[100] header-glass"
-        style={{ height: '54px' }}
+        style={{
+          height: '54px',
+          backgroundColor: 'rgba(10, 10, 15, 0.88)',
+          backdropFilter: 'blur(16px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 4px 24px -2px rgba(0, 0, 0, 0.6)'
+        }}
       >
         <div className="max-w-6xl mx-auto px-4 md:px-8 h-full flex items-center justify-between gap-4" style={{ height: '100%' }}>
 
