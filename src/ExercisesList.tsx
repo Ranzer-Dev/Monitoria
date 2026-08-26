@@ -5,7 +5,11 @@ import CodeEditor from './CodeEditor';
 import { useInterpreter } from './hooks/useInterpreter';
 import { useCInterpreter } from './hooks/useCInterpreter';
 import { getAIReview, getApiKey, setApiKey } from './services/aiService';
-import { Settings, CheckCircle2, ChevronDown, Sword, BookOpen, Lightbulb, CodeXml, Trophy, ChevronRight, Lock, Cpu } from 'lucide-react';
+import { 
+  Settings, CheckCircle2, ChevronDown, Sword, BookOpen, 
+  Lightbulb, CodeXml, Trophy, ChevronRight, Lock, Cpu, 
+  HelpCircle, Sparkles, Check, Copy
+} from 'lucide-react';
 
 function ExerciseCard({ exercise, index, completed, onComplete, language, listId }: {
   exercise: Exercise,
@@ -16,14 +20,36 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
   onComplete: () => void
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState<'lesson' | 'editor'>('lesson');
+  const [activeTab, setActiveTab] = useState<'editor' | 'lesson'>('editor');
   const [feedback, setFeedback] = useState<{ msg: string; ok: boolean; score?: number } | null>(null);
   const [aiThinking, setAiThinking] = useState(false);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
+  const [revealedHintIndex, setRevealedHintIndex] = useState(0);
+  const [showSyntaxExample, setShowSyntaxExample] = useState(false);
+  const [exampleCopied, setExampleCopied] = useState(false);
+
   const { runPython, isInitializing: isPyInitializing } = useInterpreter();
   const { runC } = useCInterpreter();
 
   const isInitializing = language === 'python' ? isPyInitializing : false;
+
+  const defaultBoilerplate = language === 'c' 
+    ? `#include <stdio.h>\n\nint main() {\n    \n    return 0;\n}`
+    : `# Escreva sua solução aqui\n`;
+
+  const [editorCode, setEditorCode] = useState(exercise.initialCode || defaultBoilerplate);
+
+  const handleInsertBoilerplate = () => {
+    setEditorCode(defaultBoilerplate);
+  };
+
+  const handleCopyExample = () => {
+    if (exercise.lesson.example) {
+      navigator.clipboard.writeText(exercise.lesson.example);
+      setExampleCopied(true);
+      setTimeout(() => setExampleCopied(false), 2000);
+    }
+  };
 
   async function handleSubmission(currentCode: string) {
     setFeedback(null);
@@ -56,7 +82,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
       }
     } catch (err) {
       setAiThinking(false);
-      console.error(err);
+      console.warn(err);
     }
   }
 
@@ -123,18 +149,20 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
 
   return (
     <div style={{
-      background: 'rgba(25,25,35,0.6)',
-      backdropFilter: 'blur(10px)',
+      background: 'rgba(25,25,35,0.75)',
+      backdropFilter: 'blur(12px)',
       borderRadius: 24,
-      border: `1px solid ${completed ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.05)'}`,
+      border: `1px solid ${completed ? 'rgba(16,185,129,0.3)' : 'rgba(255,255,255,0.06)'}`,
       overflow: 'hidden',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxShadow: completed ? '0 10px 40px -10px rgba(16,185,129,0.1)' : '0 10px 40px -10px rgba(0,0,0,0.3)',
+      boxShadow: completed ? '0 10px 40px -10px rgba(16,185,129,0.15)' : '0 10px 40px -10px rgba(0,0,0,0.4)',
       position: 'relative'
     }}>
-      {completed && <div style={{ position: 'absolute', top: 0, right: 0, width: 60, height: 60, background: 'linear-gradient(225deg, rgba(16,185,129,0.2) 0%, transparent 70%)', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', padding: 8 }}>
-        <Trophy size={20} color="#10b981" />
-      </div>}
+      {completed && (
+        <div style={{ position: 'absolute', top: 0, right: 0, width: 60, height: 60, background: 'linear-gradient(225deg, rgba(16,185,129,0.25) 0%, transparent 70%)', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', padding: 8 }}>
+          <Trophy size={20} color="#10b981" />
+        </div>
+      )}
 
       <div style={{ padding: '24px 28px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isExpanded ? 24 : 0 }}>
@@ -145,12 +173,12 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                display: 'flex', alignItems: 'center', justifyContent: 'center',
                border: `1px solid ${completed ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.05)'}`
              }}>
-               {completed ? <CheckCircle2 size={24} color="#10b981" /> : <span style={{ fontSize: 16, fontWeight: 800, color: 'rgba(255,255,255,0.3)' }}>{index + 1}</span>}
+               {completed ? <CheckCircle2 size={24} color="#10b981" /> : <span style={{ fontSize: 16, fontWeight: 800, color: 'rgba(255,255,255,0.4)' }}>{index + 1}</span>}
              </div>
              <div>
                <h3 style={{ margin: 0, fontSize: 19, fontWeight: 700, color: completed ? '#10b981' : '#f3f4f6' }}>{exercise.title}</h3>
                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
-                 <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                 <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', display: 'flex', alignItems: 'center', gap: 4 }}>
                    <Cpu size={12} /> {exercise.lesson.concept}
                  </span>
                  <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
@@ -161,7 +189,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
             style={{ 
-              width: 40, height: 40, borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: 'none', 
+              width: 40, height: 40, borderRadius: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', 
               color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
               transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s ease'
             }}
@@ -171,119 +199,206 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
         </div>
 
         {isExpanded && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, animation: 'fadeIn 0.3s ease' }}>
-            <div style={{ display: 'flex', background: 'rgba(0,0,0,0.2)', padding: 6, borderRadius: 14, alignSelf: 'flex-start' }}>
-              <button 
-                onClick={() => setActiveTab('lesson')}
-                style={{ 
-                  padding: '8px 20px', borderRadius: 10, border: 'none', fontSize: 13, fontWeight: 600,
-                  background: activeTab === 'lesson' ? 'rgba(255,255,255,0.05)' : 'transparent',
-                  color: activeTab === 'lesson' ? '#fff' : 'rgba(255,255,255,0.4)',
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                }}
-              >
-                <BookOpen size={14} /> Lição
-              </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, animation: 'fadeIn 0.3s ease' }}>
+            <div style={{ display: 'flex', background: 'rgba(0,0,0,0.25)', padding: 4, borderRadius: 14, alignSelf: 'flex-start', border: '1px solid rgba(255,255,255,0.05)' }}>
               <button 
                 onClick={() => setActiveTab('editor')}
                 style={{ 
-                  padding: '8px 20px', borderRadius: 10, border: 'none', fontSize: 13, fontWeight: 600,
-                  background: activeTab === 'editor' ? 'rgba(255,255,255,0.05)' : 'transparent',
-                  color: activeTab === 'editor' ? '#fff' : 'rgba(255,255,255,0.4)',
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                  padding: '8px 18px', borderRadius: 10, border: 'none', fontSize: 13, fontWeight: 600,
+                  background: activeTab === 'editor' ? 'rgba(139,92,246,0.25)' : 'transparent',
+                  color: activeTab === 'editor' ? '#fff' : 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s'
                 }}
               >
-                <CodeXml size={14} /> Laboratório
+                <CodeXml size={14} color={activeTab === 'editor' ? '#a78bfa' : 'currentColor'} /> Laboratório & Guia
+              </button>
+              <button 
+                onClick={() => setActiveTab('lesson')}
+                style={{ 
+                  padding: '8px 18px', borderRadius: 10, border: 'none', fontSize: 13, fontWeight: 600,
+                  background: activeTab === 'lesson' ? 'rgba(139,92,246,0.25)' : 'transparent',
+                  color: activeTab === 'lesson' ? '#fff' : 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s'
+                }}
+              >
+                <BookOpen size={14} color={activeTab === 'lesson' ? '#a78bfa' : 'currentColor'} /> Aula Teórica
               </button>
             </div>
 
             {activeTab === 'lesson' ? (
-              <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 24 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  <div style={{ background: 'rgba(139,92,246,0.05)', border: '1px solid rgba(139,92,246,0.1)', borderRadius: 16, padding: 24 }}>
+                  <div style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 16, padding: 22 }}>
                     <h4 style={{ margin: '0 0 10px', fontSize: 14, fontWeight: 700, color: '#a78bfa', display: 'flex', alignItems: 'center', gap: 8 }}>
                       <Lightbulb size={16} /> O Desafio
                     </h4>
-                    <p style={{ margin: 0, fontSize: 18, lineHeight: 1.6, color: 'rgba(255,255,255,0.8)' }}>
+                    <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6, color: 'rgba(255,255,255,0.9)' }}>
                       {exercise.description}
                     </p>
                   </div>
-                  <div style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 16, padding: 20 }}>
+                  <div style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: 16, padding: 20 }}>
                     <h4 style={{ margin: '0 0 10px', fontSize: 14, fontWeight: 700, color: '#e2e8f0' }}>Instruções do Mestre</h4>
-                    <div style={{ margin: 0, fontSize: 16, lineHeight: 1.6, color: 'rgba(255,255,255,0.5)' }}>
+                    <div style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'rgba(255,255,255,0.7)' }}>
                       {exercise.lesson.instructions ? (
                         <p style={{ margin: 0 }}>{exercise.lesson.instructions}</p>
                       ) : (
                         <ul style={{ margin: 0, paddingLeft: 20 }}>
                           {exercise.lesson.steps.map((step, i) => (
-                            <li key={i}>{step}</li>
+                            <li key={i} style={{ marginBottom: 4 }}>{step}</li>
                           ))}
                         </ul>
                       )}
                     </div>
                   </div>
                 </div>
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {(exercise.lesson.expectedOutput || exercise.description) && (
-                    <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: 16, padding: 20, border: '1px solid rgba(16,185,129,0.1)' }}>
-                      <h4 style={{ margin: '0 0 12px', fontSize: 13, fontWeight: 700, color: '#10b981', textTransform: 'uppercase' }}>Objetivo Final</h4>
-                      <code style={{ fontSize: 15, color: '#fff', fontFamily: 'JetBrains Mono, monospace' }}>
-                        {exercise.lesson.expectedOutput || 'Observe a descrição do desafio'}
-                      </code>
+                  {exercise.lesson.example && (
+                    <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: 16, padding: 20, border: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                        <h4 style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase' }}>Exemplo de Referência</h4>
+                      </div>
+                      <pre style={{ margin: 0, padding: 12, background: 'rgba(0,0,0,0.4)', borderRadius: 10, overflowX: 'auto', fontSize: 13, color: '#4ade80', fontFamily: 'JetBrains Mono, monospace', border: '1px solid rgba(255,255,255,0.03)' }}>
+                        {exercise.lesson.example}
+                      </pre>
                     </div>
                   )}
+
                   <button 
                     onClick={() => setActiveTab('editor')}
                     style={{ 
-                      marginTop: 'auto', padding: '16px', borderRadius: 16, border: 'none',
+                      marginTop: 'auto', padding: '14px', borderRadius: 14, border: 'none',
                       background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
-                      color: '#fff', fontWeight: 800, fontSize: 15, cursor: 'pointer',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                      boxShadow: '0 8px 20px -6px rgba(139,92,246,0.5)'
+                      color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                      boxShadow: '0 8px 20px -6px rgba(139,92,246,0.4)'
                     }}
                   >
-                    Começar Missão <ChevronRight size={18} />
+                    Abrir Laboratório <ChevronRight size={16} />
                   </button>
                 </div>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                 <div style={{ height: 500, borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 360px) 1fr', gap: 20, alignItems: 'start' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <div style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.18)', borderRadius: 16, padding: 18 }}>
+                    <h4 style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 700, color: '#a78bfa', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <Lightbulb size={15} /> Objetivo do Exercício
+                    </h4>
+                    <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#f3f4f6' }}>
+                      {exercise.description}
+                    </p>
+                  </div>
+
+                  <div style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 16, padding: 16 }}>
+                    <h4 style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>Passo a Passo Sugerido</h4>
+                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5 }}>
+                      {exercise.lesson.steps.map((step, i) => (
+                        <li key={i} style={{ marginBottom: 4 }}>{step}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {exercise.tips && exercise.tips.length > 0 && (
+                    <div style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.15)', borderRadius: 16, padding: 16 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                        <h4 style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#fbbf24', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <HelpCircle size={15} /> Dica de Apoio
+                        </h4>
+                        {exercise.tips.length > 1 && (
+                          <button
+                            onClick={() => setRevealedHintIndex((prev) => (prev + 1) % exercise.tips.length)}
+                            style={{ background: 'rgba(251,191,36,0.1)', border: 'none', color: '#fbbf24', fontSize: 11, padding: '3px 8px', borderRadius: 8, cursor: 'pointer' }}
+                          >
+                            Outra Dica ({revealedHintIndex + 1}/{exercise.tips.length})
+                          </button>
+                        )}
+                      </div>
+                      <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5 }}>
+                        💡 {exercise.tips[revealedHintIndex]}
+                      </p>
+                    </div>
+                  )}
+
+                  {exercise.lesson.example && (
+                    <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 16, padding: 14 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <button
+                          onClick={() => setShowSyntaxExample(!showSyntaxExample)}
+                          style={{
+                            background: 'none', border: 'none', color: '#60a5fa', fontSize: 12, fontWeight: 700,
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, padding: 0
+                          }}
+                        >
+                          <Sparkles size={14} />
+                          <span>{showSyntaxExample ? 'Ocultar Sintaxe Base' : 'Ver Exemplo de Sintaxe'}</span>
+                          <ChevronDown size={14} style={{ transform: showSyntaxExample ? 'rotate(180deg)' : 'rotate(0)', transition: '0.2s' }} />
+                        </button>
+                        {showSyntaxExample && (
+                          <button
+                            onClick={handleCopyExample}
+                            style={{
+                              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                              color: '#fff', fontSize: 11, padding: '3px 8px', borderRadius: 6, cursor: 'pointer',
+                              display: 'flex', alignItems: 'center', gap: 4
+                            }}
+                          >
+                            {exampleCopied ? <Check size={11} color="#34d399" /> : <Copy size={11} />}
+                            <span>{exampleCopied ? 'Copiado' : 'Copiar'}</span>
+                          </button>
+                        )}
+                      </div>
+                      {showSyntaxExample && (
+                        <pre style={{
+                          marginTop: 10, marginBottom: 0, padding: 10, background: '#09090b', borderRadius: 8,
+                          fontSize: 12, color: '#38bdf8', fontFamily: 'JetBrains Mono, monospace', overflowX: 'auto',
+                          border: '1px solid rgba(255,255,255,0.05)'
+                        }}>
+                          {exercise.lesson.example}
+                        </pre>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ minHeight: 480, borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column' }}>
                     <CodeEditor 
-                      initialCode={exercise.initialCode || ''} 
+                      initialCode={editorCode} 
                       language={language}
                       onExecute={handleSubmission}
                       isInitializing={isInitializing}
                       aiThinking={aiThinking}
                       executionOutput={consoleOutput}
+                      onInsertBoilerplate={language === 'c' ? handleInsertBoilerplate : undefined}
                     />
-                 </div>
+                  </div>
 
-                 {feedback && (
+                  {feedback && (
                     <div style={{ 
-                      marginTop: 20,
-                      padding: 20, 
+                      marginTop: 16,
+                      padding: 18, 
                       borderRadius: 16, 
-                      background: feedback.ok ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
-                      border: `1px solid ${feedback.ok ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`,
+                      background: feedback.ok ? 'rgba(16,185,129,0.12)' : 'rgba(239,68,68,0.12)',
+                      border: `1px solid ${feedback.ok ? 'rgba(16,185,129,0.25)' : 'rgba(239,68,68,0.25)'}`,
                       animation: 'slideUp 0.3s ease-out'
                     }}>
-                      <div style={{ display: 'flex', alignItems: 'start', gap: 16 }}>
-                         <div style={{ fontSize: 24 }}>{feedback.ok ? '✅' : '❌'}</div>
+                      <div style={{ display: 'flex', alignItems: 'start', gap: 14 }}>
+                         <div style={{ fontSize: 22 }}>{feedback.ok ? '✅' : '💡'}</div>
                          <div style={{ flex: 1 }}>
-                            <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 700, color: '#fff', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                            <h4 style={{ margin: '0 0 6px', fontSize: 13, fontWeight: 700, color: '#fff', textTransform: 'uppercase', letterSpacing: 0.5 }}>
                               {feedback.ok ? 'Missão Concluída!' : 'Feedback do Mestre'}
                             </h4>
-                            <p style={{ margin: 0, color: 'rgba(255,255,255,0.8)', fontSize: 14, lineHeight: 1.6 }}>
+                            <p style={{ margin: 0, color: 'rgba(255,255,255,0.9)', fontSize: 13, lineHeight: 1.6, whiteSpace: 'pre-line' }}>
                               {feedback.msg}
                             </p>
                             {feedback.score !== undefined && (
-                              <div style={{ marginTop: 16, borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 16 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Sincronia do Código</span>
-                                  <span style={{ fontSize: 13, fontWeight: 700, color: '#60a5fa', fontFamily: 'monospace' }}>{feedback.score}/100</span>
+                              <div style={{ marginTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 12 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                                  <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Sincronia do Código</span>
+                                  <span style={{ fontSize: 12, fontWeight: 700, color: '#60a5fa', fontFamily: 'monospace' }}>{feedback.score}/100</span>
                                 </div>
-                                <div style={{ height: 6, width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: 10, overflow: 'hidden' }}>
+                                <div style={{ height: 5, width: '100%', background: 'rgba(255,255,255,0.06)', borderRadius: 10, overflow: 'hidden' }}>
                                   <div style={{ height: '100%', background: 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)', width: `${feedback.score}%`, transition: 'width 1s ease-out' }} />
                                 </div>
                               </div>
@@ -292,6 +407,7 @@ function ExerciseCard({ exercise, index, completed, onComplete, language, listId
                       </div>
                     </div>
                   )}
+                </div>
               </div>
             )}
           </div>
@@ -391,7 +507,6 @@ export default function ExercisesList({
         </div>
       )}
 
-      {/* 🚀 Seção de Exercícios Práticos */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8, padding: '0 8px' }}>
           <div style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(139,92,246,0.3)' }}>
@@ -402,7 +517,6 @@ export default function ExercisesList({
           </h2>
         </div>
 
-        {/* Tab Menu das Listas */}
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none' }}>
             {lists.map((list) => {
@@ -505,7 +619,6 @@ export default function ExercisesList({
           </div>
         </div>
 
-        {/* Exercícios da Lista Selecionada */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {activeList.exercises.map((ex, index) => (
             <ExerciseCard

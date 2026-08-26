@@ -6,35 +6,31 @@ export interface AIReview {
   score: number;
 }
 
-/**
- * Utilitário para busca de palavras inteiras (evita 'int' dentro de 'print')
- */
-const hasWord = (text: string, word: string) => {
+const hasWord = (text: string, word: string): boolean => {
   if (!text || !word) return false;
-  // Escapa caracteres especiais e usa \b para limite de palavra
   const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const regex = new RegExp(`\\b${escapedWord}\\b`, 'i');
   return regex.test(text);
 };
 
-/**
- * Motor de Analogias: Traduz termos técnicos para conceitos do mundo real
- */
-const getMetaphor = (type: string, details?: string) => {
+const getMetaphor = (type: string, details?: string): string => {
   const metaphors: Record<string, string> = {
-    semicolon: "Imagine que cada comando é uma frase completa. Você esqueceu o 'ponto final' (`;`). Sem ele, o computador não sabe onde um pensamento termina e o outro começa!",
-    address: `Para o comando ler o valor, ele precisa saber o ENREDEÇO da casa (o '&' na frente de ${details}). Tentar usar sem o '&' é como mandar um entregador sem o número da rua!`,
-    variables: `Você criou uma gaveta chamada '${details}', mas esqueceu de colocar uma etiqueta de 'tipo' nela (como int ou float). Em C, o armário precisa saber o que cada gaveta vai guardar!`,
-    undeclared: `O computador tentou acessar a gaveta '${details}', mas ela não existe no armário. Você precisa declará-la antes de usar!`,
-    indentation: "O código está 'desalinhado'. No Python, os espaços são como a organização de uma receita: os passos de um bloco precisam estar um degrau para a direita!",
-    divisionByZero: "Você tentou dividir por zero! Na matemática e na programação, isso é como tentar repartir um bolo entre zero pessoas... cria um paradoxo e o programa para!",
-    unbalanced: "Sinto falta de um par! Você abriu uma aspa `\"`, parêntese `(` ou chaves `{` mas esqueceu de fechar. É como deixar uma porta aberta!",
-    syntax: "Há um erro de gramática no seu código! O computador não conseguiu nem começar a ler porque alguma regra de escrita foi quebrada. Verifique se faltam parênteses, aspas ou dois-pontos.",
-    genericName: `O nome '${details}' funciona, mas imagine um armário onde todas as gavetas se chamam 'x'. Fica difícil de organizar, né? Use nomes como 'soma' ou 'total'.`,
-    conceptMismatch: `Seu código está quase lá, mas o desafio era praticar **${details}**. Tente focar em usar essa estrutura para resolver o problema!`,
-    hardcoding: `Vi que você colocou o resultado direto no código. Imagine se o usuário quiser somar outros números? Use o comando de entrada de dados para deixar seu programa dinâmico!`,
+    empty: "O editor está vazio ou quase vazio. Comece escrevendo os primeiros comandos do programa!",
+    question: "Parece que você escreveu uma dúvida ou frase em português no editor em vez de código. Dê uma olhada no esqueleto inicial e nas dicas ao lado para começar!",
+    semicolon: "Imagine que cada comando é uma frase completa. Você esqueceu o ponto final (`;`). Sem ele, o computador não sabe onde a instrução termina!",
+    address: `Para ler o valor com scanf, é necessário informar o endereço da memória usando o '&' antes de ${details}. Sem o '&', o programa tenta escrever em um local desconhecido!`,
+    variables: `Você criou uma gaveta chamada '${details}', mas esqueceu de colocar uma etiqueta de tipo nela (como int ou float).`,
+    undeclared: `O computador tentou acessar o identificador '${details}', mas ele ainda não foi declarado no programa.`,
+    indentation: "O código está desalinhado. No Python, a indentação define quais comandos pertencem a cada bloco.",
+    divisionByZero: "Você tentou dividir por zero! Em computação isso gera uma indeterminação que interrompe o programa.",
+    unbalanced: "Falta fechar algum parêntese `()`, aspas `\"` ou chaves `{}`. Verifique se todas as aberturas possuem seu respectivo fechamento.",
+    syntax: "Há um erro de sintaxe. O compilador encontrou um comando que não segue as regras da linguagem. Verifique se há pontuação ou palavras fora de lugar.",
+    notype: "O compilador encontrou uma palavra que não é reconhecida como tipo ou comando válido. Verifique se o código está dentro da função main().",
+    genericName: `O identificador '${details}' é muito vago. Use nomes expressivos como 'soma' ou 'total'.`,
+    conceptMismatch: `O desafio pede que você pratique **${details}**. Tente utilizar essa estrutura na sua solução.`,
+    hardcoding: "O resultado foi fixado diretamente no código. Use a leitura de dados para tornar a solução dinâmica.",
   };
-  return metaphors[type] || "Analise a lógica do seu código para garantir que todos os passos estão corretos.";
+  return metaphors[type] || "Analise a lógica do seu código para garantir que todos os passos foram seguidos.";
 };
 
 export function simulateAIAnalysis(
@@ -44,13 +40,42 @@ export function simulateAIAnalysis(
   language: string,
   listId: number | string
 ): AIReview {
-  const c = code.toLowerCase();
+  const trimmedCode = code.trim();
+  const lowerCode = trimmedCode.toLowerCase();
   const outString = output.join('\n');
   const outLower = outString.toLowerCase();
   const isC = language === 'c';
   const numericListId = Number(listId);
-  
-  // 1. ANÁLISE DE SEGURANÇA E ERROS CRÍTICOS (Sintaxe/Runtime)
+
+  const nonCodePhrases = [
+    'não sei', 'nao sei', 'socorro', 'ajuda', 'me ajuda', 'como faz', 'duvida', 
+    'dúvida', 'nao entendi', 'não entendi', 'o que fazer', 'help'
+  ];
+
+  if (trimmedCode.length === 0) {
+    return {
+      approved: false,
+      score: 0,
+      feedback: `👨‍🏫 IA MONITOR: ${getMetaphor('empty')}`
+    };
+  }
+
+  const isNonCodeInput = nonCodePhrases.some(phrase => lowerCode.includes(phrase)) ||
+    (isC && !lowerCode.includes('main') && !lowerCode.includes('printf') && !lowerCode.includes('scanf') && !lowerCode.includes('#include') && trimmedCode.length < 40) ||
+    (!isC && !lowerCode.includes('print') && !lowerCode.includes('input') && !lowerCode.includes('=') && trimmedCode.length < 30);
+
+  if (isNonCodeInput) {
+    const hintStarter = isC 
+      ? "Lembre-se de que todo programa em C começa com `#include <stdio.h>` e a função `int main() { ... return 0; }`."
+      : "Lembre-se de usar `print()` para exibir mensagens ou `input()` para ler dados.";
+
+    return {
+      approved: false,
+      score: 0,
+      feedback: `👨‍🏫 IA MONITOR: Olá! Notei que você pode estar em dúvida sobre como iniciar este desafio.\n\n💡 **Dica de início:** ${hintStarter}\n\nConsulte o painel de instruções e dicas ao lado para ver um exemplo prático de sintaxe!`
+    };
+  }
+
   const hasError = outLower.includes('traceback') || 
                    outLower.includes('error:') || 
                    outLower.includes('erro:') ||
@@ -59,27 +84,33 @@ export function simulateAIAnalysis(
                    outLower.includes('syntaxerror');
   
   if (hasError) {
-    let metaphor = "Sua lógica parece boa, mas o motor do código travou!";
+    let metaphor = getMetaphor('syntax');
     
     if (isC) {
-      if (outLower.includes('expected \';\'')) metaphor = getMetaphor('semicolon');
-      else if (outLower.includes('undeclared')) {
+      if (outLower.includes('expected \';\'')) {
+        metaphor = getMetaphor('semicolon');
+      } else if (outLower.includes('does not name a type')) {
+        metaphor = getMetaphor('notype');
+      } else if (outLower.includes('undeclared')) {
         const match = outString.match(/error: '(.*)' undeclared/);
-        metaphor = getMetaphor('undeclared', match ? match[1] : 'dessa variável');
+        metaphor = getMetaphor('undeclared', match ? match[1] : 'da variável');
+      } else if (outLower.includes('segmentation fault')) {
+        metaphor = getMetaphor('address', 'variáveis no scanf');
+      } else if (outLower.includes('syntax error') || outLower.includes('expected')) {
+        metaphor = getMetaphor('syntax');
       }
-      else if (outLower.includes('segmentation fault')) metaphor = getMetaphor('address', 'suas variáveis no scanf');
-      else if (outLower.includes('syntax error') || outLower.includes('expected')) metaphor = getMetaphor('syntax');
     } else {
-      if (outLower.includes('zerodivisionerror')) metaphor = getMetaphor('divisionByZero');
-      else if (outLower.includes('indentationerror')) metaphor = getMetaphor('indentation');
-      else if (outLower.includes('syntaxerror')) {
+      if (outLower.includes('zerodivisionerror')) {
+        metaphor = getMetaphor('divisionByZero');
+      } else if (outLower.includes('indentationerror')) {
+        metaphor = getMetaphor('indentation');
+      } else if (outLower.includes('syntaxerror')) {
         if (outLower.includes('never closed') || outLower.includes('unmatched')) {
           metaphor = getMetaphor('unbalanced');
         } else {
           metaphor = getMetaphor('syntax');
         }
-      }
-      else if (outLower.includes('nameerror')) {
+      } else if (outLower.includes('nameerror')) {
         const match = outString.match(/name '(.*)' is not defined/);
         metaphor = getMetaphor('undeclared', match ? match[1] : 'da variável');
       }
@@ -88,17 +119,15 @@ export function simulateAIAnalysis(
     return {
       approved: false,
       score: 0,
-      feedback: `👨‍🏫 IA MONITOR: Notei um problema técnico!\n\n${metaphor}\n\n🔍 Olhe as mensagens acima para localizar o erro.`
+      feedback: `👨‍🏫 IA MONITOR: Identifiquei um detalhe de sintaxe!\n\n${metaphor}\n\n🔍 Observe a mensagem do compilador no console acima para guiar o ajuste.`
     };
   }
 
-  // 2. VALIDAÇÃO PEDAGÓGICA (A Inteligência do Monitor)
   const concept = exercise.lesson.concept.toLowerCase();
   let pedagogicalFeedback = "";
   let approved = true;
   let score = 100;
 
-  // A) Mapeamento de Conceitos Inteligentes por Lista
   const pyRules = [
     { key: 'if', words: ['if'], label: 'Estruturas Condicionais (IF)', category: 'logic' },
     { key: 'while', words: ['while'], label: 'Laços de Repetição (WHILE)', category: 'loops' },
@@ -114,7 +143,6 @@ export function simulateAIAnalysis(
     { key: 'printf', words: ['printf'], label: 'Saída de Dados (printf)', category: 'io' },
   ];
 
-  // Regra especial para Tipos Numéricos
   const numRules = isC ? [
     { key: 'int', words: ['int'], label: 'Números Inteiros (int)', category: 'types' },
     { key: 'float', words: ['float'], label: 'Números Decimais (float)', category: 'types' }
@@ -123,8 +151,6 @@ export function simulateAIAnalysis(
     { key: 'float', words: ['float('], label: 'Conversão para Decimal (float())', category: 'types' }
   ];
 
-  // Filtro de Categorias por ListID (EVITA FALSOS POSITIVOS)
-  // Se estiver na Lista 1 (Básico), a IA é PROIBIDA de exigir loops ou lógica complexa.
   const allowedCategories: Record<number, string[]> = {
     1: ['io', 'types'],
     2: ['io', 'types', 'logic'],
@@ -134,15 +160,12 @@ export function simulateAIAnalysis(
   };
 
   const listCategories = allowedCategories[numericListId] || ['io', 'types', 'logic', 'loops', 'lists', 'functions'];
-
   const allPossibleRules = [...(isC ? cRules : pyRules), ...numRules];
   const activeRules = allPossibleRules.filter(r => listCategories.includes(r.category));
 
-  // Validação Dinâmica baseada no conceito do exercício
   for (const rule of activeRules) {
-    // Só cobra a regra se a palavra-chave estiver no conceito DO EXERCÍCIO
     if (hasWord(concept, rule.key)) {
-      const missing = rule.words.filter(w => !c.includes(w));
+      const missing = rule.words.filter(w => !lowerCode.includes(w));
       if (missing.length > 0) {
         approved = false;
         score = 50;
@@ -152,36 +175,30 @@ export function simulateAIAnalysis(
     }
   }
 
-  // B) Checagem de Hardcoding (Valores fixos vs Input)
-  // Só ativa se o exercício explicitamente fala sobre receber dados (input/scanf)
   if (hasWord(concept, isC ? 'scanf' : 'input')) {
-    const hasInput = isC ? hasWord(c, 'scanf') : hasWord(c, 'input');
-    if (!hasInput && numericListId === 1) { // Só reclama de hardcoding na lista 1 se o input falhar
+    const hasInput = isC ? hasWord(lowerCode, 'scanf') : hasWord(lowerCode, 'input');
+    if (!hasInput && numericListId === 1) {
        pedagogicalFeedback += `\n\n⚠️ ${getMetaphor('hardcoding')}`;
        approved = false;
        score = 70;
     }
   }
 
-  // C) Checagem de Nomenclatura (Nomes Genéricos)
   const genericNames = ['x', 'y', 'a', 'b', 'n1', 'n2', 'var1'];
-  const usedGeneric = genericNames.filter(name => hasWord(c, name));
+  const usedGeneric = genericNames.filter(name => hasWord(lowerCode, name));
   if (usedGeneric.length > 2) {
     pedagogicalFeedback += `\n\n💡 ${getMetaphor('genericName', usedGeneric[0])}`;
   }
 
-  // 3. RETORNO FINAL
   if (!approved) {
     return { approved, score, feedback: `👨‍🏫 IA MONITOR: ${pedagogicalFeedback}` };
   }
 
-  // Feedbacks Positivos Variados
   const positiveInsights = [
-    "Uau! O código ficou limpo e muito fácil de entender.",
-    "A lógica que você usou é digna de um programador sênior!",
-    "Parabéns por usar nomes de variáveis que contam a história do programa.",
-    "Tudo certo! Você dominou o conceito deste desafio.",
-    "Excelente! Agora tente aplicar essa mesma técnica no próximo exercício."
+    "Excelente! O código está bem estruturado e cumpriu os requisitos do desafio.",
+    "Ótimo trabalho! A lógica aplicada é clara e eficiente.",
+    "Perfeito! Os conceitos deste exercício foram assimilados com sucesso.",
+    "Muito bom! Agora aplique o mesmo raciocínio no próximo desafio."
   ];
 
   return {

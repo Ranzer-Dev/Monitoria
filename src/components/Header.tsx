@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Hash, Search, Zap, Settings, Trophy, LayoutDashboard, CodeXml, LogOut, User, Flame, BookOpen } from 'lucide-react';
+import { Search, Zap, Settings, Trophy, LayoutDashboard, CodeXml, LogOut, User, Flame, BookOpen } from 'lucide-react';
 import type { UserStats } from '../hooks/useGamification';
 import type { Language } from '../App';
 
@@ -104,18 +104,6 @@ export default function Header({ stats, language, onLanguageChange, view, onView
                 }}
               >
                 <BookOpen size={14} /> Aula Teórica
-              </button>
-              <button
-                onClick={() => onViewChange('theory', 'glossario')}
-                style={{
-                  padding: '6px 12px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6,
-                  background: 'transparent',
-                  color: 'rgba(255,255,255,0.4)',
-                  border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, transition: 'all 0.2s',
-                  boxShadow: 'none'
-                }}
-              >
-                <Hash size={14} /> TermosDev
               </button>
             </div>
 

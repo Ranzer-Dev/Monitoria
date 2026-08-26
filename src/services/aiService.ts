@@ -4,8 +4,8 @@ import { simulateAIAnalysis } from '../aiSimulator';
 
 const STORAGE_KEY = 'gemini_api_key';
 
-export const getApiKey = () => localStorage.getItem(STORAGE_KEY) || '';
-export const setApiKey = (key: string) => localStorage.setItem(STORAGE_KEY, key);
+export const getApiKey = (): string => localStorage.getItem(STORAGE_KEY) || '';
+export const setApiKey = (key: string): void => localStorage.setItem(STORAGE_KEY, key);
 
 export interface AIResponse {
   approved: boolean;
@@ -13,16 +13,9 @@ export interface AIResponse {
   score: number;
 }
 
-// Função auxiliar para limpar a resposta caso a IA envie markdown (```json ...)
-function cleanJSONResponse(text: string): any {
-  try {
-    // Remove blocos de código markdown se existirem
-    const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    return JSON.parse(cleaned);
-  } catch (e) {
-    console.error("Erro ao limpar/parsear JSON da IA. Texto bruto:", text);
-    throw e;
-  }
+function cleanJSONResponse(text: string): Record<string, any> {
+  const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+  return JSON.parse(cleaned);
 }
 
 const SYSTEM_PROMPT = `Você é um Monitor de Programação extremamente pedagógico, incentivador e paciente. 
@@ -77,14 +70,12 @@ IMPORTANTE:
 `;
 
   try {
-    let resultJSON: any = null;
+    let resultJSON: Record<string, any> | null = null;
 
     if (studentApiKey) {
       const cleanKey = studentApiKey.trim();
       
-      // 1. PRIORIDADE: GROQ
       if (cleanKey.startsWith('gsk_')) {
-        console.log("🚀 Monitoria: Usando Groq (Llama 3.3 70B)...");
         const response = await axios.post(
           'https://api.groq.com/openai/v1/chat/completions',
           {
@@ -108,9 +99,7 @@ IMPORTANTE:
         if (!rawText) throw new Error("Resposta do Groq veio vazia.");
         resultJSON = cleanJSONResponse(rawText);
       } 
-      // 2. ALTERNATIVA: GEMINI (Suporte a AIza e AQ)
       else if (cleanKey.startsWith('AIza') || cleanKey.startsWith('AQ')) {
-        console.log("💎 Monitoria: Usando Gemini API (2.5 Flash Lite)...");
         const response = await axios.post(
           `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${cleanKey}`,
           {
@@ -135,18 +124,16 @@ IMPORTANTE:
         resultJSON = cleanJSONResponse(rawText);
       }
       else {
-        throw new Error("Chave Inválida: O formato não foi reconhecido como Groq ou Gemini.");
+        throw new Error("Chave não reconhecida.");
       }
     } 
     else {
-      // 3. FALLBACK: PROXY SEGURO
-      console.log("Tentando chamada via Proxy Seguro...");
       const proxyResponse = await axios.post('/api/review', {
         systemPrompt: SYSTEM_PROMPT,
         prompt: promptText
       }, {
         headers: {
-          'x-internal-secret': 'monitoria-secret-dev-2026' // DEVE ser igual ao APP_INTERNAL_SECRET no Vercel
+          'x-internal-secret': 'monitoria-secret-dev-2026'
         }
       });
       
@@ -166,10 +153,15 @@ IMPORTANTE:
     throw new Error("Formato de resposta inválido.");
 
   } catch (error: any) {
-    console.error("ERRO DETALHADO IA:", error?.response?.data || error.message);
+    const errorDetails = error?.response?.data 
+      ? (typeof error.response.data === 'object' ? JSON.stringify(error.response.data) : String(error.response.data))
+      : (error?.message || 'Serviço de IA remoto indisponível');
+    
+    console.warn("Monitoria IA fallback ativado:", errorDetails);
+    
     return {
       ...fallbackReview,
-      feedback: `${fallbackReview.feedback}`
+      feedback: fallbackReview.feedback
     };
   }
 }
