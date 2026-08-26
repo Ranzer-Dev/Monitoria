@@ -13,24 +13,26 @@ const hasWord = (text: string, word: string): boolean => {
   return regex.test(text);
 };
 
-const getMetaphor = (type: string, details?: string): string => {
-  const metaphors: Record<string, string> = {
-    empty: "O editor está vazio ou quase vazio. Comece escrevendo os primeiros comandos do programa!",
-    question: "Parece que você escreveu uma dúvida ou frase em português no editor em vez de código. Dê uma olhada no esqueleto inicial e nas dicas ao lado para começar!",
-    semicolon: "Imagine que cada comando é uma frase completa. Você esqueceu o ponto final (`;`). Sem ele, o computador não sabe onde a instrução termina!",
-    address: `Para ler o valor com scanf, é necessário informar o endereço da memória usando o '&' antes de ${details}. Sem o '&', o programa tenta escrever em um local desconhecido!`,
-    variables: `Você criou uma gaveta chamada '${details}', mas esqueceu de colocar uma etiqueta de tipo nela (como int ou float).`,
-    undeclared: `O computador tentou acessar o identificador '${details}', mas ele ainda não foi declarado no programa.`,
-    indentation: "O código está desalinhado. No Python, a indentação define quais comandos pertencem a cada bloco.",
-    divisionByZero: "Você tentou dividir por zero! Em computação isso gera uma indeterminação que interrompe o programa.",
-    unbalanced: "Falta fechar algum parêntese `()`, aspas `\"` ou chaves `{}`. Verifique se todas as aberturas possuem seu respectivo fechamento.",
-    syntax: "Há um erro de sintaxe. O compilador encontrou um comando que não segue as regras da linguagem. Verifique se há pontuação ou palavras fora de lugar.",
-    notype: "O compilador encontrou uma palavra que não é reconhecida como tipo ou comando válido. Verifique se o código está dentro da função main().",
-    genericName: `O identificador '${details}' é muito vago. Use nomes expressivos como 'soma' ou 'total'.`,
-    conceptMismatch: `O desafio pede que você pratique **${details}**. Tente utilizar essa estrutura na sua solução.`,
-    hardcoding: "O resultado foi fixado diretamente no código. Use a leitura de dados para tornar a solução dinâmica.",
-  };
-  return metaphors[type] || "Analise a lógica do seu código para garantir que todos os passos foram seguidos.";
+interface DebuggingGuide {
+  title: string;
+  explanation: string;
+  checklist: string[];
+}
+
+const buildDebuggingFeedback = (guide: DebuggingGuide, lineInfo?: string): string => {
+  const lineHeader = lineInfo ? ` (Ocorrido na ${lineInfo})` : '';
+  const items = guide.checklist.map((item, i) => `${i + 1}. ${item}`).join('\n');
+  return `👨‍🏫 IA MONITOR: 🐞 **Análise de Depuração: ${guide.title}**${lineHeader}\n\n📖 **O que aconteceu:**\n${guide.explanation}\n\n🛠️ **Checklist de Depuração:**\n${items}`;
+};
+
+const extractLineNumber = (output: string): string | undefined => {
+  const pyMatch = output.match(/File "<exec>", line (\d+)/i) || output.match(/line (\d+)/i);
+  if (pyMatch) return `linha ${pyMatch[1]}`;
+  
+  const cMatch = output.match(/prog\.cc:(\d+):(\d+)/i) || output.match(/:(\d+):(\d+): error/i);
+  if (cMatch) return `linha ${cMatch[1]}`;
+  
+  return undefined;
 };
 
 export function simulateAIAnalysis(
@@ -46,6 +48,7 @@ export function simulateAIAnalysis(
   const outLower = outString.toLowerCase();
   const isC = language === 'c';
   const numericListId = Number(listId);
+  const detectedLine = extractLineNumber(outString);
 
   const nonCodePhrases = [
     'não sei', 'nao sei', 'socorro', 'ajuda', 'me ajuda', 'como faz', 'duvida', 
@@ -56,7 +59,7 @@ export function simulateAIAnalysis(
     return {
       approved: false,
       score: 0,
-      feedback: `👨‍🏫 IA MONITOR: ${getMetaphor('empty')}`
+      feedback: `👨‍🏫 IA MONITOR: O editor está vazio. Comece escrevendo os primeiros comandos do programa!`
     };
   }
 
@@ -66,13 +69,13 @@ export function simulateAIAnalysis(
 
   if (isNonCodeInput) {
     const hintStarter = isC 
-      ? "Lembre-se de que todo programa em C começa com `#include <stdio.h>` e a função `int main() { ... return 0; }`."
-      : "Lembre-se de usar `print()` para exibir mensagens ou `input()` para ler dados.";
+      ? "Todo programa em C começa com `#include <stdio.h>` e a função `int main() { ... return 0; }`."
+      : "Utilize `print()` para exibir mensagens ou `input()` para capturar dados do teclado.";
 
     return {
       approved: false,
       score: 0,
-      feedback: `👨‍🏫 IA MONITOR: Olá! Notei que você pode estar em dúvida sobre como iniciar este desafio.\n\n💡 **Dica de início:** ${hintStarter}\n\nConsulte o painel de instruções e dicas ao lado para ver um exemplo prático de sintaxe!`
+      feedback: `👨‍🏫 IA MONITOR: Olá! Percebi que você está com dúvidas sobre como iniciar este desafio.\n\n💡 **Dica de início:** ${hintStarter}\n\nConsulte o painel de instruções e dicas ao lado para visualizar um exemplo prático de sintaxe!`
     };
   }
 
@@ -84,42 +87,142 @@ export function simulateAIAnalysis(
                    outLower.includes('syntaxerror');
   
   if (hasError) {
-    let metaphor = getMetaphor('syntax');
-    
-    if (isC) {
-      if (outLower.includes('expected \';\'')) {
-        metaphor = getMetaphor('semicolon');
-      } else if (outLower.includes('does not name a type')) {
-        metaphor = getMetaphor('notype');
-      } else if (outLower.includes('undeclared')) {
-        const match = outString.match(/error: '(.*)' undeclared/);
-        metaphor = getMetaphor('undeclared', match ? match[1] : 'da variável');
-      } else if (outLower.includes('segmentation fault')) {
-        metaphor = getMetaphor('address', 'variáveis no scanf');
-      } else if (outLower.includes('syntax error') || outLower.includes('expected')) {
-        metaphor = getMetaphor('syntax');
+    let debugGuide: DebuggingGuide = {
+      title: "Erro de Sintaxe / Compilação",
+      explanation: "O interpretador/compilador encontrou uma instrução que quebra as regras da linguagem e não conseguiu continuar a execução.",
+      checklist: [
+        "Revise se todas as pontuações e símbolos estão corretos.",
+        "Observe a linha indicada no console acima.",
+        "Compare o comando com o exemplo de referência na aba de apoio."
+      ]
+    };
+
+    if (!isC) {
+      if (outLower.includes('nameerror')) {
+        const match = outString.match(/name '(.*)' is not defined/i);
+        const varName = match ? match[1] : 'indicado';
+        debugGuide = {
+          title: `NameError (Identificador '${varName}' não definido)`,
+          explanation: `O Python leu a palavra '${varName}' sem aspas e presumiu que fosse uma variável existente na memória. Como ela não foi criada antes, o interpretador travou.`,
+          checklist: [
+            `**Era para ser um texto?** Coloque entre aspas: \`"${varName}"\`. Sem aspas, o Python sempre procura uma variável.`,
+            `**Era para ser uma variável?** Declare e atribua um valor antes dessa linha (ex: \`${varName} = input(...)\` ou \`${varName} = 10\`).`,
+            `**Foi erro de digitação?** Verifique se o nome confere exatamente com a variável declarada (Python diferencia maiúsculas de minúsculas).`
+          ]
+        };
+      } else if (outLower.includes('syntaxerror')) {
+        if (outLower.includes('never closed') || outLower.includes('unmatched') || outLower.includes('unterminated string')) {
+          debugGuide = {
+            title: "SyntaxError (Parêntese, Chave ou Aspas Abertas)",
+            explanation: "Você abriu uma estrutura (como parêntese `(`, colchete `[` ou aspas `\"`), mas esqueceu de fechá-la na mesma linha.",
+            checklist: [
+              "Conte se para cada `(` existe um `)` correspondente.",
+              "Verifique se as aspas duplas `\"` ou simples `'` estão fechadas corretamente.",
+              "Cheque a linha indicada pelo cursor `^` no console."
+            ]
+          };
+        } else {
+          debugGuide = {
+            title: "SyntaxError (Gramática Inválida)",
+            explanation: "O Python encontrou um comando que viola a estrutura da linguagem.",
+            checklist: [
+              "Se for um `if`, `for` ou `while`, verifique se colocou os dois-pontos `:` no final da linha.",
+              "Verifique se não há operadores matemáticos ou vírgulas esquecidas no final do comando.",
+              "Verifique se o nome de alguma função foi digitado incorretamente (ex: `prnt` em vez de `print`)."
+            ]
+          };
+        }
+      } else if (outLower.includes('typeerror')) {
+        debugGuide = {
+          title: "TypeError (Incompatibilidade de Tipos de Dados)",
+          explanation: "Você tentou realizar uma operação entre tipos incompatíveis, como somar um texto com um número sem conversão.",
+          checklist: [
+            "Lembre-se de que o comando `input()` sempre retorna texto (string).",
+            "Use `int(input())` para converter para número inteiro ou `float(input())` para decimal.",
+            "Para juntar texto e números no `print`, use f-strings: `print(f\"Valor: {x}\")`."
+          ]
+        };
+      } else if (outLower.includes('indentationerror')) {
+        debugGuide = {
+          title: "IndentationError (Bloco Desalinhado)",
+          explanation: "Em Python, o alinhamento dos espaços define a hierarquia de comandos dentro de blocos como `if`, `for` ou funções.",
+          checklist: [
+            "Avance o bloco de comandos interno com 4 espaços ou pressione Tab.",
+            "Certifique-se de que todas as linhas de um mesmo bloco tenham a mesma quantidade de espaços.",
+            "Nunca misture tabulações e espaços no mesmo arquivo."
+          ]
+        };
+      } else if (outLower.includes('zerodivisionerror')) {
+        debugGuide = {
+          title: "ZeroDivisionError (Divisão por Zero)",
+          explanation: "O programa tentou realizar uma divisão onde o divisor é zero (`/ 0`), o que é matematicamente indefinido.",
+          checklist: [
+            "Verifique o valor da variável usada como divisor.",
+            "Adicione um `if divisor != 0:` antes da operação para garantir integridade.",
+            "Verifique se a fórmula de cálculo foi digitada na ordem correta."
+          ]
+        };
+      } else if (outLower.includes('valueerror')) {
+        debugGuide = {
+          title: "ValueError (Valor Inválido na Conversão)",
+          explanation: "Uma função de conversão (como `int()` ou `float()`) recebeu um dado que não pode ser transformado em número.",
+          checklist: [
+            "Verifique se a entrada digitada continha letras ou símbolos onde eram esperados números.",
+            "Se for número com casas decimais, use `float()` em vez de `int()`.",
+            "Não utilize vírgula para números decimais na digitação, utilize ponto (`.` ex: `7.5`)."
+          ]
+        };
       }
     } else {
-      if (outLower.includes('zerodivisionerror')) {
-        metaphor = getMetaphor('divisionByZero');
-      } else if (outLower.includes('indentationerror')) {
-        metaphor = getMetaphor('indentation');
-      } else if (outLower.includes('syntaxerror')) {
-        if (outLower.includes('never closed') || outLower.includes('unmatched')) {
-          metaphor = getMetaphor('unbalanced');
-        } else {
-          metaphor = getMetaphor('syntax');
-        }
-      } else if (outLower.includes('nameerror')) {
-        const match = outString.match(/name '(.*)' is not defined/);
-        metaphor = getMetaphor('undeclared', match ? match[1] : 'da variável');
+      if (outLower.includes('does not name a type')) {
+        debugGuide = {
+          title: "Erro de Tipo ou Escopo em C ('does not name a type')",
+          explanation: "O compilador encontrou um comando solto fora da função `main()` ou uma palavra que não foi reconhecida como tipo válido.",
+          checklist: [
+            "Verifique se o seu código está dentro de `int main() { ... return 0; }`.",
+            "Verifique se declarou os tipos corretamente (`int`, `float`, `char`, `double`).",
+            "Se você pretendia exibir um texto, utilize `printf(\"seu texto\");` com aspas duplas."
+          ]
+        };
+      } else if (outLower.includes('undeclared') || outLower.includes('not declared')) {
+        const match = outString.match(/error: '(.*)' undeclared/i) || outString.match(/'(.*)' was not declared/i);
+        const varName = match ? match[1] : 'da variável';
+        debugGuide = {
+          title: `Variável Não Declarada ('${varName}')`,
+          explanation: `Em C, toda variável precisa ter seu tipo explicitamente declarado na memória antes de ser utilizada.`,
+          checklist: [
+            `Declare a variável no início da função: \`int ${varName};\` ou \`float ${varName};\`.`,
+            `Se '${varName}' era para ser uma mensagem de texto, envolva entre aspas no \`printf\`.`,
+            `Verifique se não houve erro de digitação no nome da variável.`
+          ]
+        };
+      } else if (outLower.includes('expected \';\'')) {
+        debugGuide = {
+          title: "Ponto e Vírgula Ausente (Expected ';')",
+          explanation: "Em C, cada comando é uma instrução finalizada por ponto e vírgula `;`.",
+          checklist: [
+            "Olhe para a linha indicada no console e também para a linha imediatamente anterior.",
+            "Adicione o `;` ao final da declaração ou do comando `printf`/`scanf`.",
+            "Lembre-se: `if`, `while` e `for` não recebem `;` logo após a condição `()`."
+          ]
+        };
+      } else if (outLower.includes('segmentation fault')) {
+        debugGuide = {
+          title: "Falha de Segmentação (Segmentation Fault)",
+          explanation: "O programa tentou acessar uma posição de memória proibida ou inexistente.",
+          checklist: [
+            "Verifique se colocou o `&` antes da variável no `scanf` (ex: `scanf(\"%d\", &variavel);`).",
+            "Se estiver usando vetores, verifique se o índice não ultrapassou o limite do array.",
+            "Para ponteiros, garanta que o ponteiro aponta para um endereço válido antes de usar `*p`."
+          ]
+        };
       }
     }
 
     return {
       approved: false,
       score: 0,
-      feedback: `👨‍🏫 IA MONITOR: Identifiquei um detalhe de sintaxe!\n\n${metaphor}\n\n🔍 Observe a mensagem do compilador no console acima para guiar o ajuste.`
+      feedback: buildDebuggingFeedback(debugGuide, detectedLine)
     };
   }
 
@@ -169,7 +272,7 @@ export function simulateAIAnalysis(
       if (missing.length > 0) {
         approved = false;
         score = 50;
-        pedagogicalFeedback = `\n\n🎯 ${getMetaphor('conceptMismatch', rule.label)}`;
+        pedagogicalFeedback = `\n\n🎯 O desafio pede a prática de **${rule.label}**. Tente incorporar essa estrutura à sua solução.`;
         break; 
       }
     }
@@ -178,7 +281,7 @@ export function simulateAIAnalysis(
   if (hasWord(concept, isC ? 'scanf' : 'input')) {
     const hasInput = isC ? hasWord(lowerCode, 'scanf') : hasWord(lowerCode, 'input');
     if (!hasInput && numericListId === 1) {
-       pedagogicalFeedback += `\n\n⚠️ ${getMetaphor('hardcoding')}`;
+       pedagogicalFeedback += `\n\n⚠️ Valores fixos detectados. Use o comando de leitura de dados para tornar a solução dinâmica.`;
        approved = false;
        score = 70;
     }
@@ -187,7 +290,7 @@ export function simulateAIAnalysis(
   const genericNames = ['x', 'y', 'a', 'b', 'n1', 'n2', 'var1'];
   const usedGeneric = genericNames.filter(name => hasWord(lowerCode, name));
   if (usedGeneric.length > 2) {
-    pedagogicalFeedback += `\n\n💡 ${getMetaphor('genericName', usedGeneric[0])}`;
+    pedagogicalFeedback += `\n\n💡 Dica de Boas Práticas: O identificador '${usedGeneric[0]}' funciona, mas nomes expressivos como 'soma' ou 'total' tornam seu código mais profissional.`;
   }
 
   if (!approved) {
@@ -195,10 +298,10 @@ export function simulateAIAnalysis(
   }
 
   const positiveInsights = [
-    "Excelente! O código está bem estruturado e cumpriu os requisitos do desafio.",
-    "Ótimo trabalho! A lógica aplicada é clara e eficiente.",
-    "Perfeito! Os conceitos deste exercício foram assimilados com sucesso.",
-    "Muito bom! Agora aplique o mesmo raciocínio no próximo desafio."
+    "Excelente! O código está bem estruturado e cumpriu todos os requisitos do desafio.",
+    "Ótimo trabalho! A lógica aplicada é clara, concisa e eficiente.",
+    "Perfeito! Os conceitos deste exercício foram assimilados com maestria.",
+    "Muito bom! Agora aplique essa mesma solidez no próximo desafio."
   ];
 
   return {
